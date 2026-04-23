@@ -57,14 +57,12 @@ class TransactionCommandApiTest extends ApiIntegrationTestSupport {
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-12345"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accountId").value("ACC-12345"))
-            .andExpect(jsonPath("$.balance").value(-100.50))
-            .andExpect(jsonPath("$.currency").value("USD"));
+            .andExpect(jsonPath("$.balances.USD").value(-100.50));
 
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-67890"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accountId").value("ACC-67890"))
-            .andExpect(jsonPath("$.balance").value(100.50))
-            .andExpect(jsonPath("$.currency").value("USD"));
+            .andExpect(jsonPath("$.balances.USD").value(100.50));
     }
 
     @Test
@@ -83,7 +81,7 @@ class TransactionCommandApiTest extends ApiIntegrationTestSupport {
 
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-22222"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.balance").value(250.00));
+            .andExpect(jsonPath("$.balances.USD").value(250.00));
 
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +97,7 @@ class TransactionCommandApiTest extends ApiIntegrationTestSupport {
 
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-22222"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.balance").value(209.75));
+            .andExpect(jsonPath("$.balances.USD").value(209.75));
     }
 
     @ParameterizedTest
@@ -376,10 +374,12 @@ class TransactionCommandApiTest extends ApiIntegrationTestSupport {
 
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-12345"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.balance").value(0));
+            .andExpect(jsonPath("$.balances").isMap())
+            .andExpect(jsonPath("$.balances").isEmpty());
 
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-67890"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.balance").value(0));
+            .andExpect(jsonPath("$.balances").isMap())
+            .andExpect(jsonPath("$.balances").isEmpty());
     }
 }
