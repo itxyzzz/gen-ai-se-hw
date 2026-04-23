@@ -23,8 +23,6 @@ public class TransactionValidator {
     public List<ValidationErrorResponse.FieldErrorDetail> validate(CreateTransactionRequest request) {
         List<ValidationErrorResponse.FieldErrorDetail> errors = new ArrayList<>();
 
-        require(errors, "fromAccount", request.fromAccount());
-        require(errors, "toAccount", request.toAccount());
         require(errors, "amount", request.amount());
         require(errors, "currency", request.currency());
         require(errors, "type", request.type());
@@ -33,11 +31,17 @@ public class TransactionValidator {
             return errors;
         }
 
-        validateAccount(errors, "fromAccount", request.fromAccount());
-        validateAccount(errors, "toAccount", request.toAccount());
         validateAmount(errors, request.amount());
         validateCurrency(errors, request.currency());
-        validateType(errors, request.type());
+        TransactionType transactionType = validateType(errors, request.type());
+
+        if (transactionType == null) {
+            validateAccountIfPresent(errors, "fromAccount", request.fromAccount());
+            validateAccountIfPresent(errors, "toAccount", request.toAccount());
+            return errors;
+        }
+
+        validateAccountsForType(errors, request, transactionType);
 
         return errors;
     }
@@ -94,15 +98,69 @@ public class TransactionValidator {
         }
     }
 
-    private void validateType(List<ValidationErrorResponse.FieldErrorDetail> errors, String type) {
+    private TransactionType validateType(List<ValidationErrorResponse.FieldErrorDetail> errors, String type) {
         if (type.length() > MAX_TYPE_LENGTH) {
             errors.add(new ValidationErrorResponse.FieldErrorDetail("type", "Type must be deposit, withdrawal, or transfer"));
-            return;
+            return null;
         }
         try {
-            TransactionType.fromValue(type);
+            return TransactionType.fromValue(type);
         } catch (IllegalArgumentException exception) {
             errors.add(new ValidationErrorResponse.FieldErrorDetail("type", "Type must be deposit, withdrawal, or transfer"));
+            return null;
+        }
+    }
+
+    private void validateAccountsForType(
+        List<ValidationErrorResponse.FieldErrorDetail> errors,
+        CreateTransactionRequest request,
+        TransactionType transactionType
+    ) {
+        switch (transactionType) {
+            case TRANSFER -> {
+                require(errors, "fromAccount", request.fromAccount());
+                require(errors, "toAccount", request.toAccount());
+
+                validateAccountIfPresent(errors, "fromAccount", request.fromAccount());
+                validateAccountIfPresent(errors, "toAccount", request.toAccount());
+            }
+            case DEPOSIT -> {
+                require(errors, "toAccount", request.toAccount());
+                rejectIfPresent(errors, "fromAccount", request.fromAccount(), "fromAccount is not allowed for deposit transactions");
+
+                if (request.toAccount() != null && !request.toAccount().isBlank()) {
+                    validateAccount(errors, "toAccount", request.toAccount());
+                }
+            }
+            case WITHDRAWAL -> {
+                require(errors, "fromAccount", request.fromAccount());
+                rejectIfPresent(errors, "toAccount", request.toAccount(), "toAccount is not allowed for withdrawal transactions");
+
+                if (request.fromAccount() != null && !request.fromAccount().isBlank()) {
+                    validateAccount(errors, "fromAccount", request.fromAccount());
+                }
+            }
+        }
+    }
+
+    private void rejectIfPresent(
+        List<ValidationErrorResponse.FieldErrorDetail> errors,
+        String field,
+        String value,
+        String message
+    ) {
+        if (value != null) {
+            errors.add(new ValidationErrorResponse.FieldErrorDetail(field, message));
+        }
+    }
+
+    private void validateAccountIfPresent(
+        List<ValidationErrorResponse.FieldErrorDetail> errors,
+        String field,
+        String account
+    ) {
+        if (account != null && !account.isBlank()) {
+            validateAccount(errors, field, account);
         }
     }
 }
