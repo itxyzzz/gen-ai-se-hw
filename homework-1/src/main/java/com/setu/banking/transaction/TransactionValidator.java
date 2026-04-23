@@ -123,6 +123,12 @@ public class TransactionValidator {
 
                 validateAccountIfPresent(errors, "fromAccount", request.fromAccount());
                 validateAccountIfPresent(errors, "toAccount", request.toAccount());
+
+                if (request.fromAccount() != null
+                    && request.toAccount() != null
+                    && request.fromAccount().equals(request.toAccount())) {
+                    errors.add(new ValidationErrorResponse.FieldErrorDetail("toAccount", "Transfer accounts must be different"));
+                }
             }
             case DEPOSIT -> {
                 require(errors, "toAccount", request.toAccount());
