@@ -293,6 +293,27 @@ class TransactionCommandApiTest extends ApiIntegrationTestSupport {
     }
 
     @Test
+    void rejectsTransferWhenFromAndToAccountsMatch() throws Exception {
+        String body = """
+            {
+              "fromAccount": "ACC-12345",
+              "toAccount": "ACC-12345",
+              "amount": 10.00,
+              "currency": "USD",
+              "type": "transfer"
+            }
+            """;
+
+        mockMvc.perform(post("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Validation failed"))
+            .andExpect(jsonPath("$.details[0].field").value("toAccount"))
+            .andExpect(jsonPath("$.details[0].message").value("Transfer accounts must be different"));
+    }
+
+    @Test
     void rejectsUnexpectedCharactersInFieldValuesWithoutReturningFiveHundred() throws Exception {
         String body = """
             {
