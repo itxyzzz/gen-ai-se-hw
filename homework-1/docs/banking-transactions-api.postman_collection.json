@@ -1,0 +1,854 @@
+{
+  "info": {
+    "_postman_id": "d6fd4a5f-1b6d-4e20-a0eb-1b7a1b4c8cf1",
+    "name": "Banking Transactions API",
+    "description": "Reusable requests for the Banking Transactions API. This collection mirrors the API surface covered by TransactionControllerTest without trying to reproduce the test workflow or duplicate every parameterized variant. Keep this collection updated when endpoints, request shapes, validation rules, or example account IDs change.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "transactionId",
+      "value": "replace-with-created-transaction-id",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Core Transactions",
+      "item": [
+        {
+          "name": "Create transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 100.50,\n  \"currency\": \"USD\",\n  \"type\": \"transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Creates a transfer transaction. Expected status: 201 Created. Response should include an id, the submitted accounts, amount, currency, type=transfer, status=completed, and a timestamp."
+          }
+        },
+        {
+          "name": "Create deposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toAccount\": \"ACC-22222\",\n  \"amount\": 250.00,\n  \"currency\": \"USD\",\n  \"type\": \"deposit\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Creates a deposit transaction. Expected status: 201 Created. The target account balance should increase by the amount."
+          }
+        },
+        {
+          "name": "Create withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-22222\",\n  \"amount\": 40.25,\n  \"currency\": \"USD\",\n  \"type\": \"withdrawal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Creates a withdrawal transaction. Expected status: 201 Created. The source account balance should decrease by the amount."
+          }
+        },
+        {
+          "name": "List transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Lists all stored transactions. Expected status: 200 OK."
+          }
+        },
+        {
+          "name": "Get transaction by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/{{transactionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions",
+                "{{transactionId}}"
+              ]
+            },
+            "description": "Fetches a transaction by ID. Set the transactionId collection variable to an ID returned by a create request. Expected status: 200 OK for an existing ID."
+          }
+        },
+        {
+          "name": "Get missing transaction",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/missing-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions",
+                "missing-id"
+              ]
+            },
+            "description": "Requests an unknown transaction ID. Expected status: 404 Not Found with a sanitized error response."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Get account balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/ACC-12345/balance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "ACC-12345",
+                "balance"
+              ]
+            },
+            "description": "Gets an account balance. Expected status: 200 OK. A new account should return balance=0 and currency=USD."
+          }
+        },
+        {
+          "name": "Get recipient account balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/ACC-67890/balance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "ACC-67890",
+                "balance"
+              ]
+            },
+            "description": "Gets the recipient account balance after transfers. Expected status: 200 OK."
+          }
+        },
+        {
+          "name": "Get account summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/ACC-77777/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "ACC-77777",
+                "summary"
+              ]
+            },
+            "description": "Gets transaction totals for an account. Expected status: 200 OK with accountId, totalDeposits, totalWithdrawals, transactionCount, and mostRecentTransactionDate."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transaction Filters",
+      "item": [
+        {
+          "name": "Filter transactions by account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?accountId=ACC-12345",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "ACC-12345"
+                }
+              ]
+            },
+            "description": "Lists transactions where the account appears as either fromAccount or toAccount. Expected status: 200 OK."
+          }
+        },
+        {
+          "name": "Filter transactions by type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?type=transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "transfer"
+                }
+              ]
+            },
+            "description": "Lists transactions with the requested type. Expected status: 200 OK."
+          }
+        },
+        {
+          "name": "Filter transactions by date range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?from=2024-01-01&to=2099-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2099-12-31"
+                }
+              ]
+            },
+            "description": "Lists transactions created within the inclusive date range. Expected status: 200 OK."
+          }
+        },
+        {
+          "name": "Filter transactions by account, type, and date range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?accountId=ACC-11111&type=transfer&from=2024-01-01&to=2099-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "ACC-11111"
+                },
+                {
+                  "key": "type",
+                  "value": "transfer"
+                },
+                {
+                  "key": "from",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2099-12-31"
+                }
+              ]
+            },
+            "description": "Combines all supported transaction filters. Expected status: 200 OK with only matching transactions."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validation and Error Examples",
+      "item": [
+        {
+          "name": "Reject invalid transaction details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"BAD\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": -10,\n  \"currency\": \"DOGE\",\n  \"type\": \"transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Invalid account, amount, and currency. Expected status: 400 Bad Request with error=Validation failed and details."
+          }
+        },
+        {
+          "name": "Reject missing required field",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 100.50,\n  \"currency\": \"USD\",\n  \"type\": \"transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Missing fromAccount. Expected status: 400 Bad Request with a required-field validation detail. Other required fields use the same response shape."
+          }
+        },
+        {
+          "name": "Reject amount with more than two decimals",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.999,\n  \"currency\": \"EUR\",\n  \"type\": \"deposit\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Amount has too many decimal places. Expected status: 400 Bad Request with an amount validation detail."
+          }
+        },
+        {
+          "name": "Reject invalid transaction type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.00,\n  \"currency\": \"EUR\",\n  \"type\": \"refund\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Unsupported transaction type. Expected status: 400 Bad Request with a type validation detail."
+          }
+        },
+        {
+          "name": "Reject deposit with forbidden fromAccount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.00,\n  \"currency\": \"EUR\",\n  \"type\": \"deposit\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Deposit requests must not include fromAccount. Expected status: 400 Bad Request with field=fromAccount and an explicit validation message."
+          }
+        },
+        {
+          "name": "Reject withdrawal with forbidden toAccount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.00,\n  \"currency\": \"EUR\",\n  \"type\": \"withdrawal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Withdrawal requests must not include toAccount. Expected status: 400 Bad Request with field=toAccount and an explicit validation message."
+          }
+        },
+        {
+          "name": "Reject unexpected characters in field values",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345;\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.00,\n  \"currency\": \"USD;\",\n  \"type\": \"transfer;\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Unexpected punctuation in account, currency, and type fields. Expected status: 400 Bad Request with validation details."
+          }
+        },
+        {
+          "name": "Reject overly long string values",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345678901234567890\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": 10.00,\n  \"currency\": \"USDDDD\",\n  \"type\": \"transfertransfertransfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Overly long account, currency, and type values. Expected status: 400 Bad Request with validation details."
+          }
+        },
+        {
+          "name": "Reject malformed JSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"fromAccount\":\"ACC-12345\";",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Invalid JSON syntax. Expected status: 400 Bad Request with error=Malformed request."
+          }
+        },
+        {
+          "name": "Reject missing request body",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Empty JSON request body. Expected status: 400 Bad Request with error=Malformed request."
+          }
+        },
+        {
+          "name": "Reject wrong JSON value type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccount\": \"ACC-12345\",\n  \"toAccount\": \"ACC-67890\",\n  \"amount\": {\"value\": 100.50},\n  \"currency\": \"USD\",\n  \"type\": \"transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Amount is an object instead of a number. Expected status: 400 Bad Request with error=Malformed request."
+          }
+        },
+        {
+          "name": "Reject unsupported content type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "fromAccount=ACC-12345"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Plain text request body. Expected status: 415 Unsupported Media Type with message=Use application/json."
+          }
+        },
+        {
+          "name": "Reject invalid balance account ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/BADID/balance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "BADID",
+                "balance"
+              ]
+            },
+            "description": "Invalid account ID for the balance endpoint. Expected status: 400 Bad Request with an accountId validation detail."
+          }
+        },
+        {
+          "name": "Reject invalid summary account ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/BADID/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "BADID",
+                "summary"
+              ]
+            },
+            "description": "Invalid account ID for the summary endpoint. Expected status: 400 Bad Request with an accountId validation detail."
+          }
+        },
+        {
+          "name": "Reject invalid filter account ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?accountId=BAD",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "BAD"
+                }
+              ]
+            },
+            "description": "Invalid accountId query parameter. Expected status: 400 Bad Request with an accountId validation detail."
+          }
+        },
+        {
+          "name": "Reject invalid filter type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?type=refund",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "refund"
+                }
+              ]
+            },
+            "description": "Invalid type query parameter. Expected status: 400 Bad Request with a type validation detail."
+          }
+        },
+        {
+          "name": "Reject invalid filter date format",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?from=01-31-2024",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "01-31-2024"
+                }
+              ]
+            },
+            "description": "Date query parameter is not yyyy-MM-dd. Expected status: 400 Bad Request with a date validation detail."
+          }
+        },
+        {
+          "name": "Reject filter date range where from is after to",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?from=2024-02-01&to=2024-01-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2024-02-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2024-01-01"
+                }
+              ]
+            },
+            "description": "from date is after to date. Expected status: 400 Bad Request with a from-date validation detail."
+          }
+        }
+      ]
+    }
+  ]
+}
