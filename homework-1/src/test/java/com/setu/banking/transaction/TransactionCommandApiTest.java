@@ -1,15 +1,10 @@
 package com.setu.banking.transaction;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
 
@@ -21,29 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class TransactionControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private TransactionRepository repository;
-
-    @BeforeEach
-    void clearRepository() {
-        repository.clear();
-    }
-
-    @Test
-    void newAccountHasZeroBalanceBeforeAnyTransaction() throws Exception {
-        mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-12345"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.accountId").value("ACC-12345"))
-            .andExpect(jsonPath("$.balance").value(0))
-            .andExpect(jsonPath("$.currency").value("USD"));
-    }
-
+class TransactionCommandApiTest extends ApiIntegrationTestSupport {
     @Test
     void transferUpdatesBalancesForBothAccounts() throws Exception {
         String body = """
@@ -127,14 +100,6 @@ class TransactionControllerTest {
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-22222"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.balance").value(209.75));
-    }
-
-    @Test
-    void returnsNotFoundForMissingTransaction() throws Exception {
-        mockMvc.perform(get("/transactions/{id}", "missing-id"))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.error").value("Not found"))
-            .andExpect(jsonPath("$.message").value("Transaction not found"));
     }
 
     @ParameterizedTest
@@ -368,15 +333,6 @@ class TransactionControllerTest {
     }
 
     @Test
-    void rejectsInvalidBalanceAccountId() throws Exception {
-        mockMvc.perform(get("/accounts/{accountId}/balance", "BADID"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("accountId"))
-            .andExpect(jsonPath("$.details[0].message").value("Account must match format ACC-XXXXX"));
-    }
-
-    @Test
     void rejectedTransactionDoesNotChangeTransactionHistoryOrBalances() throws Exception {
         String body = """
             {
@@ -404,104 +360,5 @@ class TransactionControllerTest {
         mockMvc.perform(get("/accounts/{accountId}/balance", "ACC-67890"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.balance").value(0));
-    }
-
-    @Test
-    void filtersTransactionsByAccountTypeAndDateRange() throws Exception {
-        mockMvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {"fromAccount":"ACC-11111","toAccount":"ACC-22222","amount":50.00,"currency":"USD","type":"transfer"}
-                    """))
-            .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {"toAccount":"ACC-22222","amount":25.00,"currency":"USD","type":"deposit"}
-                    """))
-            .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/transactions")
-                .param("accountId", "ACC-11111")
-                .param("type", "transfer")
-                .param("from", "2024-01-01")
-                .param("to", "2099-12-31"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].fromAccount").value("ACC-11111"))
-            .andExpect(jsonPath("$[0].type").value("transfer"));
-    }
-
-    @Test
-    void rejectsInvalidFilterAccountId() throws Exception {
-        mockMvc.perform(get("/transactions").param("accountId", "BAD"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("accountId"))
-            .andExpect(jsonPath("$.details[0].message").value("Account must match format ACC-XXXXX"));
-    }
-
-    @Test
-    void rejectsInvalidFilterType() throws Exception {
-        mockMvc.perform(get("/transactions").param("type", "refund"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("type"))
-            .andExpect(jsonPath("$.details[0].message").value("Type must be deposit, withdrawal, or transfer"));
-    }
-
-    @Test
-    void rejectsInvalidFilterDateFormat() throws Exception {
-        mockMvc.perform(get("/transactions").param("from", "01-31-2024"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("from"))
-            .andExpect(jsonPath("$.details[0].message").value("Date must use ISO format yyyy-MM-dd"));
-    }
-
-    @Test
-    void rejectsFilterDateRangeWhereFromIsAfterTo() throws Exception {
-        mockMvc.perform(get("/transactions")
-                .param("from", "2024-02-01")
-                .param("to", "2024-01-01"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("from"))
-            .andExpect(jsonPath("$.details[0].message").value("From date must be on or before to date"));
-    }
-
-    @Test
-    void returnsAccountTransactionSummary() throws Exception {
-        mockMvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {"toAccount":"ACC-77777","amount":100.00,"currency":"USD","type":"deposit"}
-                    """))
-            .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {"fromAccount":"ACC-77777","amount":40.00,"currency":"USD","type":"withdrawal"}
-                    """))
-            .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/accounts/{accountId}/summary", "ACC-77777"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.accountId").value("ACC-77777"))
-            .andExpect(jsonPath("$.totalDeposits").value(100.00))
-            .andExpect(jsonPath("$.totalWithdrawals").value(40.00))
-            .andExpect(jsonPath("$.transactionCount").value(2))
-            .andExpect(jsonPath("$.mostRecentTransactionDate").exists());
-    }
-
-    @Test
-    void rejectsInvalidSummaryAccountId() throws Exception {
-        mockMvc.perform(get("/accounts/{accountId}/summary", "BADID"))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.error").value("Validation failed"))
-            .andExpect(jsonPath("$.details[0].field").value("accountId"))
-            .andExpect(jsonPath("$.details[0].message").value("Account must match format ACC-XXXXX"));
     }
 }

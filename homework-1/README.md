@@ -62,9 +62,4 @@ The API returns structured JSON errors for validation failures, malformed JSON, 
 ## AI Assistance Notes
 
 This project was planned and implemented with AI agent assistance. Screenshots of prompts, generated code, and API test runs should be added under `docs/screenshots/`.
-
-<div align="center">
-
 *This project was completed as part of the AI-Assisted Development course.*
-
-</div>
