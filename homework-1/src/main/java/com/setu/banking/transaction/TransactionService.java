@@ -10,6 +10,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 @Service
@@ -70,31 +72,41 @@ public class TransactionService {
             .orElseThrow(() -> new NotFoundException("Transaction not found"));
     }
 
-    public BigDecimal balanceFor(String accountId) {
+    public AccountBalanceResponse balanceFor(String accountId) {
         validator.validateAccountId("accountId", accountId);
 
-        return repository.findAll().stream()
+        Map<String, BigDecimal> balances = new TreeMap<>();
+
+        repository.findAll().stream()
             .filter(transaction -> transaction.status() == TransactionStatus.COMPLETED)
-            .map(transaction -> balanceImpact(transaction, accountId))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .forEach(transaction -> applyBalanceImpact(balances, transaction, accountId));
+
+        balances.entrySet().removeIf(entry -> entry.getValue().compareTo(BigDecimal.ZERO) == 0);
+
+        return new AccountBalanceResponse(accountId, balances);
     }
 
     public AccountSummaryResponse summaryFor(String accountId) {
         validator.validateAccountId("accountId", accountId);
 
         List<Transaction> accountTransactions = repository.findAll().stream()
+            .filter(transaction -> transaction.status() == TransactionStatus.COMPLETED)
             .filter(transaction -> accountId.equals(transaction.fromAccount()) || accountId.equals(transaction.toAccount()))
             .toList();
 
-        BigDecimal deposits = accountTransactions.stream()
-            .filter(transaction -> transaction.type() == TransactionType.DEPOSIT && accountId.equals(transaction.toAccount()))
-            .map(Transaction::amount)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Map<String, BigDecimal> deposits = new TreeMap<>();
+        Map<String, BigDecimal> withdrawals = new TreeMap<>();
+        Map<String, BigDecimal> incomingTransfers = new TreeMap<>();
+        Map<String, BigDecimal> outgoingTransfers = new TreeMap<>();
 
-        BigDecimal withdrawals = accountTransactions.stream()
-            .filter(transaction -> transaction.type() == TransactionType.WITHDRAWAL && accountId.equals(transaction.fromAccount()))
-            .map(Transaction::amount)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        accountTransactions.forEach(transaction -> accumulateSummaryTotals(
+            transaction,
+            accountId,
+            deposits,
+            withdrawals,
+            incomingTransfers,
+            outgoingTransfers
+        ));
 
         Instant mostRecent = accountTransactions.stream()
             .map(Transaction::timestamp)
@@ -105,25 +117,66 @@ public class TransactionService {
             accountId,
             deposits,
             withdrawals,
+            incomingTransfers,
+            outgoingTransfers,
             accountTransactions.size(),
             mostRecent
         );
     }
 
-    private BigDecimal balanceImpact(Transaction transaction, String accountId) {
-        return switch (transaction.type()) {
+    private void applyBalanceImpact(Map<String, BigDecimal> balances, Transaction transaction, String accountId) {
+        BigDecimal impact = switch (transaction.type()) {
             case DEPOSIT -> accountId.equals(transaction.toAccount()) ? transaction.amount() : BigDecimal.ZERO;
             case WITHDRAWAL -> accountId.equals(transaction.fromAccount()) ? transaction.amount().negate() : BigDecimal.ZERO;
             case TRANSFER -> {
+                BigDecimal transferImpact = BigDecimal.ZERO;
                 if (accountId.equals(transaction.fromAccount())) {
-                    yield transaction.amount().negate();
+                    transferImpact = transferImpact.subtract(transaction.amount());
                 }
                 if (accountId.equals(transaction.toAccount())) {
-                    yield transaction.amount();
+                    transferImpact = transferImpact.add(transaction.amount());
                 }
-                yield BigDecimal.ZERO;
+                yield transferImpact;
             }
         };
+
+        if (impact.compareTo(BigDecimal.ZERO) != 0) {
+            balances.merge(transaction.currency(), impact, BigDecimal::add);
+        }
+    }
+
+    private void accumulateSummaryTotals(
+        Transaction transaction,
+        String accountId,
+        Map<String, BigDecimal> deposits,
+        Map<String, BigDecimal> withdrawals,
+        Map<String, BigDecimal> incomingTransfers,
+        Map<String, BigDecimal> outgoingTransfers
+    ) {
+        switch (transaction.type()) {
+            case DEPOSIT -> {
+                if (accountId.equals(transaction.toAccount())) {
+                    addAmount(deposits, transaction.currency(), transaction.amount());
+                }
+            }
+            case WITHDRAWAL -> {
+                if (accountId.equals(transaction.fromAccount())) {
+                    addAmount(withdrawals, transaction.currency(), transaction.amount());
+                }
+            }
+            case TRANSFER -> {
+                if (accountId.equals(transaction.fromAccount())) {
+                    addAmount(outgoingTransfers, transaction.currency(), transaction.amount());
+                }
+                if (accountId.equals(transaction.toAccount())) {
+                    addAmount(incomingTransfers, transaction.currency(), transaction.amount());
+                }
+            }
+        }
+    }
+
+    private void addAmount(Map<String, BigDecimal> totals, String currency, BigDecimal amount) {
+        totals.merge(currency, amount, BigDecimal::add);
     }
 
     private TransactionType validateFilterParameters(String accountId, String type, LocalDate from, LocalDate to) {

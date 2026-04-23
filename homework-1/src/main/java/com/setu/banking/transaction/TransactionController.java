@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class TransactionController {
@@ -43,13 +41,8 @@ public class TransactionController {
     }
 
     @GetMapping("/accounts/{accountId}/balance")
-    public Map<String, Object> balance(@PathVariable String accountId) {
-        BigDecimal balance = service.balanceFor(accountId);
-        return Map.of(
-            "accountId", accountId,
-            "balance", balance,
-            "currency", "USD"
-        );
+    public AccountBalanceResponse balance(@PathVariable String accountId) {
+        return service.balanceFor(accountId);
     }
 
     @GetMapping("/accounts/{accountId}/summary")
