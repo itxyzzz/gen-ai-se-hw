@@ -54,6 +54,7 @@ Filters can be combined.
 - Error handling is centralized in `GlobalExceptionHandler`.
 - Constrained fields use allow-list validation to reject malformed values.
 - Transaction account directions are enforced by type so deposits only credit a target account and withdrawals only debit a source account.
+- Windows lifecycle scripts in `demo/` manage a background app process using compiled classes plus copied runtime dependencies so local restarts do not depend on the locked Spring Boot fat-JAR path.
 
 ## Error Handling and Robustness
 
@@ -63,3 +64,15 @@ The API returns structured JSON errors for validation failures, malformed JSON, 
 
 This project was planned and implemented with AI agent assistance. Screenshots of prompts, generated code, and API test runs should be added under `docs/screenshots/`.
 *This project was completed as part of the AI-Assisted Development course.*
+
+## Local Run Scripts
+
+For Windows, prefer:
+
+```powershell
+.\demo\start.ps1
+.\demo\stop.ps1
+.\demo\restart.ps1
+```
+
+`demo\run.bat` now delegates to `start.ps1`.
