@@ -7,7 +7,6 @@
     "type": "transfer"
   },
   {
-    "fromAccount": "ACC-00000",
     "toAccount": "ACC-12345",
     "amount": 250.00,
     "currency": "USD",
@@ -15,7 +14,6 @@
   },
   {
     "fromAccount": "ACC-12345",
-    "toAccount": "ACC-00000",
     "amount": 25.00,
     "currency": "USD",
     "type": "withdrawal"

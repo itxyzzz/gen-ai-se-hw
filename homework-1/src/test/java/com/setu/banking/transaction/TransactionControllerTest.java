@@ -100,7 +100,6 @@ class TransactionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {
-                      "fromAccount": "ACC-00000",
                       "toAccount": "ACC-22222",
                       "amount": 250.00,
                       "currency": "USD",
@@ -118,7 +117,6 @@ class TransactionControllerTest {
                 .content("""
                     {
                       "fromAccount": "ACC-22222",
-                      "toAccount": "ACC-00000",
                       "amount": 40.25,
                       "currency": "USD",
                       "type": "withdrawal"
@@ -159,6 +157,12 @@ class TransactionControllerTest {
                 """),
             Arguments.of("toAccount", """
                 {"fromAccount":"ACC-12345","amount":100.50,"currency":"USD","type":"transfer"}
+                """),
+            Arguments.of("toAccount", """
+                {"amount":100.50,"currency":"USD","type":"deposit"}
+                """),
+            Arguments.of("fromAccount", """
+                {"amount":100.50,"currency":"USD","type":"withdrawal"}
                 """),
             Arguments.of("amount", """
                 {"fromAccount":"ACC-12345","toAccount":"ACC-67890","currency":"USD","type":"transfer"}
@@ -284,6 +288,46 @@ class TransactionControllerTest {
     }
 
     @Test
+    void rejectsDepositRequestWhenFromAccountIsPresent() throws Exception {
+        String body = """
+            {
+              "fromAccount": "ACC-12345",
+              "toAccount": "ACC-67890",
+              "amount": 10.00,
+              "currency": "EUR",
+              "type": "deposit"
+            }
+            """;
+
+        mockMvc.perform(post("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.details[0].field").value("fromAccount"))
+            .andExpect(jsonPath("$.details[0].message").value("fromAccount is not allowed for deposit transactions"));
+    }
+
+    @Test
+    void rejectsWithdrawalRequestWhenToAccountIsPresent() throws Exception {
+        String body = """
+            {
+              "fromAccount": "ACC-12345",
+              "toAccount": "ACC-67890",
+              "amount": 10.00,
+              "currency": "EUR",
+              "type": "withdrawal"
+            }
+            """;
+
+        mockMvc.perform(post("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.details[0].field").value("toAccount"))
+            .andExpect(jsonPath("$.details[0].message").value("toAccount is not allowed for withdrawal transactions"));
+    }
+
+    @Test
     void rejectsUnexpectedCharactersInFieldValuesWithoutReturningFiveHundred() throws Exception {
         String body = """
             {
@@ -374,7 +418,7 @@ class TransactionControllerTest {
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"fromAccount":"ACC-33333","toAccount":"ACC-22222","amount":25.00,"currency":"USD","type":"deposit"}
+                    {"toAccount":"ACC-22222","amount":25.00,"currency":"USD","type":"deposit"}
                     """))
             .andExpect(status().isCreated());
 
@@ -432,14 +476,14 @@ class TransactionControllerTest {
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"fromAccount":"ACC-90000","toAccount":"ACC-77777","amount":100.00,"currency":"USD","type":"deposit"}
+                    {"toAccount":"ACC-77777","amount":100.00,"currency":"USD","type":"deposit"}
                     """))
             .andExpect(status().isCreated());
 
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"fromAccount":"ACC-77777","toAccount":"ACC-90000","amount":40.00,"currency":"USD","type":"withdrawal"}
+                    {"fromAccount":"ACC-77777","amount":40.00,"currency":"USD","type":"withdrawal"}
                     """))
             .andExpect(status().isCreated());
 

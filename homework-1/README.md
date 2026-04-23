@@ -36,6 +36,14 @@ This project is a Java Spring Boot REST API for Homework 1. It supports creating
 
 Filters can be combined.
 
+## Transaction Payload Rules
+
+`POST /transactions` validates account fields based on `type`:
+
+- `transfer` requires both `fromAccount` and `toAccount`
+- `deposit` requires `toAccount` and rejects `fromAccount` with `fromAccount is not allowed for deposit transactions`
+- `withdrawal` requires `fromAccount` and rejects `toAccount` with `toAccount is not allowed for withdrawal transactions`
+
 ## Architecture Decisions
 
 - Spring Boot keeps the REST API small and easy to run.
@@ -45,6 +53,7 @@ Filters can be combined.
 - Business logic is handled by `TransactionService`.
 - Error handling is centralized in `GlobalExceptionHandler`.
 - Constrained fields use allow-list validation to reject malformed values.
+- Transaction account directions are enforced by type so deposits only credit a target account and withdrawals only debit a source account.
 
 ## Error Handling and Robustness
 
