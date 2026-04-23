@@ -1,1 +1,38 @@
-# ▶️ How to Run the application
+# How to Run the Application
+
+## Prerequisites
+
+- Java 17 or newer
+- Maven 3.9 or newer
+
+## Run Tests
+
+```powershell
+mvn test
+```
+
+## Start the API
+
+```powershell
+mvn spring-boot:run
+```
+
+The API runs at `http://localhost:8080`.
+
+## Try a Request
+
+```powershell
+curl -X POST http://localhost:8080/transactions -H "Content-Type: application/json" -d "{\"fromAccount\":\"ACC-12345\",\"toAccount\":\"ACC-67890\",\"amount\":100.50,\"currency\":\"USD\",\"type\":\"transfer\"}"
+```
+
+```powershell
+curl http://localhost:8080/transactions
+```
+
+```powershell
+curl http://localhost:8080/accounts/ACC-12345/balance
+```
+
+```powershell
+curl http://localhost:8080/accounts/ACC-12345/summary
+```
