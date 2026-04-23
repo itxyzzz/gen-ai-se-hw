@@ -13,6 +13,28 @@ mvn test
 
 ## Start the API
 
+Preferred Windows workflow:
+
+```powershell
+.\demo\start.ps1
+```
+
+Stop the managed app:
+
+```powershell
+.\demo\stop.ps1
+```
+
+Restart with a fresh build:
+
+```powershell
+.\demo\restart.ps1
+```
+
+The scripts build the latest compiled classes and runtime dependencies, then launch the API without relying on the Spring Boot fat-JAR packaging step.
+
+Manual fallback:
+
 ```powershell
 mvn spring-boot:run
 ```
