@@ -1,8 +1,8 @@
 # Banking Transactions API
 
-> **Student Name**: [Your Name]
-> **Date Submitted**: [Date]
-> **AI Tools Used**: Codex
+> **Student Name**: Igor Tanatarov
+> **Date Submitted**: April 24, 2026
+> **AI Tools Used**: Codex; Google Antigravity (secondary code review)
 
 ## Project Overview
 
@@ -86,7 +86,6 @@ Date filters are interpreted strictly in UTC.
 ## Architecture Decisions
 
 - Spring Boot keeps the REST API small and easy to run.
-- In-memory storage is used because the homework does not require a database.
 - Money values use `BigDecimal`.
 - Validation is isolated in `TransactionValidator`.
 - Business logic is handled by `TransactionService`.
@@ -94,11 +93,23 @@ Date filters are interpreted strictly in UTC.
 - Constrained fields use allow-list validation to reject malformed values.
 - Transaction account directions are enforced by type so deposits only credit a target account and withdrawals only debit a source account.
 - Same-account transfers are rejected because they do not represent a meaningful movement of funds.
-- Account balances and summary totals are derived per currency from transactions; the API does not convert or mix currencies.
-- Overdrafts are intentionally allowed as a homework simplification; the API does not model sufficient-funds checks or credit limits.
-- Account balance and summary views only count `completed` transactions so aggregate endpoints stay internally consistent.
-- Timestamp storage and date filtering are handled in UTC by design; timezone-aware account statements are out of scope for this homework.
+- Account balance and summary views are derived per currency from completed transactions.
 - Windows lifecycle scripts in `demo/` manage a background app process using compiled classes plus copied runtime dependencies so local restarts do not depend on the locked Spring Boot fat-JAR path.
+
+## Intentional Simplifications and Non-Goals
+
+This project is scoped as a local homework API, not a production banking system. These limitations are intentional:
+
+- Data is stored in memory only and is lost when the application restarts.
+- The repository is a concrete in-memory class rather than an interface-backed persistence abstraction because no database implementation is required.
+- Read operations scan the in-memory transaction list and aggregate results on demand; a larger system would need database indexes, pagination, and query-level aggregation.
+- `GET /transactions` does not implement pagination or result-size limits.
+- Authentication, authorization, and rate limiting are not implemented; endpoints are assumed to run in a trusted local/demo environment.
+- Accounts are not modeled as separate persisted entities. Balances and summaries are derived from transaction history.
+- Created transactions are marked `completed` immediately. The API does not model asynchronous settlement, pending/failed state transitions, reversals, or audit workflows.
+- Overdrafts are allowed. There is no sufficient-funds check, credit-limit model, account locking, or database transaction boundary.
+- Date filters operate on UTC calendar dates, not arbitrary timestamp ranges or timezone-aware account statements.
+- Currencies are tracked separately and are never converted or netted across currencies.
 
 ## Error Handling and Robustness
 
