@@ -34,18 +34,22 @@ Use this when changes are developed locally in the repo.
 - Final submission PR is created manually by student in GitHub from homework branch to `main`.
 
 ### B) Web/agent implementation mode
-Use this when implementation happens through web/remote agent sessions.
+Use this when implementation happens through web/remote agent sessions (including Codex Web UI).
 
-- Work only on the same homework-specific branch.
+- Start from the homework-specific submission branch (for example `homework-x-submission`).
+- Do not introduce extra `-web` branches just to satisfy Codex workflow.
+- Codex may auto-create a temporary working branch (for example `codex/<id>`) for the session.
 - Implement in small incremental steps.
 - Each step must:
   1. start with a brief plan,
   2. implement and verify,
   3. update `CHANGELOG.md`,
   4. end with a commit,
-  5. open/update a PR to the **remote homework branch** (integration PR for step review).
+  5. open/update a step PR.
+- Because Codex Web UI can force default PR base to `main`, the user must manually change the PR base to `homework-x-submission` before merging step PRs.
+- Agent responsibility: produce complete step commits/PR descriptions and keep branch intent explicit.
+- User responsibility: validate and retarget PR base in GitHub UI when Codex defaults it incorrectly.
 - Final submission PR to `main` is still created manually by student in GitHub.
-
 
 ### C) Final homework submission PR (single PR)
 Regardless of mode above:
@@ -55,14 +59,15 @@ Regardless of mode above:
 - That PR must contain the full narrative/evidence required by the course task.
 
 
-### D) Optional dual-branch pattern for mixed local/web work
-If you switch frequently between local and web sessions, you may use:
-- `homework-x-submission` as canonical submission branch
-- `homework-x-web` (or `homework-x-mobile`) as web/agent working branch
+### D) Branch simplification for Codex Web UI
+Default branch model for HW2+:
+- Canonical branch: `homework-x-submission`
+- Temporary agent branch: auto-created `codex/<id>` (managed by Codex UI)
 
 Rules:
-- Web/agent steps may use PRs from working branch into `homework-x-submission`.
-- Local mode does not require PRs into `homework-x-submission`; local commits with enforced gates are sufficient.
+- Do not create additional long-lived `-web` branches solely for agent sessions.
+- Step PRs created by Codex are review/integration PRs and must target `homework-x-submission` as base before merge.
+- The user performs the manual base retarget in GitHub when the UI defaults to `main`.
 - Final submission PR to `main` always comes from `homework-x-submission`.
 
 
