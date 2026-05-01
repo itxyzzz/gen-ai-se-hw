@@ -19,8 +19,9 @@ For work inside `homework-*` folders, enforce these non-negotiables:
 3. Every incremental step must update that homework's `CHANGELOG.md` before commit/PR closure.
 4. Enforce quality gates by mode:
    - Local mode: enforce gates at commit time.
-   - Web/agent mode: enforce gates in step PRs.
-5. Follow the local vs web/agent workflow model defined in `HOMEWORK_STANDARDS.md`.
-6. Final submission PR to `main` is created manually by the student.
+   - Web/agent mode: enforce gates in each Codex-generated step PR.
+5. In web/agent mode, treat `homework-x-submission` as the canonical branch and do **not** create extra `-web` branches solely for Codex.
+6. Codex Web UI may auto-create a temporary `codex/<id>` branch and default PR base `main`; the user must manually retarget that PR base to `homework-x-submission` before merge.
+7. Final submission PR to `main` is created manually by the student from `homework-x-submission` after step work is complete.
 
 `HOMEWORK_STANDARDS.md` is the detailed source of truth for structure, documentation minima, timing, quality gates, diagrams/evidence, and review checklist.
