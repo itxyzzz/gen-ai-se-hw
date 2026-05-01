@@ -10,6 +10,10 @@ Allowed email domains:
 
 Do not use company, contractor, school, client, or other organizational email domains in Git commit metadata.
 
+## Repository-Level Change Logging
+
+For repository-level changes outside `homework-*` folders, update the root `CHANGELOG.md` before commit/PR closure.
+
 ## Homework Standards Enforcement (HW2+)
 
 For work inside `homework-*` folders, enforce these non-negotiables:
@@ -21,7 +25,8 @@ For work inside `homework-*` folders, enforce these non-negotiables:
    - Local mode: enforce gates at commit time.
    - Web/agent mode: enforce gates in each Codex-generated step PR.
 5. In web/agent mode, treat `homework-x-submission` as the canonical branch and do **not** create extra `-web` branches solely for Codex.
-6. Codex Web UI may auto-create a temporary `codex/<id>` branch and default PR base `main`; the user must manually retarget that PR base to `homework-x-submission` before merge.
-7. Final submission PR to `main` is created manually by the student from `homework-x-submission` after step work is complete.
+6. In web/agent mode, start work from the intended homework branch (for example `homework-x-submission`).
+7. Codex step PRs should target that same homework branch; do not manually retarget bases unless required by tooling failure.
+8. Keep final-delivery flow consistent with `HOMEWORK_STANDARDS.md`: homework branch integrates to `main` only at final submission.
 
 `HOMEWORK_STANDARDS.md` is the detailed source of truth for structure, documentation minima, timing, quality gates, diagrams/evidence, and review checklist.
