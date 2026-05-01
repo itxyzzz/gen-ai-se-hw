@@ -1,0 +1,84 @@
+### Create transfer
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "fromAccount": "ACC-12345",
+  "toAccount": "ACC-67890",
+  "amount": 100.50,
+  "currency": "USD",
+  "type": "transfer"
+}
+
+### Create deposit
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "toAccount": "ACC-22222",
+  "amount": 250.00,
+  "currency": "USD",
+  "type": "deposit"
+}
+
+### Create withdrawal
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "fromAccount": "ACC-22222",
+  "amount": 40.25,
+  "currency": "USD",
+  "type": "withdrawal"
+}
+
+### List all transactions
+GET http://localhost:8080/transactions
+
+### Get transactions for account
+GET http://localhost:8080/transactions?accountId=ACC-12345
+
+### Get transfer transactions in date range
+GET http://localhost:8080/transactions?type=transfer&from=2024-01-01&to=2099-12-31
+
+### Get account balance
+GET http://localhost:8080/accounts/ACC-12345/balance
+
+### Get account summary
+GET http://localhost:8080/accounts/ACC-12345/summary
+
+### Invalid transaction example
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "fromAccount": "BAD",
+  "toAccount": "ACC-67890",
+  "amount": -10,
+  "currency": "DOGE",
+  "type": "transfer"
+}
+
+### Invalid deposit with forbidden fromAccount
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "fromAccount": "ACC-12345",
+  "toAccount": "ACC-22222",
+  "amount": 10.00,
+  "currency": "USD",
+  "type": "deposit"
+}
+
+### Invalid withdrawal with forbidden toAccount
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "fromAccount": "ACC-22222",
+  "toAccount": "ACC-12345",
+  "amount": 10.00,
+  "currency": "USD",
+  "type": "withdrawal"
+}
