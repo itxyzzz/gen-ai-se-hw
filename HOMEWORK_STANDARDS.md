@@ -36,7 +36,7 @@ Use this when changes are developed locally in the repo.
 ### B) Web/agent implementation mode
 Use this when implementation happens through web/remote agent sessions (including Codex Web UI).
 
-- Start from the homework-specific submission branch (for example `homework-x-submission`).
+- Start each web/agent session from the intended homework-specific submission branch (for example `homework-x-submission`).
 - Do not introduce extra `-web` branches just to satisfy Codex workflow.
 - Codex may auto-create a temporary working branch (for example `codex/<id>`) for the session.
 - Implement in small incremental steps.
@@ -46,14 +46,12 @@ Use this when implementation happens through web/remote agent sessions (includin
   3. update `CHANGELOG.md`,
   4. end with a commit,
   5. open/update a step PR.
-- Because Codex Web UI can force default PR base to `main`, the user must manually change the PR base to `homework-x-submission` before merging step PRs.
-- Agent responsibility: produce complete step commits/PR descriptions and keep branch intent explicit.
-- User responsibility: validate and retarget PR base in GitHub UI when Codex defaults it incorrectly.
-- Final submission PR to `main` is still created manually by student in GitHub.
+- When the session starts on the intended homework branch, step PRs should target that same branch by default.
+- Final submission remains a single PR from the homework branch to `main`.
 
 ### C) Final homework submission PR (single PR)
 Regardless of mode above:
-- Exactly one final homework PR is prepared by the student in GitHub.
+- Exactly one final homework PR is prepared from the homework branch.
 - Base: `main`
 - Compare: homework-specific branch
 - That PR must contain the full narrative/evidence required by the course task.
@@ -66,8 +64,7 @@ Default branch model for HW2+:
 
 Rules:
 - Do not create additional long-lived `-web` branches solely for agent sessions.
-- Step PRs created by Codex are review/integration PRs and must target `homework-x-submission` as base before merge.
-- The user performs the manual base retarget in GitHub when the UI defaults to `main`.
+- Step PRs created by Codex are review/integration PRs and should target `homework-x-submission` when that branch is selected at session start.
 - Final submission PR to `main` always comes from `homework-x-submission`.
 
 
