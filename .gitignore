@@ -56,3 +56,6 @@ temp/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+
+# Local PR drafting artifacts
+documentation/PR description drafts/
