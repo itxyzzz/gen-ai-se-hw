@@ -2,6 +2,18 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-05-02
+
+### Added
+- Added a root-level context hierarchy and mandatory task preflight to `AGENTS.md`.
+- Added mandatory Codex Web fallback gates for sessions without plugins, model selection, or reasoning-effort control.
+- Added Context-Model-Prompt practice guidance to `HOMEWORK_STANDARDS.md`.
+
+### Changed
+- Consolidated homework branch, local mode, web/agent mode, and final PR guidance in `HOMEWORK_STANDARDS.md`.
+- Clarified local model/reasoning guidance and AI workflow disclosure expectations.
+- Tightened per-homework changelog, evidence, demo, and review standards for HW2+.
+
 ## 2026-05-01
 
 ### Added

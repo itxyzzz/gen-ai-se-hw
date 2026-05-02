@@ -1,96 +1,103 @@
 # Homework Implementation Standards (HW2+)
 
-This document defines the default delivery, documentation, and workflow standards for **Homework 2 and later**.
-Its goal is to keep every homework submission consistent, easy to review, and easy to run.
+This document defines the default delivery, documentation, and workflow standards for Homework 2 and later. It is the detailed operational reference; `AGENTS.md` stays the concise non-negotiable rule layer.
 
 ---
 
 ## 1) Scope and Precedence
 
-- Applies to each `homework-N/` folder unless a specific homework task overrides it.
-- If there is a conflict:
-  1. Homework task requirements win.
-  2. Repository `AGENTS.md` policy is next.
-  3. This standards file is baseline guidance.
+- Applies to each `homework-N/` folder unless a specific homework task explicitly overrides a content requirement.
+- Repository workflow guardrails in `AGENTS.md` are mandatory for all agents.
+- Homework task files define assignment deliverables and can add or refine homework-specific requirements.
+- This file provides the reusable baseline for planning, implementation, documentation, evidence, and review.
 
 ---
 
-## 2) Branch and PR Model (Clarified)
+## 2) Context-Model-Prompt Practice
 
-There are **two valid implementation modes**; choose based on where implementation is performed.
+Use each homework to practice setting the right agent context, choosing the right capability level, and writing efficient prompts.
 
-### A) Local implementation mode
-Use this when changes are developed locally in the repo.
+### Context
+- Durable context belongs in repo and homework docs, not repeated in every prompt.
+- Start from `AGENTS.md`, this file, the relevant `TASKS.md`, existing homework docs, and current code/test state.
+- Move repeated process agreements up to the root control layer when they apply across homeworks or future projects.
 
-- Work only on the homework-specific branch (for example `homework-x-submission`).
-- Implement in small incremental steps.
-- Each step must:
-  1. start with a brief plan,
-  2. implement and verify,
-  3. update `CHANGELOG.md`,
-  4. end with a local commit.
-- No intermediate GitHub PR is required for each step.
-- In local mode, do not require PRs into `homework-x-submission`; commit-level gates are sufficient.
-- Final submission PR is created manually by student in GitHub from homework branch to `main`.
+### Model and tools
+- Record which AI tools, models, plugins, and quality controls were used when that information is available.
+- In local mode, prefer stronger/deeper reasoning for planning, architecture, debugging, cross-file changes, and final review.
+- Use lighter handling only for narrow mechanical edits or simple documentation cleanup.
+- If model choice, reasoning effort, or plugins are unavailable, disclose that limitation and use the web-mode compensation checklist below.
 
-### B) Web/agent implementation mode
-Use this when implementation happens through web/remote agent sessions (including Codex Web UI).
-
-- Start each web/agent session from the intended homework-specific submission branch (for example `homework-x-submission`).
-- Do not introduce extra `-web` branches just to satisfy Codex workflow.
-- Codex may auto-create a temporary working branch (for example `codex/<id>`) for the session.
-- Implement in small incremental steps.
-- Each step must:
-  1. start with a brief plan,
-  2. implement and verify,
-  3. update `CHANGELOG.md`,
-  4. end with a commit,
-  5. open/update a step PR.
-- When the session starts on the intended homework branch, step PRs should target that same branch by default.
-- Final submission remains a single PR from the homework branch to `main`.
-
-### C) Final homework submission PR (single PR)
-Regardless of mode above:
-- Exactly one final homework PR is prepared from the homework branch.
-- Base: `main`
-- Compare: homework-specific branch
-- That PR must contain the full narrative/evidence required by the course task.
-
-
-### D) Branch simplification for Codex Web UI
-Default branch model for HW2+:
-- Canonical branch: `homework-x-submission`
-- Temporary agent branch: auto-created `codex/<id>` (managed by Codex UI)
-
-Rules:
-- Do not create additional long-lived `-web` branches solely for agent sessions.
-- Step PRs created by Codex are review/integration PRs and should target `homework-x-submission` when that branch is selected at session start.
-- Final submission PR to `main` always comes from `homework-x-submission`.
-
+### Prompt
+Good task prompts should state:
+- Goal: what outcome is wanted.
+- Scope: what should and should not change.
+- Context: which task files, standards, plans, or docs apply.
+- Constraints: stack, style, verification, documentation, and timing requirements.
+- Done criteria: what evidence proves the step is complete.
 
 ---
 
-## 2.1) Quality Gates by Mode (Enforcement Point)
+## 3) Work Modes and Branch Model
 
-Use the same gate checklist in both modes; only the enforcement point changes.
+Use one canonical homework branch: `homework-N-submission`.
 
-### Local mode (enforced before each commit)
-A step is not complete until all are true:
-- Plan captured (brief note)
-- Implementation verified (commands/results recorded as needed)
-- `CHANGELOG.md` updated for that step
-- If behavior changed, related docs updated in same step (`API_REFERENCE.md`, `HOWTORUN.md`, and/or `README.md`)
-- Commit message is scoped and descriptive
+- Never implement homework changes on `main`.
+- Do not create long-lived `-web` branches solely for Codex or other agent tools.
+- Temporary agent branches such as `codex/<id>` are acceptable when created by the tool.
+- The final homework submission PR is always from `homework-N-submission` to `main`.
 
-### Web/agent mode (enforced in each step PR)
-A step PR is not review-ready until all are true:
-- Everything required in local mode
-- PR description includes what changed, how it was verified, and doc/changelog updates
-- If behavior changed, evidence links/screenshots are included or referenced
+### Local implementation mode
+Use when changes are developed locally in this repository.
 
-## 3) Recommended Homework Folder Structure
+- Work directly on `homework-N-submission`.
+- Implement in small, reviewable steps.
+- Enforce quality gates before each local commit.
+- Intermediate GitHub PRs into the homework branch are not required.
 
-Use this baseline structure for each homework:
+### Web/agent implementation mode
+Use when implementation happens through Codex Web or another remote agent workflow.
+
+- Start each session from the intended `homework-N-submission` branch.
+- Step PRs created by the agent should target `homework-N-submission`.
+- Each step PR must include what changed, how it was verified, and what docs/changelog entries were updated.
+- The final submission remains a single PR from `homework-N-submission` to `main`.
+
+---
+
+## 4) Increment Quality Gates
+
+Every local commit or web/agent step PR must satisfy the same gate checklist:
+
+- Plan captured before implementation.
+- Relevant existing files, docs, and tests inspected.
+- Implementation completed within the stated scope.
+- Verification run and result recorded where useful.
+- Applicable docs updated with behavior changes.
+- Applicable `CHANGELOG.md` updated for the step.
+- Diff reviewed for unrelated changes, placeholders, contradictions, and accidental generated noise.
+
+Local mode enforces these gates before commit. Web/agent mode enforces them before the step PR is review-ready.
+
+---
+
+## 5) Web Mode Compensation
+
+Codex Web and similar environments may lack Superpowers plugins, model selection, and reasoning-effort control. When those controls are unavailable, the agent must manually follow equivalent discipline:
+
+- State a brief plan before editing.
+- Use test-first or focused-verification-first workflow for behavior changes when practical.
+- For docs-only changes, define the review checks before editing.
+- Debug from observed errors, logs, diffs, and test output.
+- Run fresh verification before claiming completion.
+- Update docs and changelog in the same step as the behavior or policy change.
+- In the PR description or AI-assistance notes, disclose missing quality levers and the practices used to compensate.
+
+---
+
+## 6) Homework Folder Structure and Deliverables
+
+Use this baseline structure unless the assignment requires a different layout:
 
 ```text
 homework-N/
@@ -100,188 +107,106 @@ homework-N/
 ├── ARCHITECTURE.md
 ├── TESTING_GUIDE.md
 ├── CHANGELOG.md
-├── TASKS.md                      # copy/reference task scope for convenience
+├── TASKS.md
 ├── src/
 ├── tests/
 ├── demo/
 │   ├── run.sh
 │   ├── run.bat
 │   ├── sample-requests.http
-│   └── (optional lifecycle helpers: start/stop/restart scripts)
+│   └── optional start/stop/restart helpers
 └── docs/
     ├── screenshots/
-    ├── superpowers/              # optional: plans/specs/prompts
-    └── <project>.postman_collection.json
+    ├── superpowers/
+    └── optional API collection or extra design evidence
 ```
 
-Notes:
-- Keep runnable demo and sample requests under `demo/`.
-- Keep reviewer evidence and extra design artifacts under `docs/`.
-- Keep fixtures close to tests unless assignment asks for dedicated sample-data placement.
+Required per homework unless explicitly waived:
+- Source code and tests.
+- `README.md`, `HOWTORUN.md`, `API_REFERENCE.md`, `ARCHITECTURE.md`, `TESTING_GUIDE.md`, and `CHANGELOG.md`.
+- Evidence screenshots under `docs/screenshots/`.
+- Demo helpers and sample requests under `demo/`.
+- Sample data, fixtures, coverage reports, benchmarks, or API collections when required by the task.
+
+Create `homework-N/CHANGELOG.md` early if it does not already exist.
 
 ---
 
-## 4) Required Deliverables Per Homework
+## 7) Documentation Standards
 
-Unless explicitly waived by assignment:
+Write documentation continuously, not at the end.
 
-1. `README.md`
-2. `HOWTORUN.md`
-3. `API_REFERENCE.md`
-4. `ARCHITECTURE.md`
-5. `TESTING_GUIDE.md`
-6. `CHANGELOG.md`
-7. `docs/screenshots/` evidence
-8. `demo/` runnable helpers and sample requests
-9. Postman collection (or equivalent API collection) in `docs/`
+- `README.md`: developer entry point with overview, scope, quick start, feature map, project structure, links to detailed docs, and at least one Mermaid diagram.
+- `HOWTORUN.md`: reviewer runbook with prerequisites, exact run/stop/restart commands, test commands, expected outcomes, troubleshooting, and smoke checks.
+- `API_REFERENCE.md`: API contract with endpoint catalog, schemas, examples, validation/error formats, and cURL examples.
+- `ARCHITECTURE.md`: technical rationale with component and data-flow diagrams, design decisions, trade-offs, security/performance notes, and known limitations.
+- `TESTING_GUIDE.md`: QA guide with strategy, test pyramid diagram, command matrix, manual checklist, coverage summary, and performance notes when relevant.
+
+Keep diagrams focused and readable. Across each homework, include at least three Mermaid diagrams: one in `README.md`, one in `ARCHITECTURE.md`, and one in `TESTING_GUIDE.md`.
 
 ---
 
-## 5) Documentation Intent and Minimum Content
+## 8) Changelog Standards
 
-### `README.md` (developer entry point)
-Intent: fast orientation for someone joining the project.
-Must include:
-- Problem overview and implemented scope
-- Setup summary and quick start
-- Feature map and project structure
-- Link map to other docs
-- At least one Mermaid diagram
+Each homework has its own `CHANGELOG.md`; repository-level policy changes use the root `CHANGELOG.md`.
 
-### `HOWTORUN.md` (operator/reviewer runbook)
-Intent: exact reproducible execution path.
-Must include:
-- Prerequisites and environment assumptions
-- Exact start/stop/restart commands
-- Test commands and expected outcomes
-- Common troubleshooting notes
-- Minimal smoke-check requests
+Homework changelog entries should use this shape:
 
-### `API_REFERENCE.md` (API consumer contract)
-Intent: authoritative request/response contract.
-Must include:
-- Endpoint catalog
-- Request/response examples
-- Validation and error formats
-- cURL examples per endpoint
-- Versioning/compatibility notes if behavior changed
+```markdown
+## Homework N - Step X
 
-### `ARCHITECTURE.md` (technical design rationale)
-Intent: explain why system is built this way.
-Must include:
-- High-level component diagram (Mermaid)
-- Data flow or sequence diagram (Mermaid)
-- Design decisions and trade-offs
-- Security/performance considerations
-- Known non-goals/limitations
-
-### `TESTING_GUIDE.md` (QA execution and strategy)
-Intent: make test coverage and quality strategy auditable.
-Must include:
-- Test strategy and scope
-- Test pyramid diagram (Mermaid)
-- Test run matrix/commands
-- Manual checklist
-- Performance/coverage summary table
-
-### `CHANGELOG.md` (incremental delivery log)
-Intent: clear user-impact history for each incremental step.
-
-Required structure:
-- `## <current-homework-iteration>` (for example: `## Homework 2 - Step 3`)
-  - `### Added`
-  - `### Changed`
-  - `### Fixed`
-  - `### Tests`
+### Added
+### Changed
+### Fixed
+### Tests
+```
 
 Authoring rules:
-- Update on **every** incremental commit/step.
-- Describe behavior/contract impact, not internal trivia.
-- Call out endpoint and validation rule changes explicitly.
-- Log documentation/demo asset updates when behavior changed.
-- Summarize test additions/changes in `### Tests`.
+- Update on every incremental step before commit or PR closure.
+- Describe behavior, contract, documentation, and verification impact.
+- Call out endpoint, validation, data model, workflow, and run-command changes explicitly.
+- Avoid internal trivia that does not help a reviewer understand the submission.
 
 ---
 
-## 6) Documentation Timing in the Commit/PR Cycle
+## 9) Evidence, Demo, and AI-Assistance Records
 
-Documentation should be written continuously, not postponed.
+Each homework should provide a minimal manual QA package:
+- `demo/run.sh` and `demo/run.bat`.
+- `demo/start.ps1`, `demo/stop.ps1`, and `demo/restart.ps1` when a managed local server lifecycle is useful.
+- `demo/sample-requests.http` or equivalent request script.
+- Positive and negative sample data where imports, validation, or workflows depend on data files.
+- Postman collection or equivalent API collection when useful for review.
 
-### Step lifecycle (applies to both modes)
-1. **Plan**
-   - Add/adjust architecture notes when design intent changes.
-2. **Implement**
-   - Update API reference and runbook alongside code changes.
-3. **Verify**
-   - Record testing commands/outcomes in testing guide if new patterns are introduced.
-4. **Record**
-   - Update changelog for that exact step.
-5. **Finish step**
-   - Local mode: commit.
-   - Web mode: commit + PR/update PR to remote homework branch.
-
-### Finalization lifecycle (before final PR to `main`)
-- Tighten README narrative and cross-links.
-- Ensure diagrams are accurate and readable.
-- Ensure HOWTORUN and API_REFERENCE match current behavior exactly.
-- Ensure screenshot evidence is complete and current.
-
----
-
-## 7) Diagram and Evidence Requirements
-
-- Include at least **3 Mermaid diagrams** across docs:
-  - one in `README.md`
-  - one in `ARCHITECTURE.md`
-  - one in `TESTING_GUIDE.md`
-- Store evidence screenshots in `docs/screenshots/`.
-- Keep diagrams focused; avoid oversized unreadable blocks.
-
----
-
-## 8) Demo and Manual QA Package
-
-Each homework should provide a minimal manual QA pack:
-- `demo/run.sh` and `demo/run.bat`
-- optional lifecycle scripts (`start/stop/restart`) when useful
-- `demo/sample-requests.http` or equivalent script
-- sample fixture data for positive/negative checks (as relevant)
-- Postman collection with `baseUrl` variable and short expected-result notes
-
----
-
-## 9) AI-Assistance Documentation Standard
-
-For every homework:
-- State which AI tools/models were used and for what.
+For AI-assistance documentation:
+- State tools, models, plugins, and workflow modes used.
 - Record what was manually validated by the student.
-- Keep prompt/design artifacts (optional) under `docs/superpowers/` when helpful.
-- Preserve screenshots that demonstrate meaningful AI-assisted workflow.
+- Preserve meaningful prompt/design artifacts under `docs/superpowers/` or an equivalent docs subfolder.
+- Preserve screenshots showing meaningful AI-assisted workflow, app behavior, test/coverage evidence, and manual checks.
+- For Codex Web work, include the missing quality levers and the manual compensation practices used.
 
 ---
 
-## 10) Review Checklist (Per Increment and Before Final PR)
+## 10) Review Checklist
 
-Per incremental step:
-- [ ] Plan captured (brief)
-- [ ] Implementation completed
-- [ ] Validation performed
-- [ ] `CHANGELOG.md` updated
-- [ ] Step closed (commit only in local mode; commit + step PR/update PR in web mode)
+Per increment:
+- [ ] Plan captured.
+- [ ] Existing context inspected.
+- [ ] Implementation completed within scope.
+- [ ] Verification run.
+- [ ] Relevant docs updated.
+- [ ] Applicable changelog updated.
+- [ ] Diff reviewed.
+- [ ] Local mode: commit ready.
+- [ ] Web/agent mode: step PR description ready.
 
 Before final PR to `main`:
-- [ ] All required docs are present and non-placeholder
-- [ ] Mermaid minimum (>=3) is met
-- [ ] HOWTORUN commands work as written
-- [ ] API reference matches implementation
-- [ ] Testing guide includes execution commands and checklist
-- [ ] Demo assets and collection are runnable/importable
-- [ ] Screenshots are complete and current
-- [ ] Changelog reflects the full implementation history
-
----
-
-## 11) AGENTS.md Integration Guidance
-
-`AGENTS.md` should stay concise and only enforce non-negotiable workflow rules.
-This file remains the detailed operational reference for structure, documentation content, timing, and quality gates.
+- [ ] All required docs are present and non-placeholder.
+- [ ] Mermaid minimum is met.
+- [ ] Run commands work as written.
+- [ ] API reference matches implementation.
+- [ ] Testing guide includes commands, coverage, and checklist.
+- [ ] Demo assets and sample data are runnable/importable.
+- [ ] Screenshots and evidence are current.
+- [ ] Changelog reflects the full implementation history.
+- [ ] Final PR body stands on its own with summary, AI workflow, verification, challenges, and evidence links.

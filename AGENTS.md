@@ -1,5 +1,17 @@
 # Repository Instructions
 
+## Context Hierarchy
+
+Build task context in this order before making changes:
+
+1. System, tool, plugin, sandbox, and model constraints.
+2. Repository instructions in this file and `HOMEWORK_STANDARDS.md`.
+3. The relevant homework task file, usually `homework-N/TASKS.md`.
+4. The user's immediate prompt, including scope and stop conditions.
+5. Discovered working state from files, tests, logs, diffs, and branch status.
+
+If instructions conflict, preserve higher-priority system/user constraints, then apply the most specific repo or homework requirement. Homework task requirements define deliverables; this file defines non-negotiable workflow guardrails.
+
 ## Git Author Email
 
 All commits in this repository must use a private email address for author and committer metadata.
@@ -9,6 +21,16 @@ Allowed email domains:
 - `@users.noreply.github.com`
 
 Do not use company, contractor, school, client, or other organizational email domains in Git commit metadata.
+
+## Mandatory Task Preflight
+
+Before implementing any homework or repository-policy change:
+
+1. Confirm the current branch and do not implement homework work on `main`.
+2. Read this file and `HOMEWORK_STANDARDS.md`.
+3. Read the relevant `homework-N/TASKS.md` and existing homework docs/changelog when working inside a homework folder.
+4. Inspect current files and tests before editing.
+5. Identify whether the work is in local mode or web/agent mode and apply the matching gates.
 
 ## Repository-Level Change Logging
 
@@ -30,3 +52,15 @@ For work inside `homework-*` folders, enforce these non-negotiables:
 8. Keep final-delivery flow consistent with `HOMEWORK_STANDARDS.md`: homework branch integrates to `main` only at final submission.
 
 `HOMEWORK_STANDARDS.md` is the detailed source of truth for structure, documentation minima, timing, quality gates, diagrams/evidence, and review checklist.
+
+## Codex Web Fallback Gates
+
+Codex Web may lack local quality levers such as Superpowers plugins, model selection, and reasoning-effort control. When those controls are unavailable, agents must follow the Web Mode Compensation checklist in `HOMEWORK_STANDARDS.md` and disclose the missing controls in PRs or AI-assistance notes.
+
+## Local Model and Reasoning Guidance
+
+When local tooling allows model or reasoning-effort choice:
+
+- Use stronger/deeper reasoning for planning, architecture, debugging, cross-file implementation, security-sensitive changes, and final review.
+- Use lighter handling only for narrow mechanical edits, formatting, or simple documentation cleanup.
+- If model/reasoning controls are unavailable, follow the Codex Web fallback gate above.
