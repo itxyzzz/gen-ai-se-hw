@@ -1,12 +1,11 @@
 # Homework 2: Intelligent Customer Support API
 
-> **Student Name**: [Your Name]  
-> **Date Submitted**: [Date]  
-> **AI Tools Used**: Codex local desktop workflow with Superpowers planning, TDD, and verification discipline
+> **Date Submitted**: 2026-05-02  
+> **AI Tools Used**: Codex local desktop workflow with Superpowers planning, TDD, and verification discipline. See [AI_USAGE.md](AI_USAGE.md) for the Context-Model-Prompt log.
 
 ## Overview
 
-This project implements Homework 2 Task 1 and Task 2 for an intelligent customer support ticket service. It supports ticket CRUD operations, filtering, CSV/JSON/XML bulk import, Swagger UI, and deterministic rule-based auto-classification for ticket category and priority.
+This project implements Homework 2 Tasks 1-5 for an intelligent customer support ticket service. It supports ticket CRUD operations, filtering, CSV/JSON/XML bulk import, deterministic rule-based auto-classification for ticket category and priority, comprehensive tests, coverage reporting, sample data, and multi-audience documentation.
 
 ## Features
 
@@ -64,6 +63,7 @@ cd homework-2
 homework-2/
 ├── src/main/java/com/setu/support/
 ├── src/test/java/com/setu/support/ticket/
+├── src/test/resources/fixtures/
 ├── demo/
 │   ├── sample_tickets.csv
 │   ├── sample_tickets.json
@@ -72,7 +72,9 @@ homework-2/
 │   └── sample-requests.http
 ├── docs/
 │   ├── support-ticket-api.postman_collection.json
+│   ├── screenshots/test_coverage.png
 │   └── superpowers/plans/
+├── AI_USAGE.md
 ├── API_REFERENCE.md
 ├── ARCHITECTURE.md
 ├── HOWTORUN.md
@@ -85,7 +87,17 @@ homework-2/
 - [API_REFERENCE.md](API_REFERENCE.md): endpoint contract, classification fields, and examples.
 - [ARCHITECTURE.md](ARCHITECTURE.md): design rationale, data flow, and trade-offs.
 - [TESTING_GUIDE.md](TESTING_GUIDE.md): automated and manual QA instructions.
+- [AI_USAGE.md](AI_USAGE.md): Context-Model-Prompt workflow and AI assistance log.
 - [CHANGELOG.md](CHANGELOG.md): implementation history.
+
+## Deliverables
+
+- Source code: `src/main/java/com/setu/support/`
+- Automated tests: `src/test/java/com/setu/support/ticket/`
+- Test fixtures: `src/test/resources/fixtures/`
+- Sample data for manual import: `demo/sample_tickets.csv`, `demo/sample_tickets.json`, `demo/sample_tickets.xml`
+- Coverage report: `target/site/jacoco/index.html`
+- Coverage screenshot: `docs/screenshots/test_coverage.png`
 
 ## Scope Notes
 

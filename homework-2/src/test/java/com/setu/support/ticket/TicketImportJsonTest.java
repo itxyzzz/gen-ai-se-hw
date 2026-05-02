@@ -45,6 +45,14 @@ class TicketImportJsonTest extends ApiIntegrationTestSupport {
             .andExpect(jsonPath("$.successful").value(0));
     }
 
+    @Test
+    void rejectsNonArrayJsonImport() throws Exception {
+        mockMvc.perform(multipart("/tickets/import")
+                .file(file("tickets.json", MediaType.APPLICATION_JSON_VALUE, "{\"customer_id\":\"CUST-1\"}")))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("JSON import must be a valid array of ticket objects"));
+    }
+
     static String validJsonArray() {
         return """
             [

@@ -49,6 +49,30 @@ class TicketImportCsvTest extends ApiIntegrationTestSupport {
             .andExpect(jsonPath("$.successful").value(2));
     }
 
+    @Test
+    void returnsCsvFailuresWhenRequiredHeadersAreMissing() throws Exception {
+        String csv = """
+            customer_id,customer_email
+            CUST-1,ada@example.com
+            """;
+
+        mockMvc.perform(multipart("/tickets/import")
+                .file(file("missing-headers.csv", "text/csv", csv)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.total_records").value(1))
+            .andExpect(jsonPath("$.successful").value(0))
+            .andExpect(jsonPath("$.failed").value(1))
+            .andExpect(jsonPath("$.errors[*].field").value(hasSize(5)));
+    }
+
+    @Test
+    void rejectsEmptyCsvUpload() throws Exception {
+        mockMvc.perform(multipart("/tickets/import")
+                .file(file("empty.csv", "text/csv", "")))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("Import file is required"));
+    }
+
     static String validCsv() {
         return """
             customer_id,customer_email,customer_name,subject,description,category,priority,status,resolved_at,assigned_to,tags,metadata_source,metadata_browser,metadata_device_type

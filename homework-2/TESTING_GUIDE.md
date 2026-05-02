@@ -16,7 +16,8 @@ Run:
 
 ```bash
 cd homework-2
-mvn test jacoco:report
+mvn test
+mvn verify
 ```
 
 Current automated suites:
@@ -31,9 +32,10 @@ Current automated suites:
 | `TicketCategorizationTest` | rule-based category, priority, confidence, reasoning, keyword evidence |
 | `TicketClassificationApiTest` | explicit classify endpoint, create/import auto-classification, manual override evidence, decision logs |
 | `TicketClassificationDisabledTest` | disabled auto-classification requires manual category and priority |
-| `TicketIntegrationTest` | lifecycle and import-then-filter workflows |
-| `TicketPerformanceTest` | 50 CSV, 20 JSON, and 30 XML imports within threshold |
+| `TicketIntegrationTest` | full lifecycle, auto-classified import, concurrent requests, combined filtering, partial import persistence |
+| `TicketPerformanceTest` | CSV, JSON, XML, classification-heavy import, and post-import filtering benchmarks |
 | `ApiDocumentationTest` | Swagger UI and OpenAPI path coverage |
+| `TicketSampleDataTest` | fixture/sample data record counts and invalid fixture behavior |
 
 Coverage report:
 
@@ -47,14 +49,17 @@ Capture the final coverage screenshot as:
 
 | File | Purpose |
 | --- | --- |
-| `demo/sample_tickets.csv` | 50 valid CSV tickets |
-| `demo/sample_tickets.json` | 20 valid JSON tickets |
-| `demo/sample_tickets.xml` | 30 valid XML tickets |
-| `demo/classification_tickets.csv` | classification-focused records covering categories and priorities |
-| `demo/invalid_tickets.csv` | invalid rows for partial failure checks |
-| `demo/invalid_tickets.json` | invalid records for partial failure checks |
-| `demo/invalid_tickets.xml` | invalid records for partial failure checks |
-| `demo/malformed_tickets.json` | malformed file for hard import failure checks |
+| `src/test/resources/fixtures/sample_tickets.csv` | 50 valid CSV tickets for automated tests |
+| `src/test/resources/fixtures/sample_tickets.json` | 20 valid JSON tickets for automated tests |
+| `src/test/resources/fixtures/sample_tickets.xml` | 30 valid XML tickets for automated tests |
+| `src/test/resources/fixtures/classification_tickets.csv` | classification-focused automated fixture |
+| `src/test/resources/fixtures/invalid_tickets.csv` | invalid CSV rows for partial failure checks |
+| `src/test/resources/fixtures/invalid_tickets.json` | invalid JSON records for partial failure checks |
+| `src/test/resources/fixtures/invalid_tickets.xml` | invalid XML records for partial failure checks |
+| `src/test/resources/fixtures/malformed_tickets.json` | malformed JSON fixture for hard import failure checks |
+| `demo/sample_tickets.csv` | 50 valid CSV tickets for manual import |
+| `demo/sample_tickets.json` | 20 valid JSON tickets for manual import |
+| `demo/sample_tickets.xml` | 30 valid XML tickets for manual import |
 
 ## Manual Test Checklist
 
@@ -83,5 +88,7 @@ Capture the final coverage screenshot as:
 | CSV import | 50 records | completes inside 5 seconds |
 | JSON import | 20 records | completes inside 5 seconds |
 | XML import | 30 records | completes inside 5 seconds |
+| Classification-heavy CSV import | 40 records | completes inside 5 seconds |
+| Post-import category/priority filter | 50 records | completes inside 5 seconds |
 
 The automated benchmark is intentionally small and stable for local reviewer machines.

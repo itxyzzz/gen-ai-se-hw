@@ -2,6 +2,7 @@ package com.setu.support.ticket;
 
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,6 +42,17 @@ class TicketImportXmlTest extends ApiIntegrationTestSupport {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.failed").value(1))
             .andExpect(jsonPath("$.errors[0].field").value("customer_email"));
+    }
+
+    @Test
+    void reportsValidationErrorsForXmlWithoutTicketElements() throws Exception {
+        mockMvc.perform(multipart("/tickets/import")
+                .file(file("tickets.xml", "application/xml", "<tickets></tickets>")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.total_records").value(1))
+            .andExpect(jsonPath("$.successful").value(0))
+            .andExpect(jsonPath("$.failed").value(1))
+            .andExpect(jsonPath("$.errors[*].field", hasSize(7)));
     }
 
     static String validXml() {

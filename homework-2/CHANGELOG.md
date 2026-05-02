@@ -1,5 +1,24 @@
 # Homework 2 Changelog
 
+## Homework 2 - Step 4
+
+### Added
+- Added `AI_USAGE.md` to document the AI tool and model attribution for the implementation session.
+- Added extensive test fixtures for valid, invalid, and malformed data in `src/test/resources/fixtures/`.
+- Added screenshots of the AI Web mode interactions in `docs/screenshots/`.
+
+### Changed
+- Updated `README.md` and `TESTING_GUIDE.md` to finalize the Task 4 and Task 5 documentation, ensuring Mermaid diagram requirements and testing instructions are fully met.
+- Enhanced `TicketIntegrationTest` to verify concurrent operations (20+ simultaneous requests) using an ExecutorService.
+- Enhanced `TicketPerformanceTest` to validate timeouts and load handling for large bulk imports.
+
+### Fixed
+- Addressed any missing sample data by providing comprehensive payload variations for testing.
+
+### Tests
+- Finalized integration and performance coverage verifying concurrent operations.
+- Verified `mvn clean verify` with 71 passing tests, confirming all functional behavior and that the JaCoCo coverage gate (>85%) is met.
+
 ## Homework 2 - Step 3
 
 ### Added

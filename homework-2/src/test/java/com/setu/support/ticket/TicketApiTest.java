@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -111,5 +112,71 @@ class TicketApiTest extends ApiIntegrationTestSupport {
         mockMvc.perform(delete("/tickets/{id}", "11111111-1111-1111-1111-111111111111"))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("Ticket not found"));
+    }
+
+    @Test
+    void listTicketsStartsEmpty() throws Exception {
+        mockMvc.perform(get("/tickets"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void getUnknownTicketReturnsNotFound() throws Exception {
+        mockMvc.perform(get("/tickets/{id}", "11111111-1111-1111-1111-111111111111"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.error").value("Not found"))
+            .andExpect(jsonPath("$.message").value("Ticket not found"));
+    }
+
+    @Test
+    void updateUnknownTicketReturnsNotFound() throws Exception {
+        mockMvc.perform(put("/tickets/{id}", "11111111-1111-1111-1111-111111111111")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validTicketJson()))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value("Ticket not found"));
+    }
+
+    @Test
+    void rejectsValidationErrorsOnCreate() throws Exception {
+        mockMvc.perform(post("/tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validTicketJson()
+                    .replace("ada@example.com", "not-an-email")
+                    .replace("\"subject\": \"Cannot access my account\"", "\"subject\": \"\"")))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Validation failed"))
+            .andExpect(jsonPath("$.details[*].field", hasItem("customer_email")))
+            .andExpect(jsonPath("$.details[*].field", hasItem("subject")));
+    }
+
+    @Test
+    void filtersTicketsByStatusCustomerEmailAndAssignee() throws Exception {
+        createTicket();
+        mockMvc.perform(post("/tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validTicketJson()
+                    .replace("CUST-1001", "CUST-3003")
+                    .replace("ada@example.com", "hopper@example.com")
+                    .replace("\"status\": \"new\"", "\"status\": \"waiting_customer\"")
+                    .replace("support-agent-1", "support-agent-3")))
+            .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/tickets")
+                .param("status", "waiting_customer")
+                .param("customer_email", "hopper@example.com")
+                .param("assigned_to", "support-agent-3"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].customer_id").value("CUST-3003"));
+    }
+
+    @Test
+    void rejectsMissingImportFile() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/tickets/import"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Malformed import"))
+            .andExpect(jsonPath("$.message").value("Import file is required"));
     }
 }

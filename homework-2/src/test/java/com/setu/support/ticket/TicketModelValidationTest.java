@@ -72,6 +72,15 @@ class TicketModelValidationTest extends ApiIntegrationTestSupport {
             .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @Test
+    void rejectsMissingRequestBody() throws Exception {
+        mockMvc.perform(post("/tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Malformed request"));
+    }
+
     static Stream<Arguments> missingRequiredFieldRequests() {
         return Stream.of(
             Arguments.of("customer_id", """

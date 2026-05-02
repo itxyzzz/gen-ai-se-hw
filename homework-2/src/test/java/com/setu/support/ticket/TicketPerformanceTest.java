@@ -5,32 +5,66 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class TicketPerformanceTest extends ApiIntegrationTestSupport {
     @Test
-    void importsLargeCsvJsonAndXmlFixturesWithinThreshold() {
+    void importsLargeCsvFixtureWithinThreshold() {
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            mockMvc.perform(multipart("/tickets/import")
+                    .file(file("bulk.csv", "text/csv", bulkCsv(50))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.successful").value(50));
+        });
+    }
+
+    @Test
+    void importsLargeJsonFixtureWithinThreshold() {
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            mockMvc.perform(multipart("/tickets/import")
+                    .file(file("bulk.json", "application/json", bulkJson(20))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.successful").value(20));
+        });
+    }
+
+    @Test
+    void importsLargeXmlFixtureWithinThreshold() {
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            mockMvc.perform(multipart("/tickets/import")
+                    .file(file("bulk.xml", "application/xml", bulkXml(30))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.successful").value(30));
+        });
+    }
+
+    @Test
+    void importsClassificationHeavyCsvWithinThreshold() {
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+            mockMvc.perform(multipart("/tickets/import")
+                    .file(file("classification-heavy.csv", "text/csv", classificationHeavyCsv(40))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.successful").value(40));
+        });
+    }
+
+    @Test
+    void filtersAfterBulkImportWithinThreshold() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
             mockMvc.perform(multipart("/tickets/import")
                     .file(file("bulk.csv", "text/csv", bulkCsv(50))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.successful").value(50));
 
-            repository.clear();
-
-            mockMvc.perform(multipart("/tickets/import")
-                    .file(file("bulk.json", "application/json", bulkJson(20))))
+            mockMvc.perform(get("/tickets")
+                    .param("category", "other")
+                    .param("priority", "medium"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.successful").value(20));
-
-            repository.clear();
-
-            mockMvc.perform(multipart("/tickets/import")
-                    .file(file("bulk.xml", "application/xml", bulkXml(30))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.successful").value(30));
+                .andExpect(jsonPath("$", hasSize(50)));
         });
     }
 
@@ -88,5 +122,18 @@ class TicketPerformanceTest extends ApiIntegrationTestSupport {
                 """.formatted(index, index, index, index));
         }
         return builder.append("</tickets>").toString();
+    }
+
+    static String classificationHeavyCsv(int count) {
+        StringBuilder builder = new StringBuilder(TicketImportCsvTest.validCsv().lines().findFirst().orElseThrow()).append('\n');
+        for (int index = 1; index <= count; index++) {
+            builder.append("CUST-A").append(index)
+                .append(",auto").append(index).append("@example.com,Auto Customer ")
+                .append(index)
+                .append(",Cannot access account ")
+                .append(index)
+                .append(",I can't access my account because the password reset failed and this is blocking work,,,new,,agent-a,login;password,api,Chrome,desktop\n");
+        }
+        return builder.toString();
     }
 }

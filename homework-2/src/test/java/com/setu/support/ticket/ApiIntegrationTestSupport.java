@@ -9,6 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,5 +68,14 @@ abstract class ApiIntegrationTestSupport {
 
     MockMultipartFile file(String name, String contentType, String content) {
         return new MockMultipartFile("file", name, contentType, content.getBytes());
+    }
+
+    String readFixture(String name) throws IOException {
+        try (var stream = getClass().getClassLoader().getResourceAsStream("fixtures/" + name)) {
+            if (stream == null) {
+                throw new IOException("Missing fixture: " + name);
+            }
+            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 }
