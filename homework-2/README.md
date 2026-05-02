@@ -1,5 +1,6 @@
 # Homework 2: Intelligent Customer Support API
 
+> **Author**: Igor Tanatarov  
 > **Date Submitted**: 2026-05-02  
 > **AI Tools Used**: Multi-stage workflow using Codex Web (Android), Codex Local Desktop (GPT-5.5) with Superpowers, and Google Antigravity (Gemini). See [AI_USAGE.md](AI_USAGE.md) for the detailed flow.
 

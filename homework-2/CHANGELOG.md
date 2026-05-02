@@ -5,7 +5,7 @@
 ### Added
 - Added `AI_USAGE.md` to document the AI tool and model attribution for the implementation session.
 - Added extensive test fixtures for valid, invalid, and malformed data in `src/test/resources/fixtures/`.
-- Added screenshots of the AI Web mode interactions in `docs/screenshots/`.
+- Added screenshots of the AI Web mode interactions, Codex Local implementation, and Antigravity finalization in `docs/screenshots/`.
 
 ### Changed
 - Updated `AI_USAGE.md` and `README.md` to detail the actual multi-stage, multi-model implementation flow using Codex Web, Codex Local, and Google Antigravity.
