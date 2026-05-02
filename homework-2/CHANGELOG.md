@@ -8,6 +8,7 @@
 - Added screenshots of the AI Web mode interactions in `docs/screenshots/`.
 
 ### Changed
+- Updated `AI_USAGE.md` and `README.md` to detail the actual multi-stage, multi-model implementation flow using Codex Web, Codex Local, and Google Antigravity.
 - Updated `README.md` and `TESTING_GUIDE.md` to finalize the Task 4 and Task 5 documentation, ensuring Mermaid diagram requirements and testing instructions are fully met.
 - Enhanced `TicketIntegrationTest` to verify concurrent operations (20+ simultaneous requests) using an ExecutorService.
 - Enhanced `TicketPerformanceTest` to validate timeouts and load handling for large bulk imports.

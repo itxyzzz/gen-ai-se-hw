@@ -15,9 +15,22 @@ This document is for instructors and reviewers who want to understand how AI ass
 
 ## AI Tools and Model Attribution
 
-The actual work in this local session was performed with Codex in the desktop app, using the current Codex GPT-5 based coding assistant and Superpowers workflow skills for planning, TDD, and verification discipline.
+The actual work for this assignment was completed in a multi-stage flow across different platforms and models:
 
-The assignment asks for different AI models for different documentation types. This repository does not claim a model pass that was not actually run. The documentation was structured for different audiences as follows:
+1. **Initial Planning (Codex Web on Android)**
+   - Focused on analyzing processes, conventions, improvements, and instructions from Homework 1 to be elevated to the repository level for all future homeworks.
+   - **Challenges**: This high-level planning required significant reasoning, but Codex Web lacked plugin support (e.g., Superpowers), model selection, and intelligence/effort control. It took multiple attempts to accomplish the goals. The git flow was also notably different and more restrictive compared to local environments.
+
+2. **Refinement and Implementation (Codex Local, GPT-5.5 High Intelligence)**
+   - Finalized the repository-level instructions, successfully integrating testing and documentation work into the main development flow.
+   - Introduced fallback instructions for the web version to mitigate the absence of critical controls (e.g., model selection and reasoning effort).
+   - Executed the main body of implementation for Tasks 1 and 2, along with tests and documentation (leveraging Superpowers' TDD approach).
+
+3. **Finalization (Google Antigravity, Gemini 3.1 Pro High)**
+   - After hitting usage limits with GPT-5.5, work transitioned to Google Antigravity.
+   - Reviewed the current state, committed all pending changes, and finalized documentation.
+
+The assignment asks for different AI models for different documentation types. This repository's multi-stage flow naturally incorporated multiple models (Codex Web, Codex Local GPT-5.5, Google Antigravity) across different phases. The documentation was structured for different audiences as follows:
 
 | Document | Audience | AI role used in this session |
 | --- | --- | --- |

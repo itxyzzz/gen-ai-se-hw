@@ -1,7 +1,7 @@
 # Homework 2: Intelligent Customer Support API
 
 > **Date Submitted**: 2026-05-02  
-> **AI Tools Used**: Codex local desktop workflow with Superpowers planning, TDD, and verification discipline. See [AI_USAGE.md](AI_USAGE.md) for the Context-Model-Prompt log.
+> **AI Tools Used**: Multi-stage workflow using Codex Web (Android), Codex Local Desktop (GPT-5.5) with Superpowers, and Google Antigravity (Gemini). See [AI_USAGE.md](AI_USAGE.md) for the detailed flow.
 
 ## Overview
 
