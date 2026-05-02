@@ -4,6 +4,10 @@ Base URL: `http://localhost:8080`
 
 All JSON fields use `snake_case`.
 
+## Interactive OpenAPI Documentation
+
+Swagger UI is available at `http://localhost:8080/api-docs` when the application is running. The generated OpenAPI JSON document is available at `http://localhost:8080/v3/api-docs`.
+
 ## Ticket Schema
 
 ```json

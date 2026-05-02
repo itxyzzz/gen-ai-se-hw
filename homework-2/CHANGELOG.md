@@ -1,5 +1,23 @@
 # Homework 2 Changelog
 
+## Homework 2 - Step 2
+
+### Added
+- Added Springdoc OpenAPI generation and Swagger UI for the Homework 2 API.
+- Added a reviewer-facing Swagger UI entrypoint at `/api-docs`.
+- Added generated OpenAPI JSON coverage for ticket endpoints at `/v3/api-docs`.
+- Added focused MockMvc tests for the API documentation routes.
+
+### Changed
+- Updated README, HOWTORUN, and API reference documentation with the OpenAPI documentation paths.
+
+### Fixed
+- Not applicable for this documentation feature increment.
+
+### Tests
+- Verified `mvn -Dtest=ApiDocumentationTest test` with 2 passing tests.
+- Verified `mvn clean verify` with 32 passing tests and the JaCoCo coverage gate met.
+
 ## Homework 2 - Step 1
 
 ### Added

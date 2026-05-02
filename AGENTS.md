@@ -38,6 +38,7 @@ Before implementing any homework or repository-policy change:
   - File search: `Get-ChildItem -Recurse -File`, with `-Include` or `-Filter` when useful.
   - Text search: `Get-ChildItem -Recurse -File | Select-String -Pattern ...`.
 - Keep this fallback quiet in routine work unless the tool failure affects verification, timing, or the user explicitly asks about tooling.
+- For opening local Swagger UI through Codex Desktop/browser-use, use the probe-first workflow in `documentation/agent-workflows/local-swagger-browser.md` instead of starting the app blindly.
 
 ## Repository-Level Change Logging
 

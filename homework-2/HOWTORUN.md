@@ -73,6 +73,13 @@ List tickets:
 curl http://localhost:8080/tickets
 ```
 
+OpenAPI documentation:
+
+```bash
+curl -I http://localhost:8080/api-docs
+curl http://localhost:8080/v3/api-docs
+```
+
 Import CSV:
 
 ```bash

@@ -45,6 +45,8 @@ mvn spring-boot:run
 
 The API starts at `http://localhost:8080`.
 
+Swagger UI is available at `http://localhost:8080/api-docs` while the API is running.
+
 PowerShell managed lifecycle:
 
 ```powershell
