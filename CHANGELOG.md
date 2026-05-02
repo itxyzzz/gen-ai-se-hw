@@ -8,6 +8,8 @@ All notable repository-level policy and standards changes are tracked here.
 - Added a root-level context hierarchy and mandatory task preflight to `AGENTS.md`.
 - Added mandatory Codex Web fallback gates for sessions without plugins, model selection, or reasoning-effort control.
 - Added Context-Model-Prompt practice guidance to `HOMEWORK_STANDARDS.md`.
+- Added local Codex desktop search fallback guidance for cases where bundled `rg.exe` is blocked by the Windows sandbox.
+- Added managed PowerShell lifecycle script standards based on the Homework 1 `AppLifecycle.ps1` pattern.
 
 ### Changed
 - Consolidated homework branch, local mode, web/agent mode, and final PR guidance in `HOMEWORK_STANDARDS.md`.

@@ -1,0 +1,3 @@
+customer_id,customer_email,customer_name,subject,description,category,priority,status,resolved_at,assigned_to,tags,metadata_source,metadata_browser,metadata_device_type
+CUST-BAD-1,not-an-email,Bad CSV Customer,Bad email row,This row has an invalid email address,other,medium,new,,agent-1,bad,api,Chrome,desktop
+CUST-BAD-2,bad2@example.com,Bad CSV Customer,,Too short,unknown,instant,new,,agent-1,bad,fax,Chrome,watch

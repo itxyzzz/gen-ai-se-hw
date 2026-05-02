@@ -32,6 +32,13 @@ Before implementing any homework or repository-policy change:
 4. Inspect current files and tests before editing.
 5. Identify whether the work is in local mode or web/agent mode and apply the matching gates.
 
+## Local Tooling Notes
+
+- In the Codex desktop Windows sandbox, the bundled `rg.exe` may fail with `Access is denied`. If `rg` fails to start, do not spend time retrying it or escalating just for search. Immediately fall back to native PowerShell discovery:
+  - File search: `Get-ChildItem -Recurse -File`, with `-Include` or `-Filter` when useful.
+  - Text search: `Get-ChildItem -Recurse -File | Select-String -Pattern ...`.
+- Keep this fallback quiet in routine work unless the tool failure affects verification, timing, or the user explicitly asks about tooling.
+
 ## Repository-Level Change Logging
 
 For repository-level changes outside `homework-*` folders, update the root `CHANGELOG.md` before commit/PR closure.

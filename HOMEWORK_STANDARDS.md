@@ -185,6 +185,19 @@ For AI-assistance documentation:
 - Preserve screenshots showing meaningful AI-assisted workflow, app behavior, test/coverage evidence, and manual checks.
 - For Codex Web work, include the missing quality levers and the manual compensation practices used.
 
+### Managed PowerShell lifecycle scripts
+
+For Spring Boot or similar long-running homework APIs, prefer the reusable pattern from `homework-1/demo/AppLifecycle.ps1` instead of ad hoc `Start-Process mvn spring-boot:run` wrappers.
+
+Required behavior for managed lifecycle scripts:
+- Start a stable Java process directly, either with `java -cp "target/classes;target/dependency/*" <MainClass>` after `compile dependency:copy-dependencies`, or with `java -jar target/<artifact>.jar` after packaging.
+- Do not record a transient Maven launcher PID as the managed app PID.
+- Record the app PID, process start time, port, and state file path under `target/managed-app.json`.
+- On start, fail clearly if the expected port already has a responding service that is not the recorded managed process.
+- Wait for a documented health/smoke endpoint to return success before reporting that the app started.
+- On stop, verify the PID and process start time before killing it, then mark the state inactive or otherwise handle sandbox/file-lock cleanup robustly.
+- Include tests or a manual verification note for start, smoke request, stop, and no-listener-left-on-port behavior.
+
 ---
 
 ## 10) Review Checklist
