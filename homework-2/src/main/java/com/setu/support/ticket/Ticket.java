@@ -19,6 +19,13 @@ public record Ticket(
     Instant resolvedAt,
     String assignedTo,
     List<String> tags,
-    TicketMetadata metadata
+    TicketMetadata metadata,
+    Double classificationConfidence,
+    String classificationReasoning,
+    List<String> classificationKeywords,
+    String suggestedCategory,
+    String suggestedPriority,
+    Instant classifiedAt,
+    boolean manualOverrideApplied
 ) {
 }

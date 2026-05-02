@@ -11,13 +11,21 @@ public class TicketValidator {
     private static final Pattern EMAIL = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
     public void validate(CreateTicketRequest request) {
-        List<ValidationErrorResponse.FieldError> errors = validateFields(request);
+        validate(request, true, true);
+    }
+
+    public void validate(CreateTicketRequest request, boolean requireCategory, boolean requirePriority) {
+        List<ValidationErrorResponse.FieldError> errors = validateFields(request, requireCategory, requirePriority);
         if (!errors.isEmpty()) {
             throw new ValidationException(errors);
         }
     }
 
     public List<ValidationErrorResponse.FieldError> validateFields(CreateTicketRequest request) {
+        return validateFields(request, true, true);
+    }
+
+    public List<ValidationErrorResponse.FieldError> validateFields(CreateTicketRequest request, boolean requireCategory, boolean requirePriority) {
         List<ValidationErrorResponse.FieldError> errors = new ArrayList<>();
         if (request == null) {
             errors.add(new ValidationErrorResponse.FieldError("body", "Request body is required"));
@@ -29,8 +37,12 @@ public class TicketValidator {
         required(errors, "customer_name", request.customerName());
         required(errors, "subject", request.subject());
         required(errors, "description", request.description());
-        required(errors, "category", request.category());
-        required(errors, "priority", request.priority());
+        if (requireCategory) {
+            required(errors, "category", request.category());
+        }
+        if (requirePriority) {
+            required(errors, "priority", request.priority());
+        }
         required(errors, "status", request.status());
 
         if (present(request.customerEmail()) && !EMAIL.matcher(request.customerEmail()).matches()) {

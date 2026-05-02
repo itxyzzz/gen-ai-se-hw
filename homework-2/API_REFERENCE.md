@@ -30,8 +30,41 @@ Swagger UI is available at `http://localhost:8080/api-docs` when the application
     "source": "web_form | email | api | chat | phone",
     "browser": "string or null",
     "device_type": "desktop | mobile | tablet or null"
-  }
+  },
+  "classification_confidence": 0.85,
+  "classification_reasoning": "Matched category account_access...",
+  "classification_keywords": ["can't access", "password"],
+  "suggested_category": "account_access",
+  "suggested_priority": "urgent",
+  "classified_at": "datetime or null",
+  "manual_override_applied": false
 }
+```
+
+When create/import auto-classification is enabled, `category` and `priority` may be omitted and are filled by the classifier. If manual override is enabled and the request provides category/priority, those input values remain final while classifier suggestions are stored in `suggested_category` and `suggested_priority`.
+
+## Classification Rules
+
+Category rules inspect subject, description, and tags:
+
+| Category | Keywords |
+| --- | --- |
+| `account_access` | login, log in, password, reset, 2fa, two-factor, authenticator, can't access, account locked |
+| `technical_issue` | error, crash, timeout, failed, failure, not working, not loading, unavailable, 500 |
+| `billing_question` | billing, payment, invoice, refund, charge, subscription, receipt, card |
+| `feature_request` | feature, enhancement, suggestion, request, add, improve, would like |
+| `bug_report` | bug, defect, reproduce, reproduction, steps to reproduce, expected, actual |
+| `other` | no category keyword matched |
+
+Priority precedence is `urgent` > `high` > `low` > `medium`.
+
+## Configuration Flags
+
+```properties
+tickets.classification.auto-classify-on-create=true
+tickets.classification.auto-classify-on-import=true
+tickets.classification.allow-create-manual-override=true
+tickets.classification.allow-import-manual-override=true
 ```
 
 ## Error Shapes
@@ -60,10 +93,43 @@ General:
 
 Creates a ticket. Returns `201`.
 
+With manual category/priority:
+
 ```bash
 curl -X POST http://localhost:8080/tickets \
   -H "Content-Type: application/json" \
   -d '{"customer_id":"CUST-1","customer_email":"ada@example.com","customer_name":"Ada Lovelace","subject":"Cannot access account","description":"I cannot access my account after resetting my password.","category":"account_access","priority":"high","status":"new","assigned_to":"agent-1","tags":["login"],"metadata":{"source":"web_form","browser":"Firefox","device_type":"desktop"}}'
+```
+
+With default auto-classification:
+
+```bash
+curl -X POST http://localhost:8080/tickets \
+  -H "Content-Type: application/json" \
+  -d '{"customer_id":"CUST-AUTO-1","customer_email":"auto@example.com","customer_name":"Auto Customer","subject":"Production down security issue","description":"Production down security incident is critical and blocking checkout.","status":"new","assigned_to":"agent-1","tags":["security"],"metadata":{"source":"api","device_type":"desktop"}}'
+```
+
+## POST /tickets/{id}/auto-classify
+
+Runs the classifier for an existing ticket, applies the classifier category/priority, stores evidence, and returns the decision.
+
+```bash
+curl -X POST http://localhost:8080/tickets/{id}/auto-classify
+```
+
+Response:
+
+```json
+{
+  "category": "account_access",
+  "priority": "urgent",
+  "confidence_score": 0.85,
+  "reasoning": "Matched category account_access from keywords...",
+  "keywords_found": ["can't access", "password"],
+  "suggested_category": "account_access",
+  "suggested_priority": "urgent",
+  "manual_override_applied": false
+}
 ```
 
 ## GET /tickets
@@ -73,7 +139,7 @@ Lists tickets. Optional filters:
 `category`, `priority`, `status`, `customer_id`, `customer_email`, `assigned_to`, `source`, `tag`
 
 ```bash
-curl "http://localhost:8080/tickets?category=account_access&priority=high&source=web_form"
+curl "http://localhost:8080/tickets?category=account_access&priority=urgent&source=api"
 ```
 
 ## GET /tickets/{id}
@@ -86,12 +152,12 @@ curl http://localhost:8080/tickets/11111111-1111-1111-1111-111111111111
 
 ## PUT /tickets/{id}
 
-Replaces editable ticket fields. Preserves `id` and `created_at`; updates `updated_at`.
+Replaces editable ticket fields. Preserves `id` and `created_at`; updates `updated_at`. Changing `category` or `priority` marks `manual_override_applied`.
 
 ```bash
 curl -X PUT http://localhost:8080/tickets/{id} \
   -H "Content-Type: application/json" \
-  -d '{"customer_id":"CUST-1","customer_email":"ada@example.com","customer_name":"Ada Lovelace","subject":"Cannot access account","description":"The access issue has been resolved by support.","category":"account_access","priority":"high","status":"resolved","assigned_to":"agent-2","tags":["login"],"metadata":{"source":"web_form","browser":"Firefox","device_type":"desktop"}}'
+  -d '{"customer_id":"CUST-1","customer_email":"ada@example.com","customer_name":"Ada Lovelace","subject":"Cannot access account","description":"The access issue has been resolved by support.","category":"billing_question","priority":"low","status":"resolved","assigned_to":"agent-2","tags":["login"],"metadata":{"source":"web_form","browser":"Firefox","device_type":"desktop"}}'
 ```
 
 ## DELETE /tickets/{id}
@@ -108,8 +174,7 @@ Imports CSV, JSON, or XML as multipart form data. Field `file` is required. Opti
 
 ```bash
 curl -X POST http://localhost:8080/tickets/import -F "file=@demo/sample_tickets.csv"
-curl -X POST http://localhost:8080/tickets/import -F "file=@demo/sample_tickets.json"
-curl -X POST http://localhost:8080/tickets/import -F "file=@demo/sample_tickets.xml"
+curl -X POST http://localhost:8080/tickets/import -F "file=@demo/classification_tickets.csv"
 ```
 
 Import summary:
@@ -130,4 +195,4 @@ CSV headers:
 
 `customer_id,customer_email,customer_name,subject,description,category,priority,status,resolved_at,assigned_to,tags,metadata_source,metadata_browser,metadata_device_type`
 
-For CSV `tags`, separate multiple tags with semicolons.
+For CSV `tags`, separate multiple tags with semicolons. With default import auto-classification, category and priority cells may be blank.

@@ -1,21 +1,24 @@
-# Homework 2: Support Ticket Import API
+# Homework 2: Intelligent Customer Support API
 
 > **Student Name**: [Your Name]  
 > **Date Submitted**: [Date]  
-> **AI Tools Used**: Codex local desktop workflow with Superpowers planning/execution discipline
+> **AI Tools Used**: Codex local desktop workflow with Superpowers planning, TDD, and verification discipline
 
 ## Overview
 
-This project implements Task 1 of Homework 2: an API-only intelligent customer support ticket service. It supports ticket CRUD operations, filtering, validation, and bulk import from CSV, JSON, and XML files. Auto-classification is intentionally deferred to Task 2.
+This project implements Homework 2 Task 1 and Task 2 for an intelligent customer support ticket service. It supports ticket CRUD operations, filtering, CSV/JSON/XML bulk import, Swagger UI, and deterministic rule-based auto-classification for ticket category and priority.
 
 ## Features
 
 - Create, list, filter, get, update, and delete support tickets.
-- Bulk import valid records from CSV, JSON, and XML.
-- Partial import success with per-record validation errors.
-- In-memory repository for a focused part 1 API implementation.
-- Sanitized API errors for validation, malformed bodies, malformed imports, unsupported media types, and missing tickets.
-- Automated MockMvc test suite with JaCoCo coverage reporting.
+- Bulk import valid records from CSV, JSON, and XML with partial failure summaries.
+- Rule-based auto-classification on ticket creation and import by default.
+- Explicit `POST /tickets/{id}/auto-classify` endpoint.
+- Classification confidence, reasoning, keywords, suggested category/priority, timestamp, and manual override evidence stored with tickets.
+- Manual category/priority overrides during create, import, and update.
+- In-memory repository and decision log for focused homework scope.
+- Swagger UI at `http://localhost:8080/api-docs`.
+- Automated MockMvc/JUnit test suite with JaCoCo coverage gate above 85%.
 - Manual QA assets: Postman collection, sample requests, sample data, and lifecycle scripts.
 
 ## Architecture
@@ -25,14 +28,14 @@ flowchart LR
     Client[API client or Postman] --> Controller[TicketController]
     Controller --> Service[TicketService]
     Controller --> ImportService[TicketImportService]
-    ImportService --> Csv[CsvTicketParser]
-    ImportService --> Json[JsonTicketParser]
-    ImportService --> Xml[XmlTicketParser]
-    Csv --> Validator[TicketValidator]
-    Json --> Validator
-    Xml --> Validator
-    Service --> Validator
+    Controller --> Swagger[Swagger UI and OpenAPI JSON]
+    Service --> Validator[TicketValidator]
+    Service --> Classifier[TicketClassificationService]
+    Service --> DecisionLog[ClassificationDecisionLog]
     Service --> Repo[In-memory TicketRepository]
+    ImportService --> Parser[CSV JSON XML parsers]
+    ImportService --> Validator
+    ImportService --> Service
 ```
 
 ## Quick Start
@@ -65,6 +68,7 @@ homework-2/
 │   ├── sample_tickets.csv
 │   ├── sample_tickets.json
 │   ├── sample_tickets.xml
+│   ├── classification_tickets.csv
 │   └── sample-requests.http
 ├── docs/
 │   ├── support-ticket-api.postman_collection.json
@@ -77,12 +81,12 @@ homework-2/
 
 ## Documentation
 
-- [HOWTORUN.md](HOWTORUN.md): setup, run commands, and smoke checks.
-- [API_REFERENCE.md](API_REFERENCE.md): endpoint contract and examples.
-- [ARCHITECTURE.md](ARCHITECTURE.md): design rationale and data flow.
+- [HOWTORUN.md](HOWTORUN.md): setup, run commands, smoke checks, and troubleshooting.
+- [API_REFERENCE.md](API_REFERENCE.md): endpoint contract, classification fields, and examples.
+- [ARCHITECTURE.md](ARCHITECTURE.md): design rationale, data flow, and trade-offs.
 - [TESTING_GUIDE.md](TESTING_GUIDE.md): automated and manual QA instructions.
 - [CHANGELOG.md](CHANGELOG.md): implementation history.
 
 ## Scope Notes
 
-Task 1 stores tickets in memory. Classification confidence, decision logs, and `POST /tickets/{id}/auto-classify` are reserved for Task 2.
+The service intentionally uses in-memory ticket storage and an in-memory classification decision log. Task 2 uses deterministic local rules rather than an LLM or integrated agentic workflow so the behavior is transparent, auditable, and easy to test.

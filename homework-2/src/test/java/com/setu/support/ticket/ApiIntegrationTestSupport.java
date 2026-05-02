@@ -21,9 +21,13 @@ abstract class ApiIntegrationTestSupport {
     @Autowired
     TicketRepository repository;
 
+    @Autowired
+    TicketClassificationDecisionLog decisionLog;
+
     @BeforeEach
     void clearTickets() {
         repository.clear();
+        decisionLog.clear();
     }
 
     String validTicketJson() {

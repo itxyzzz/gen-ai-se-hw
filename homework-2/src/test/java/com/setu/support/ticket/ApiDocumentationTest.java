@@ -27,6 +27,7 @@ class ApiDocumentationTest extends ApiIntegrationTestSupport {
             .andExpect(jsonPath("$.info.title").value("Homework 2 Support Ticket API"))
             .andExpect(jsonPath("$.paths['/tickets']").exists())
             .andExpect(jsonPath("$.paths['/tickets/import']").exists())
-            .andExpect(jsonPath("$.paths['/tickets/{id}']").exists());
+            .andExpect(jsonPath("$.paths['/tickets/{id}']").exists())
+            .andExpect(jsonPath("$.paths['/tickets/{id}/auto-classify']").exists());
     }
 }

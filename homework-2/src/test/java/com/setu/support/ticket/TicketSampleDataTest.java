@@ -53,6 +53,25 @@ class TicketSampleDataTest extends ApiIntegrationTestSupport {
             .andExpect(jsonPath("$.failed").value(2));
     }
 
+    @Test
+    void demoClassificationFileImportsAndAutoClassifiesRecords() throws Exception {
+        mockMvc.perform(multipart("/tickets/import")
+                .file(file("classification_tickets.csv", "text/csv", readDemo("classification_tickets.csv"))))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.total_records").value(5))
+            .andExpect(jsonPath("$.successful").value(5));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/tickets")
+                .param("category", "bug_report"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].priority").value("medium"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/tickets")
+                .param("priority", "urgent"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].classification_keywords").isArray());
+    }
+
     private String readDemo(String name) throws Exception {
         return Files.readString(Path.of("demo", name));
     }

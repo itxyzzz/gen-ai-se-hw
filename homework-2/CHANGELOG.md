@@ -1,5 +1,29 @@
 # Homework 2 Changelog
 
+## Homework 2 - Step 3
+
+### Added
+- Added deterministic rule-based ticket auto-classification for category and priority.
+- Added `POST /tickets/{id}/auto-classify`.
+- Added classification confidence, reasoning, keywords, suggestions, timestamp, and manual override evidence to ticket responses.
+- Added default-on create/import classification flags and independent manual override flags.
+- Added in-memory classification decision logging with application log output.
+- Added classification-focused demo data and Postman/manual request coverage.
+
+### Changed
+- Create and import flows can now omit category and priority when auto-classification is enabled.
+- Import validation now respects import classification flags while preserving partial failure summaries.
+- Update flow marks category/priority edits as manual override evidence.
+- README, API reference, architecture, runbook, testing guide, and Postman assets now cover Task 2.
+
+### Fixed
+- Removed the Task 1 documentation limitation that reserved classification for later work.
+
+### Tests
+- Added focused classifier, classification API, disabled-configuration, decision-log, and OpenAPI path tests.
+- Verified targeted Task 2 classifier/API/OpenAPI slices during implementation.
+- Verified `mvn clean verify` with 53 passing tests and 93.55% JaCoCo line coverage.
+
 ## Homework 2 - Step 2
 
 ### Added

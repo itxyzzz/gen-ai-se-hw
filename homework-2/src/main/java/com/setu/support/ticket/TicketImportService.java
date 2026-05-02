@@ -17,19 +17,22 @@ public class TicketImportService {
     private final CsvTicketParser csvTicketParser;
     private final JsonTicketParser jsonTicketParser;
     private final XmlTicketParser xmlTicketParser;
+    private final TicketClassificationProperties classificationProperties;
 
     public TicketImportService(
         TicketService ticketService,
         TicketValidator validator,
         CsvTicketParser csvTicketParser,
         JsonTicketParser jsonTicketParser,
-        XmlTicketParser xmlTicketParser
+        XmlTicketParser xmlTicketParser,
+        TicketClassificationProperties classificationProperties
     ) {
         this.ticketService = ticketService;
         this.validator = validator;
         this.csvTicketParser = csvTicketParser;
         this.jsonTicketParser = jsonTicketParser;
         this.xmlTicketParser = xmlTicketParser;
+        this.classificationProperties = classificationProperties;
     }
 
     public TicketImportSummary importFile(MultipartFile file, String requestedFormat) {
@@ -44,9 +47,14 @@ public class TicketImportService {
 
         for (int index = 0; index < records.size(); index++) {
             CreateTicketRequest request = records.get(index);
-            List<ValidationErrorResponse.FieldError> validationErrors = validator.validateFields(request);
+            boolean requireClassificationFields = !classificationProperties.isAutoClassifyOnImport();
+            List<ValidationErrorResponse.FieldError> validationErrors = validator.validateFields(
+                request,
+                requireClassificationFields,
+                requireClassificationFields
+            );
             if (validationErrors.isEmpty()) {
-                createdIds.add(ticketService.create(request).id());
+                createdIds.add(ticketService.createFromImport(request).id());
             } else {
                 failedRecords++;
                 int recordNumber = index + 1;

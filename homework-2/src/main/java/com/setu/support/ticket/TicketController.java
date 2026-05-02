@@ -39,6 +39,11 @@ public class TicketController {
         return ticketImportService.importFile(file, format);
     }
 
+    @PostMapping("/tickets/{id}/auto-classify")
+    public ClassificationResponse autoClassify(@PathVariable UUID id) {
+        return ticketService.autoClassify(id);
+    }
+
     @GetMapping("/tickets")
     public List<Ticket> list(
         @RequestParam(required = false) String category,

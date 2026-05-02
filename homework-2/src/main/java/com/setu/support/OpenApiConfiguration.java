@@ -13,6 +13,6 @@ public class OpenApiConfiguration {
             .info(new Info()
                 .title("Homework 2 Support Ticket API")
                 .version("0.0.1-SNAPSHOT")
-                .description("CRUD, filtering, and multi-format import API for support tickets."));
+                .description("CRUD, filtering, multi-format import, Swagger UI, and rule-based auto-classification API for support tickets."));
     }
 }

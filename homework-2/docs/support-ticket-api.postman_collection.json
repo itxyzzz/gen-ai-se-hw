@@ -1,12 +1,13 @@
 {
   "info": {
     "name": "Homework 2 Support Ticket API",
-    "description": "Postman collection for CRUD, filtering, CSV/JSON/XML imports, validation, and malformed import checks.",
+    "description": "Postman collection for CRUD, filtering, CSV/JSON/XML imports, Swagger-backed API checks, validation, and Task 2 auto-classification workflows.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {"key": "baseUrl", "value": "http://localhost:8080"},
-    {"key": "ticketId", "value": ""}
+    {"key": "ticketId", "value": ""},
+    {"key": "autoTicketId", "value": ""}
   ],
   "item": [
     {
@@ -22,18 +23,44 @@
       },
       "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test('created', function () { pm.response.to.have.status(201); });", "pm.collectionVariables.set('ticketId', pm.response.json().id);"]}}]
     },
+    {
+      "name": "Create ticket with auto-classification",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{baseUrl}}/tickets",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"CUST-AUTO-POSTMAN-1\",\n  \"customer_email\": \"auto-postman@example.com\",\n  \"customer_name\": \"Auto Postman Customer\",\n  \"subject\": \"Production down security issue\",\n  \"description\": \"Production down security incident is critical and blocking checkout.\",\n  \"status\": \"new\",\n  \"assigned_to\": \"agent-postman\",\n  \"tags\": [\"security\", \"postman\"],\n  \"metadata\": {\"source\": \"api\", \"browser\": \"Chrome\", \"device_type\": \"desktop\"}\n}"
+        }
+      },
+      "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test('auto classified', function () { pm.response.to.have.status(201); pm.expect(pm.response.json().priority).to.eql('urgent'); });", "pm.collectionVariables.set('autoTicketId', pm.response.json().id);"]}}]
+    },
+    {
+      "name": "Create ticket manual override wins",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{baseUrl}}/tickets",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"CUST-OVERRIDE-POSTMAN-1\",\n  \"customer_email\": \"override-postman@example.com\",\n  \"customer_name\": \"Override Postman Customer\",\n  \"subject\": \"Cannot access account\",\n  \"description\": \"I can't access my account after password reset failed.\",\n  \"category\": \"billing_question\",\n  \"priority\": \"low\",\n  \"status\": \"new\",\n  \"assigned_to\": \"agent-postman\",\n  \"tags\": [\"login\"],\n  \"metadata\": {\"source\": \"api\", \"device_type\": \"desktop\"}\n}"
+        }
+      }
+    },
+    {"name": "Explicit auto-classify existing ticket", "request": {"method": "POST", "url": "{{baseUrl}}/tickets/{{ticketId}}/auto-classify"}},
     {"name": "List tickets", "request": {"method": "GET", "url": "{{baseUrl}}/tickets"}},
     {"name": "Filter tickets", "request": {"method": "GET", "url": "{{baseUrl}}/tickets?category=account_access&priority=high&source=web_form"}},
     {"name": "Get ticket by id", "request": {"method": "GET", "url": "{{baseUrl}}/tickets/{{ticketId}}"}},
     {
-      "name": "Update ticket",
+      "name": "Update ticket manual override",
       "request": {
         "method": "PUT",
         "header": [{"key": "Content-Type", "value": "application/json"}],
         "url": "{{baseUrl}}/tickets/{{ticketId}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"customer_id\": \"CUST-POSTMAN-1\",\n  \"customer_email\": \"postman@example.com\",\n  \"customer_name\": \"Postman Customer\",\n  \"subject\": \"Cannot access account\",\n  \"description\": \"The access issue has now been investigated and resolved.\",\n  \"category\": \"account_access\",\n  \"priority\": \"high\",\n  \"status\": \"resolved\",\n  \"assigned_to\": \"agent-postman-2\",\n  \"tags\": [\"login\", \"postman\"],\n  \"metadata\": {\"source\": \"web_form\", \"browser\": \"Chrome\", \"device_type\": \"desktop\"}\n}"
+          "raw": "{\n  \"customer_id\": \"CUST-POSTMAN-1\",\n  \"customer_email\": \"postman@example.com\",\n  \"customer_name\": \"Postman Customer\",\n  \"subject\": \"Cannot access account\",\n  \"description\": \"The access issue has now been investigated and resolved.\",\n  \"category\": \"billing_question\",\n  \"priority\": \"low\",\n  \"status\": \"resolved\",\n  \"assigned_to\": \"agent-postman-2\",\n  \"tags\": [\"login\", \"postman\"],\n  \"metadata\": {\"source\": \"web_form\", \"browser\": \"Chrome\", \"device_type\": \"desktop\"}\n}"
         }
       }
     },
@@ -63,6 +90,14 @@
       }
     },
     {
+      "name": "Import classification sample",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/tickets/import",
+        "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": "../demo/classification_tickets.csv"}]}
+      }
+    },
+    {
       "name": "Partial import failure CSV",
       "request": {
         "method": "POST",
@@ -86,6 +121,8 @@
         "url": "{{baseUrl}}/tickets",
         "body": {"mode": "raw", "raw": "{\"customer_id\":\"CUST-BAD\",\"customer_email\":\"bad\",\"customer_name\":\"Bad\",\"subject\":\"\",\"description\":\"short\",\"category\":\"unknown\",\"priority\":\"instant\",\"status\":\"started\",\"metadata\":{\"source\":\"fax\"}}"}
       }
-    }
+    },
+    {"name": "Swagger UI", "request": {"method": "GET", "url": "{{baseUrl}}/api-docs"}},
+    {"name": "OpenAPI JSON", "request": {"method": "GET", "url": "{{baseUrl}}/v3/api-docs"}}
   ]
 }

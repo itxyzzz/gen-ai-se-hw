@@ -16,6 +16,25 @@ Content-Type: application/json
   "metadata": {"source": "web_form", "browser": "Chrome", "device_type": "desktop"}
 }
 
+### Create a ticket with default auto-classification
+POST http://localhost:8080/tickets
+Content-Type: application/json
+
+{
+  "customer_id": "CUST-AUTO-DEMO-1",
+  "customer_email": "auto-demo@example.com",
+  "customer_name": "Auto Demo Customer",
+  "subject": "Production down security issue",
+  "description": "Production down security incident is critical and blocking checkout.",
+  "status": "new",
+  "assigned_to": "agent-demo",
+  "tags": ["security", "demo"],
+  "metadata": {"source": "api", "browser": "Chrome", "device_type": "desktop"}
+}
+
+### Auto-classify an existing ticket explicitly
+POST http://localhost:8080/tickets/{{ticketId}}/auto-classify
+
 ### List tickets
 GET http://localhost:8080/tickets
 
@@ -53,4 +72,15 @@ Content-Disposition: form-data; name="file"; filename="sample_tickets.xml"
 Content-Type: application/xml
 
 < ./sample_tickets.xml
+--demo--
+
+### Import classification-focused CSV
+POST http://localhost:8080/tickets/import
+Content-Type: multipart/form-data; boundary=demo
+
+--demo
+Content-Disposition: form-data; name="file"; filename="classification_tickets.csv"
+Content-Type: text/csv
+
+< ./classification_tickets.csv
 --demo--
