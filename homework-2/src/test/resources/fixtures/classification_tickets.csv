@@ -1,0 +1,6 @@
+customer_id,customer_email,customer_name,subject,description,category,priority,status,resolved_at,assigned_to,tags,metadata_source,metadata_browser,metadata_device_type
+CUST-CLASS-1,class1@example.com,Classification One,Cannot access account,I can't access my account after password reset,,,new,,agent-class,login;password,api,,desktop
+CUST-CLASS-2,class2@example.com,Classification Two,Production down security,Production down security issue is critical and blocking checkout,,,new,,agent-class,security,api,,desktop
+CUST-CLASS-3,class3@example.com,Classification Three,Invoice refund,I need a refund for an invoice charge,,,new,,agent-class,billing;invoice,api,,desktop
+CUST-CLASS-4,class4@example.com,Classification Four,Feature suggestion,Minor cosmetic suggestion to improve dashboard filters,,,new,,agent-class,suggestion,api,,desktop
+CUST-CLASS-5,class5@example.com,Classification Five,Bug reproduction,Bug report with steps to reproduce expected and actual results,,,new,,agent-class,bug,api,,desktop
