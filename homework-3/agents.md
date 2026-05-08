@@ -36,18 +36,35 @@ If instructions conflict, follow the highest-priority repository and user instru
 - Keep process requirements in `docs/development-process.md`.
 - Keep internal operator behavior in `docs/operator-manual.md`.
 - Do not bury acceptance criteria in prose. Future tasks should include checkable definitions of done.
+- Before adding feature-specific tasks, confirm the feature spec carries forward the Agent-Control Baseline from `specification.md`.
 
 ## Finance-Sensitive Defaults
 
 Until the final feature-specific domain rules are researched, use conservative finance-safe defaults:
 
 - Never log raw sensitive personal, financial, authentication, or payment-card data.
-- Prefer masked examples over realistic secrets or account numbers.
-- Prefer idempotent write operations for externally retried actions.
+- Never include raw PII, PAN, CVV, secrets, account numbers, authentication tokens, or real production logs in prompts, examples, fixtures, screenshots, errors, or audit notes.
+- Prefer masked examples and opaque IDs over realistic secrets, card numbers, or account numbers.
+- Prefer idempotent write operations for externally retried actions, and document duplicate-request behavior before defining low-level tasks.
 - Preserve audit context for state-changing operations.
 - Separate end-user behavior from internal operator behavior.
-- Treat permission boundaries and stale data as first-class edge cases.
+- Treat permission boundaries, stale data, concurrent actions, invalid amounts or limits, dependency failures, duplicate commands, and redaction failures as first-class edge cases.
 - Do not make unsupported regulatory claims.
+
+## Agent-Control Baseline Enforcement
+
+Future agents must enforce these controls when completing the final feature specification:
+
+| Control | Agent rule |
+| --- | --- |
+| Synthetic data only | Use synthetic or masked examples only; reject requests to paste real customer, card, account, auth, transaction, or secret data into the homework docs. |
+| Role boundaries | Define allowed and forbidden actions for each user, support, compliance/ops, fraud/risk, and system role used by the feature. |
+| Safe audit events | For every state-changing task, state the required safe audit metadata and what must not be stored. |
+| Redaction | Add redaction expectations for logs, errors, audit notes, and operator views whenever sensitive data can appear. |
+| Idempotent state changes | Define idempotency keys or duplicate-handling behavior for retryable commands that affect financial state. |
+| Explicit state machines | Define valid states, transitions, rejected transitions, and stale-state behavior before task acceptance criteria are considered complete. |
+| Human review for sensitive ops | Add review or dual-approval expectations for exceptional, destructive, override, fraud, or compliance-sensitive operator actions. |
+| Verification mapping | Map each mid-level objective and baseline control to acceptance criteria, future test categories, or manual review evidence. |
 
 ## Verification Expectations
 
@@ -61,7 +78,7 @@ For documentation-only changes:
 For future feature-spec changes:
 
 - Define verification per mid-level objective.
-- Include happy path, negative path, edge case, permission, audit, and performance checks as documentation.
+- Include happy path, negative path, edge case, permission, audit, redaction, idempotency, stale-state, and performance checks as documentation.
 - Include measurable targets or clearly labeled assumed targets.
 - Record the verification approach in `CHANGELOG.md`.
 

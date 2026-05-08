@@ -32,6 +32,15 @@ This document defines feature-neutral conventions for a future finance-oriented 
 - Use idempotency keys for externally initiated state changes when duplicate execution would be harmful.
 - Define valid state transitions in the feature spec before defining low-level tasks.
 - State-changing operations should produce audit evidence even when the visible state does not change because the request was idempotent.
+- State-changing feature specs should define the idempotency key owner, key lifetime assumption, duplicate-response behavior, and whether the second request returns the original result or a stable conflict.
+- A retried command must not create duplicate financial effects, duplicate user notifications, or contradictory audit records.
+
+## State Machines
+
+- Define every durable business state before low-level tasks are written.
+- For each state transition, specify the actor allowed to initiate it, required preconditions, user-visible result, audit event, and rejected-transition behavior.
+- Treat stale version or stale timestamp conflicts as expected edge cases, not generic failures.
+- Do not infer transitions from prose alone; future specs should include a table or diagram when a feature has more than three states.
 
 ## Errors
 
@@ -58,6 +67,24 @@ State-changing future tasks should define audit metadata including:
 - Before and after state when safe and useful.
 - Reason code or workflow reason when an operator acts.
 - Timestamp and source channel.
+- Target resource type and opaque target identifier.
+- Idempotency key or replay marker when a command can be retried.
+- Review or approval identifier when a sensitive operator action requires human review.
+
+Safe audit events should follow this shape in future implementation specs:
+
+| Field | Requirement |
+| --- | --- |
+| `event_id` | Stable unique audit event identifier. |
+| `occurred_at` | UTC event timestamp. |
+| `actor_type` and `actor_id` | End user, operator, system job, or provider identity, using opaque identifiers. |
+| `actor_role` | Role or permission used for the action. |
+| `action` | Stable action name, such as `freeze_card` or `approve_limit_override`. |
+| `target_type` and `target_id` | Opaque target reference. |
+| `correlation_id` | Request or workflow correlation identifier. |
+| `reason_code` | Required for operator actions and optional for user actions. |
+| `before_state` and `after_state` | Include only safe state labels or redacted snapshots. |
+| `sensitive_data_present` | Boolean or classification marker, not raw sensitive values. |
 
 ## Logging And Redaction
 
@@ -65,6 +92,10 @@ State-changing future tasks should define audit metadata including:
 - Mask account-like, card-like, token-like, and authentication values in examples.
 - Prefer structured logs with correlation IDs for workflows that cross services.
 - Do not include raw request or response bodies unless the future spec defines a safe redaction policy.
+- Use allowlisted structured fields for logs and audit records. Do not rely on ad hoc string cleanup after logging raw data.
+- Redact PAN-like values to first-six/last-four only when the feature specifically requires inspection; otherwise use opaque references.
+- Never log CVV, passwords, one-time codes, session tokens, API keys, authorization headers, or full customer support notes.
+- Error messages should use stable codes and safe summaries instead of echoing invalid sensitive input.
 
 ## Naming
 

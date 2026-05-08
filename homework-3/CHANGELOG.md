@@ -1,5 +1,30 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 4
+
+### Added
+
+- Added a feature-neutral Agent-Control Baseline to `specification.md` with eight reusable controls for future EU banking-style finance feature specs.
+- Added researched, scoped banking-style control rationale to `docs/domain-rules.md`.
+- Added sensitive-operator-action review expectations to `docs/operator-manual.md`.
+
+### Changed
+
+- Tightened `agents.md` and `.github/copilot-instructions.md` so future agents must carry the control baseline into feature-specific tasks.
+- Expanded `docs/technical-conventions.md` with state-machine, idempotency, safe audit event, and redaction expectations.
+- Updated `README.md` to explain why real-bank enterprise controls were trimmed to homework-realistic controls.
+
+### Fixed
+
+- Reduced the risk of unsupported compliance claims by labeling EU banking controls as homework assumptions and deferring feature-specific legal obligations.
+
+### Tests
+
+- Verified required deliverables exist.
+- Verified the eight baseline controls appear in the Homework 3 package.
+- Scanned for unsupported compliance language; matches were limited to explicit scope-limiting or "do not invent" wording.
+- Verified the increment remains documentation-only and preserves newest-first changelog order.
+
 ## Homework 3 - Step 3
 
 ### Added
