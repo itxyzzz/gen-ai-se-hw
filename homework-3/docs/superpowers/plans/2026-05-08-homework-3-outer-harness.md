@@ -112,7 +112,7 @@ Include the Homework 3 required layered headings:
 ## Low-Level Tasks
 ```
 
-Each section must clearly state that feature-specific content is deferred until feature selection.
+Each section must clearly state that feature-specific content is intentionally postponed pending finance-feature selection.
 
 - [ ] **Step 3: Write `agents.md`**
 
@@ -124,7 +124,7 @@ Point Copilot-style agents to `homework-3/TASKS.md`, `agents.md`, `specification
 
 - [ ] **Step 5: Write `docs/domain-rules.md`**
 
-Mark this document as intentionally deferred until finance feature selection and research. List the research inputs required before it becomes authoritative.
+Mark this document as intentionally postponed pending finance-feature selection and research. List the research inputs required before it becomes authoritative.
 
 - [ ] **Step 6: Write `docs/technical-conventions.md`**
 

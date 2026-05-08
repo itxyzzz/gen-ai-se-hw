@@ -1,5 +1,38 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 6
+
+### Added
+
+- Added the approved Dispute Intake implementation plan under `docs/superpowers/plans/`.
+- Selected EU payment-account Dispute Intake as the Homework 3 finance feature.
+- Replaced the deferred scaffold in `specification.md` with a layered dispute-intake specification covering objective, scope, stakeholders, state machine, data concepts, edge cases, verification, performance targets, and low-level tasks.
+- Added feature-specific PSD2, GDPR, DORA, EBA ICT/security, EBA complaints-handling, and FIN-NET/ADR context to `docs/domain-rules.md`.
+- Added dispute queue roles, review queues, sensitive operator actions, audit-safe notes, and escalation rules to `docs/operator-manual.md`.
+
+### Changed
+
+- Updated `README.md` to explain the selected feature, EU jurisdiction decision, scope exclusions, performance-target rationale, verification depth, and industry practices.
+- Updated `agents.md` and `.github/copilot-instructions.md` so AI agents apply dispute-specific rules for posted transactions, evidence metadata, audit-safe notes, redaction, role boundaries, and state transitions.
+- Preserved the existing Agent-Control Baseline while applying it directly to Dispute Intake.
+- Reworded stale deferred-marker phrasing in the earlier outer-harness plan artifact so active package scans do not look unfinished.
+
+### Fixed
+
+- Removed deferred feature-selection language from the active Homework 3 specification package.
+- Reduced unsupported compliance risk by documenting regulatory sources as design rationale and excluding exact legal deadlines, refund obligations, chargeback processing, regulator reporting, and ADR outcomes.
+
+### Tests
+
+- Verified the current branch is `homework-3-submission` before editing.
+- Verified the working tree was clean before the Step 6 documentation changes.
+- Verified required deliverables are present.
+- Verified local Markdown links resolve in the changed reviewer-facing docs.
+- Verified the unfinished-marker scan is clean for the planned marker set and accidental patch markers.
+- Verified `specification.md` contains all required Homework 3 layers.
+- Verified Agent-Control Baseline coverage remains present and applied to Dispute Intake.
+- Verified `git diff --check` passes after whitespace cleanup.
+
 ## Homework 3 - Step 5
 
 ### Added
