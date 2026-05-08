@@ -1,5 +1,25 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 5
+
+### Added
+
+- Added the missing Superpowers-style implementation plan for the agent-controls baseline under `docs/superpowers/plans/`.
+
+### Changed
+
+- Recorded the plan artifact after the agent-controls baseline had already been implemented and committed.
+
+### Fixed
+
+- Fixed the missing plan archival record for the Homework 3 agent-controls increment.
+
+### Tests
+
+- Verified the plan file exists under `docs/superpowers/plans/`.
+- Verified the plan follows the required Superpowers plan header shape.
+- Verified the plan includes checkbox task steps and preserves the documentation-only scope.
+
 ## Homework 3 - Step 4
 
 ### Added
