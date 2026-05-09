@@ -555,36 +555,84 @@ The following task cards describe future implementation slices for the Dispute I
 
 #### M5.1 Stale version and concurrent decision behavior
 - **Supports:** M5, M3, M4
-- **Implementation prompt:** Protect operator and system-job writes with current-version checks.
-- **Create or update:** Create compare-and-swap version checks, stale conflict responses, stale-action audit events, and concurrency fixtures.
-- **Core behavior:** The first valid state-changing command with the current version wins; later commands using stale versions return `stale_dispute_version` and do not overwrite status, owner, notes, or evidence metadata.
-- **Edge cases and failure modes:** Concurrent accept/reject, assignment during transition, user response during closure, note creation during restricted transition, and system timeout marker race must resolve deterministically.
-- **Acceptance criteria:** Stale writes return conflict with safe current-state label. No stale command changes durable dispute state. Safe audit evidence records the rejected stale action when actor and correlation ID are available.
-- **Verification:** Cover concurrent transition race, assignment race, user-response versus closure race, note versus status race, stale system-job marker, and stale-action audit assertions.
+- **Implementation prompt:**
+  - **Context:** Dispute Intake has multiple actors who may touch the same case, so stale operator or system-job writes must be expected rather than treated as rare failures.
+  - **Task:** Implement current-version checks and deterministic conflict behavior for operator transitions, assignment changes, notes, user responses, evidence metadata updates, and system-job markers.
+  - **Constraints:** Require a current `version` or equivalent compare-and-swap token for mutating commands, return safe `stale_dispute_version` conflicts, preserve the first valid write, never overwrite a newer state, and record stale-action audit evidence when actor and correlation context exist. Do not expose restricted fields in conflict responses.
+  - **Examples:** Concurrent accept/reject decisions resolve with the first valid version winning; an assignment submitted against an old version returns conflict; a system timeout marker does not close a case after a user response has already moved it back to `under_review`.
+  - **Output format:** Provide version contract, compare-and-swap behavior, stale response shape, safe current-state projection, stale-action audit mapping, and concurrency tests.
+- **Create or update:** Create compare-and-swap version checks, current-version command requirements, stale conflict responses, safe current-state labels, stale-action audit events, and concurrency fixtures.
+- **Core behavior:** The first valid state-changing command with the current version wins; later commands using stale versions return `stale_dispute_version` and do not overwrite status, owner, notes, evidence metadata, user-response markers, or system-job markers.
+- **Edge cases and failure modes:** Concurrent accept/reject, assignment during transition, user response during closure, evidence update during information request, note creation during restricted transition, compliance approval race, queue refresh race, and system timeout marker race must resolve deterministically.
+- **Acceptance criteria:** Stale writes return conflict with a safe current-state label. No stale command changes durable dispute state or role-scoped data. Safe audit evidence records the rejected stale action when actor and correlation ID are available.
+- **Verification:** Cover concurrent transition race, assignment race, user-response versus closure race, evidence update race, note versus status race, approval race, queue refresh race, stale system-job marker, no-mutation assertions, safe conflict projection, and stale-action audit assertions.
 
 #### M5.2 Retry, idempotency, and rate-limit behavior
 - **Supports:** M5, M1, M2, M4
-- **Implementation prompt:** Define retry-safe behavior for user submissions and other retryable commands.
-- **Create or update:** Create idempotency key ownership rules, replay response behavior, retry headers or guidance, rate-limit policy, and retry coverage fixtures.
-- **Core behavior:** User-created disputes require a user/session-owned idempotency key. Equivalent replay returns the original result; non-equivalent replay with the same key returns a stable conflict. Excessive retries receive a safe rate-limit error.
-- **Edge cases and failure modes:** Client timeout after success, duplicate network delivery, same key different payload, key used by another user, repeated unsafe submissions, and retry while dependency is degraded must not create duplicates.
-- **Acceptance criteria:** Idempotency keys are scoped to the actor and command payload. Duplicate retries do not duplicate cases, evidence metadata, notifications, or audit history. Rate limits use safe errors and do not expose sensitive details.
-- **Verification:** Cover equivalent replay, changed-payload replay, cross-user key reuse, timeout retry, duplicate delivery, repeated unsafe content, rate-limit response, and duplicate audit prevention.
+- **Implementation prompt:**
+  - **Context:** User and operator clients may retry after timeouts, duplicate network delivery, or ambiguous dependency failures, but retries must not create duplicate cases, metadata, notifications, or audit history.
+  - **Task:** Implement retry-safe semantics for user submissions and other retryable commands, including idempotency-key ownership, payload fingerprinting, replay responses, duplicate audit prevention, and safe rate limits.
+  - **Constraints:** Scope idempotency keys to actor, session or service identity, command type, and payload fingerprint; protect stored keys; return the original result for equivalent replay; return stable conflict for changed payloads; block cross-user key reuse; and make rate-limit responses safe and non-enumerating.
+  - **Examples:** A duplicate create-dispute request after client timeout returns the original `case_`; the same key with a different evidence description returns idempotency conflict; excessive unsafe retries return `rate_limited` without echoing unsafe input.
+  - **Output format:** Provide idempotency key contract, payload fingerprint rules, replay response shape, conflict behavior, rate-limit policy, audit rules, and retry/idempotency tests.
+- **Create or update:** Create idempotency key ownership rules, protected key storage assumptions, payload fingerprinting, replay response behavior, changed-payload conflict handling, cross-user key denial, retry headers or guidance, rate-limit policy, and retry coverage fixtures.
+- **Core behavior:** User-created disputes require a user/session-owned idempotency key. Equivalent replay returns the original result. Non-equivalent replay with the same key returns a stable conflict. Excessive retries receive a safe rate-limit error and do not reveal sensitive details.
+- **Edge cases and failure modes:** Missing key, client timeout after success, duplicate network delivery, same key with different payload, key used by another user, repeated unsafe submissions, retry after audit timeout, retry while transaction dependency is degraded, and operator command replay must not create duplicates or contradictory audit records.
+- **Acceptance criteria:** Idempotency keys are scoped to the actor and command payload. Duplicate retries do not duplicate cases, evidence metadata, information requests, user notifications, queue records, or audit history. Rate limits use safe errors and preserve privacy boundaries.
+- **Verification:** Cover missing key, equivalent replay, changed-payload replay, cross-user key reuse, timeout retry, duplicate delivery, repeated unsafe content, retry after audit timeout, dependency-degraded retry, operator command replay, rate-limit response, and duplicate audit prevention.
 
-#### M5.3 Performance and pagination target coverage
-- **Supports:** M5, M1, M2, M3
-- **Implementation prompt:** Add performance and pagination checks that prove the assumed homework targets are measurable.
-- **Create or update:** Create performance smoke scenarios for create, detail, queue, transition, read-after-write, and cursor pagination.
-- **Core behavior:** Measure create dispute p95 <= 500 ms, detail p95 <= 400 ms, queue p95 <= 800 ms for 25 items, state transition p95 <= 500 ms, and read-after-write visibility within 2 seconds under healthy dependencies.
-- **Edge cases and failure modes:** Maximum page size, invalid cursor, empty page, mutable queue while paging, large assigned queue, slow audit write, and queue projection lag must be tested or explicitly flagged.
-- **Acceptance criteria:** Future test reports can map each performance target to a scenario, fixture size, and pass/fail threshold. Queue pagination caps requests at 100 items and preserves deterministic ordering.
-- **Verification:** Cover create, detail, queue, transition, and read-after-write performance smoke checks plus default page, max page, invalid cursor, empty page, mutable queue pagination, and projection-lag tests.
+#### M5.3 Read-after-write consistency and projection recovery
+- **Supports:** M5, M1, M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Users and operators need recent dispute changes to become visible quickly, while queue projections may recover asynchronously only when durable dispute and audit records are already consistent.
+  - **Task:** Implement read-after-write expectations for create, detail, evidence metadata, information requests, user responses, assignment, state transitions, and queue projection refresh.
+  - **Constraints:** Target visibility within 2 seconds under healthy dependencies; keep user detail, operator detail, queue projection, and audit state consistent enough to avoid contradictory status; return safe pending/projection-lag behavior when derived views lag; and never claim success for a mutation that lacks durable audit evidence.
+  - **Examples:** A newly created `case_` appears in user detail immediately or within the documented target; ops queue shows the new submission within 2 seconds; if queue projection lags, durable detail still shows the correct state and recovery behavior is documented.
+  - **Output format:** Provide consistency contract, projection refresh triggers, lag response behavior, recovery rules, audit/detail reconciliation checks, and read-after-write tests.
+- **Create or update:** Create read-after-write contract, projection refresh triggers, user and operator detail consistency checks, queue projection recovery behavior, projection-lag safe responses, and audit/detail reconciliation fixtures.
+- **Core behavior:** Durable dispute and audit state are the source of truth. User detail, operator detail, and queue views should reflect successful writes within 2 seconds under healthy dependencies, with safe recovery behavior when derived projections lag.
+- **Edge cases and failure modes:** Queue projection lag, detail read immediately after create, evidence metadata read after attach, information request read after transition, user response during queue lag, assignment projection delay, audit/detail mismatch, duplicate projection event, and projection worker outage must not show contradictory or unauthorized information.
+- **Acceptance criteria:** Successful create, evidence update, information request, user response, assignment, transition, and closure flows have documented read-after-write expectations. Projection lag does not duplicate records, hide durable state from authorized detail views, or expose restricted fields. Audit/detail reconciliation can identify and recover stale projections.
+- **Verification:** Cover create-to-detail visibility, create-to-queue visibility, evidence read-after-write, information-request visibility, user-response visibility, assignment queue refresh, transition queue refresh, closure projection, projection-lag fallback, audit/detail reconciliation, duplicate projection event, and projection-worker outage recovery.
 
-#### M5.4 Verification fixtures and objective traceability
+#### M5.4 Performance target measurement
+- **Supports:** M5, M1, M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Performance expectations in this homework are assumed targets, so future implementers need explicit scenarios, fixture sizes, and thresholds to know whether the feature behaves well enough.
+  - **Task:** Implement performance smoke checks for create dispute, user detail, operator detail, queue listing, state transition, audit write path, and read-after-write visibility.
+  - **Constraints:** Measure p95 <= 500 ms for create dispute, p95 <= 400 ms for user dispute detail, p95 <= 800 ms for ops queue pages of 25 items, p95 <= 500 ms for state transition under healthy dependencies, and read-after-write visibility within 2 seconds. Keep audit persistence inside success timing and label targets as homework assumptions.
+  - **Examples:** Measure create with healthy transaction lookup and audit store; measure queue with 25 returned items and allowed filters; measure transition with current version and required audit event; record dependency-degraded cases separately from healthy p95 checks.
+  - **Output format:** Provide scenario catalog, fixture sizes, timing boundaries, measurement method, pass/fail thresholds, dependency assumptions, and performance smoke tests.
+- **Create or update:** Create performance scenario catalog, fixture-size definitions, timing instrumentation boundaries, healthy-dependency assumptions, audit-write timing inclusion, read-after-write timing checks, and performance smoke reports.
+- **Core behavior:** Measure create dispute p95 <= 500 ms, user detail p95 <= 400 ms, ops queue p95 <= 800 ms for 25 items, state transition p95 <= 500 ms, and read-after-write visibility within 2 seconds under healthy dependencies.
+- **Edge cases and failure modes:** Slow audit write, slow transaction lookup, slow permission check, degraded redaction check, large assigned queue, restricted queue filtering, projection lag, cold cache, and dependency timeout must be measured separately or flagged outside healthy-target results.
+- **Acceptance criteria:** Future test reports can map each performance target to a scenario, fixture size, timing boundary, dependency assumption, and pass/fail threshold. Audit write time is included before success for state-changing commands. Degraded-dependency results do not masquerade as healthy p95 measurements.
+- **Verification:** Cover create, user detail, operator detail, queue listing, state transition, audit-write timing, read-after-write timing, slow audit dependency, slow transaction dependency, projection lag, cold-cache note, and report-to-target traceability.
+
+#### M5.5 Cursor pagination and mutable queue scale behavior
+- **Supports:** M5, M3, M4
+- **Implementation prompt:**
+  - **Context:** Ops queues can grow and mutate while reviewers page through them, so pagination must remain deterministic, role-shaped, and safe under concurrent assignment or transition changes.
+  - **Task:** Implement cursor pagination behavior for operator queues, audit/history-style views, and any dispute lists that can grow beyond a small fixed set.
+  - **Constraints:** Use cursor pagination with default page size 25 and maximum 100, deterministic ordering by oldest actionable item with dispute-ID tie-break for queues, role-filtered field allowlists, safe invalid-cursor errors, and privacy-preserving empty states. Do not expose restricted notes, raw narratives, or unauthorized queue membership through cursors.
+  - **Examples:** An ops reviewer pages through `under_review` cases while another reviewer assigns one; a compliance reviewer sees only compliance queue items; invalid or tampered cursor returns a safe validation error without exposing encoded filter internals.
+  - **Output format:** Provide pagination contract, cursor contents and protection rules, ordering rules, page-size limits, mutable-data behavior, role-filtered projections, and pagination tests.
+- **Create or update:** Create cursor pagination contract, default and maximum page sizes, deterministic queue ordering, cursor validation, mutable-data paging rules, role-filtered projection rules, empty-page behavior, and pagination performance checks.
+- **Core behavior:** Queue and list endpoints use cursor pagination with default 25 items and maximum 100 items. Queue ordering is oldest actionable item first with deterministic dispute-ID tie-break and role-shaped fields.
+- **Edge cases and failure modes:** Invalid cursor, tampered cursor, page size over maximum, empty page, no-results state, restricted queue access, mutable queue while paging, item reassigned between pages, case closed between pages, duplicate sort key, and projection lag must resolve safely.
+- **Acceptance criteria:** Pagination caps requests at 100 items, preserves deterministic ordering, avoids duplicates or skipped items where the documented cursor contract can prevent them, and returns safe validation for invalid cursors. Cursors do not leak restricted filters, internal note text, raw narratives, or unauthorized resource identifiers.
+- **Verification:** Cover default page, max page, over-max page, invalid cursor, tampered cursor, empty page, no-results state, deterministic tie-break, mutable queue pagination, reassignment between pages, closure between pages, restricted queue denial, cursor privacy assertions, and p95 queue smoke checks.
+
+#### M5.6 Verification fixtures and objective traceability
 - **Supports:** M1, M2, M3, M4, M5
-- **Implementation prompt:** Build the future verification fixture set and coverage matrix that ties tests back to each objective.
-- **Create or update:** Create synthetic fixture catalog, objective-to-test matrix, manual review checklist, and coverage labels for `M1` through `M5`.
-- **Core behavior:** Provide synthetic users, accounts, posted and pending transactions, active and closed disputes, evidence metadata, operator roles, restricted notes, stale versions, and dependency-failure scenarios using only opaque IDs.
-- **Edge cases and failure modes:** Fixtures must avoid real PII, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, real production logs, realistic customer histories, and real evidence files.
-- **Acceptance criteria:** Every mid-level objective maps to happy path, negative path, permission, audit, redaction, concurrency, and performance coverage where relevant. Manual review confirms fixtures are synthetic and scoped to intake only.
-- **Verification:** Cover fixture linting, secret and sensitive-pattern scans, objective traceability review, audit-event coverage review, role-permission coverage review, and documentation review for unsupported legal or refund claims.
+- **Implementation prompt:**
+  - **Context:** The low-level tasks must remain traceable to M1-M5, and future verification needs synthetic fixtures that cover happy paths, negative paths, privacy, audit, concurrency, and performance without real customer data.
+  - **Task:** Build the future verification fixture catalog and objective-to-test matrix that ties tests, manual checks, and performance scenarios back to each mid-level objective.
+  - **Constraints:** Use opaque synthetic identifiers only; include posted and ineligible transactions, active and closed disputes, evidence metadata, operator roles, restricted notes, stale versions, idempotency keys, dependency failures, projection lag, and pagination scenarios. Avoid real PII, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, realistic customer histories, real evidence files, unsupported legal deadlines, refund obligations, chargeback rules, regulator duties, retention periods, or ADR outcomes.
+  - **Examples:** Fixture groups include `usr_` users with posted and pending `txn_` records, `case_` disputes in every durable state, metadata-only evidence rows, support/ops/compliance/fraud role claims, stale version tokens, audit-store outage markers, and queue pages with deterministic tie-break cases.
+  - **Output format:** Provide fixture catalog, objective-to-test matrix, coverage labels, manual review checklist, synthetic-data scan rules, and traceability verification steps.
+- **Create or update:** Create synthetic fixture catalog, objective-to-test matrix, manual review checklist, coverage labels for `M1` through `M5`, fixture lint rules, sensitive-pattern scan rules, and documentation traceability review.
+- **Core behavior:** Provide synthetic users, accounts, posted and pending transactions, active and closed disputes, evidence metadata, operator roles, restricted notes, stale versions, idempotency/retry scenarios, dependency-failure scenarios, projection-lag scenarios, and pagination scenarios using only opaque IDs.
+- **Edge cases and failure modes:** Fixtures must avoid real PII, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, real production logs, realistic customer histories, real evidence files, real file URLs, unsupported legal deadlines, refund obligations, chargeback rules, regulator reporting duties, fixed retention periods, and ADR outcomes.
+- **Acceptance criteria:** Every mid-level objective maps to happy path, negative path, permission, audit, redaction, concurrency, idempotency, dependency failure, pagination, and performance coverage where relevant. Manual review confirms fixtures are synthetic, metadata-only for evidence, and scoped to intake/internal tracking only.
+- **Verification:** Cover fixture linting, secret and sensitive-pattern scans, objective traceability review, audit-event coverage review, role-permission coverage review, stale-state coverage review, idempotency coverage review, projection and pagination coverage review, performance scenario coverage review, and documentation review for unsupported legal or refund claims.

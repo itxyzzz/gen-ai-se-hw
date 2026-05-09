@@ -1,5 +1,29 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 16
+
+### Added
+
+- Added a refined M5-only low-level task rewrite for reliability, concurrency, performance, pagination, and verification traceability.
+- Added new M5 task cards for read-after-write consistency and projection recovery, plus cursor pagination and mutable queue scale behavior.
+
+### Changed
+
+- Reworked M5 implementation prompts into structured context, task, constraints, examples, and output-format blocks.
+- Expanded M5 task details for stale-version conflicts, retry and idempotency semantics, projection lag recovery, performance target measurement, cursor privacy, and synthetic verification fixtures.
+- Strengthened M5 acceptance criteria and verification coverage for concurrency races, duplicate replay prevention, audit/detail reconciliation, healthy-dependency p95 targets, mutable queue pagination, and objective-to-test traceability.
+
+### Fixed
+
+- Reduced ambiguity in the M5 task depth by separating reliability, consistency, performance, pagination, and fixture coverage into executable task cards.
+
+### Tests
+
+- Reviewed the M5 task shape against the low-level task handoff and existing M1-M4 prompt-structure pattern.
+- Verified the change remains documentation-only and scoped to the M5 section of `specification.md`.
+- Counted six `M5.x` task cards and six M5 implementation prompts containing context, task, constraints, examples, and output-format guidance.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 15
 
 ### Added
