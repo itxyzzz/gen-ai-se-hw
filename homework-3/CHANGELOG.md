@@ -1,5 +1,28 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 10
+
+### Added
+
+- Replaced the rough `Low-Level Tasks` table in `specification.md` with readable task-card subsections grouped by `M1` through `M5`.
+
+### Changed
+
+- Converted the low-level task list from document-maintenance chores into future implementation-ready slices for intake eligibility, evidence metadata, internal review, audit/privacy controls, and reliability/performance.
+- Added explicit per-task fields for supports, implementation prompt, create-or-update target, core behavior, edge cases, acceptance criteria, and verification without using a wide table.
+- Expanded verification guidance inside each task to cover happy paths, negative paths, role permissions, audit events, redaction, concurrency, idempotency, dependency failure, pagination, performance, and synthetic fixture coverage.
+
+### Fixed
+
+- Made the low-level task hierarchy human-readable while preserving traceability to the five active mid-level objectives.
+
+### Tests
+
+- Verified each low-level task uses an `M1.x` through `M5.x` task ID and includes the required fields.
+- Verified only the five active objective IDs are used in the rewritten task cards.
+- Verified the rewrite remains documentation-only and evidence remains metadata-only.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 9
 
 ### Added
