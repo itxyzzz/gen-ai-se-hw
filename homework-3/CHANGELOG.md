@@ -1,5 +1,48 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 12
+
+### Added
+
+- Added structured subfields under each M1 implementation prompt: context, task, constraints, examples, and output format.
+
+### Changed
+
+- Reformatted the M1 implementation prompts from single-line paragraphs into scannable nested prompt blocks while preserving the same task-card fields and M1 scope.
+
+### Fixed
+
+- Improved readability for future AI-agent execution prompts without changing product behavior or expanding beyond intake eligibility and submission.
+
+### Tests
+
+- Verified each M1 task still has one implementation prompt with all five required prompt-structure subfields.
+- Verified `git diff --check` passes.
+
+## Homework 3 - Step 11
+
+### Added
+
+- Added a refined M1-only low-level task rewrite for intake eligibility and submission, expanding the objective into seven implementation-ready task cards.
+
+### Changed
+
+- Reworked M1 implementation prompts to follow the template guidance with explicit context, task, constraints, examples, and output-format expectations.
+- Split retry, duplicate-dispute, creation, and rejected-intake error/audit behavior into separate M1 leaf tasks so future implementers can verify each slice independently.
+- Strengthened M1 acceptance criteria and verification coverage for privacy, audit trails, safe errors, idempotency, duplicate prevention, dependency failure, and read-after-write behavior.
+
+### Fixed
+
+- Reduced ambiguity in the M1 task depth by making compliance, security, data privacy, audit, error handling, and testing requirements explicit in each relevant task.
+
+### Tests
+
+- Reviewed the M1 task shape against the low-level task handoff and prompt-structure guidance.
+- Verified the change remains documentation-only and scoped to the M1 section of `specification.md`.
+- Counted seven `M1.x` task cards and seven M1 implementation prompts containing context, task, constraints, examples, and output-format guidance.
+- Verified `specification.md` has no `M6` or `M7` references.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 10
 
 ### Added

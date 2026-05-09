@@ -195,50 +195,103 @@ The following task cards describe future implementation slices for the Dispute I
 
 ### M1 - Intake Eligibility And Submission
 
-#### M1.1 Transaction lookup and eligible empty state
+#### M1.1 Eligible transaction lookup and empty state
 - **Supports:** M1, M5
-- **Implementation prompt:** Build the user-facing transaction lookup path that returns only dispute-eligible posted transactions for the authenticated user.
-- **Create or update:** Create the eligible-transaction query, user transaction-list response shape, empty-state response, and lookup coverage fixtures.
-- **Core behavior:** Return posted transactions owned by the user with opaque `txn_` and `acct_` identifiers, amount, currency, merchant label, and posted timestamp. If none exist, return a safe empty state that explains there are no eligible transactions to dispute.
-- **Edge cases and failure modes:** Hide pending, reversed, missing, and wrong-owner transactions. Do not reveal whether another user's transaction exists. Treat transaction lookup outage as retryable dependency failure.
-- **Acceptance criteria:** A user with eligible posted transactions sees only their own eligible items. A user with no eligible transactions receives no dispute form for a specific transaction. Empty-state behavior creates no dispute or dispute audit event.
-- **Verification:** Cover happy-path lookup, empty eligible state, pending transaction exclusion, wrong-owner non-disclosure, transaction lookup dependency failure, and p95 lookup contribution to the create-dispute target.
+- **Implementation prompt:**
+  - **Context:** The product is EU/EEA payment-account dispute intake, and M1 succeeds only when users can choose from their own eligible posted transactions without exposing any other user's data.
+  - **Task:** Build the lookup path that returns dispute-eligible transaction summaries and the empty state used before a dispute is submitted.
+  - **Constraints:** Enforce least privilege, GDPR-style minimization, opaque identifiers, safe errors, no raw account/card/authentication data, no dispute mutation, no dispute audit event for passive empty-state lookup, and measurable latency contribution to the create flow.
+  - **Examples:** Return `txn_123` with `acct_123`, amount, currency, merchant label, and posted timestamp; hide pending, reversed, missing, and wrong-owner transactions.
+  - **Output format:** Provide response contract, dependency/error behavior, audit/telemetry decision, and unit/integration/performance test cases.
+- **Create or update:** Create the eligible-transaction query, transaction-summary response shape, empty-state response, dependency error mapping, and lookup coverage fixtures.
+- **Core behavior:** Return only posted transactions owned by the authenticated user with opaque `txn_` and `acct_` identifiers, amount, currency, merchant label, and posted timestamp. If none are eligible, return a safe empty state that explains there are no eligible transactions to dispute without presenting a transaction-specific dispute form.
+- **Edge cases and failure modes:** Hide pending, reversed, missing, and wrong-owner transactions. Do not reveal whether another user's transaction exists. Treat transaction lookup outage as a retryable dependency failure and avoid logging raw provider responses.
+- **Acceptance criteria:** A user with eligible posted transactions sees only their own eligible items. A user with no eligible transactions receives the documented empty state. Empty-state behavior creates no `Dispute`, no `DisputeEvidenceMetadata`, and no dispute audit event.
+- **Verification:** Cover happy-path lookup, empty eligible state, pending transaction exclusion, reversed transaction exclusion, wrong-owner non-disclosure, transaction lookup dependency failure, log redaction assertions, and p95 lookup contribution to the create-dispute target.
 
 #### M1.2 Posted-transaction ownership and eligibility guard
-- **Supports:** M1, M4
-- **Implementation prompt:** Implement the create-dispute eligibility guard before any dispute record is created.
-- **Create or update:** Create the eligibility validator, posted-transaction ownership check, safe validation errors, and rejected-intake audit hook.
-- **Core behavior:** Allow intake only when the transaction exists, belongs to the authenticated user, is posted, and is not excluded by known transaction state.
-- **Edge cases and failure modes:** Return `transaction_not_posted` for owned pending transactions, generic not-found or ineligible messaging for wrong-owner transactions, and safe dependency errors when ownership cannot be verified.
-- **Acceptance criteria:** Ineligible submissions do not create `Dispute`, `DisputeEvidenceMetadata`, or queue records. Owned pending transactions produce a specific safe error. Wrong-owner and missing transactions do not leak target details.
-- **Verification:** Cover owned posted, owned pending, missing, wrong-owner, reversed, permission-denied, and transaction-service-unavailable cases with unit and integration eligibility tests.
-
-#### M1.3 Reason category and safe user summary validation
-- **Supports:** M1, M2, M4
-- **Implementation prompt:** Validate reason categories and sanitize user-provided summaries during intake.
-- **Create or update:** Create reason-category validation, safe summary length rules, redaction checks, and unsafe-content error handling.
-- **Core behavior:** Accept only allowlisted reason categories and persist a redacted, length-limited `safe_user_summary` suitable for user detail, operator queue preview, and audit context.
-- **Edge cases and failure modes:** Reject unknown categories, empty required summaries, oversized summaries, raw account-like values, PAN-like values, authentication values, secrets, and unsafe accusations.
-- **Acceptance criteria:** Invalid categories return a stable validation code. Unsafe summaries are rejected or masked according to policy before persistence. Raw unsafe input is not copied into audit, logs, or operator notes.
-- **Verification:** Cover valid categories, invalid categories, empty summary, oversized summary, PAN-like text, account-like text, token-like text, and log/audit redaction assertions.
-
-#### M1.4 Duplicate active dispute handling
-- **Supports:** M1, M5
-- **Implementation prompt:** Prevent duplicate active disputes for the same user-owned transaction and reason category.
-- **Create or update:** Create duplicate lookup rules, active-status definition, conflict response, and duplicate-attempt audit event.
-- **Core behavior:** Treat `submitted`, `under_review`, and `needs_information` as active for duplicate prevention. Return the existing `case_` reference only for an equivalent idempotent retry; otherwise return `duplicate_active_dispute`.
-- **Edge cases and failure modes:** Different reason category, changed summary, changed evidence metadata, closed prior dispute, and concurrent submissions must produce deterministic behavior.
-- **Acceptance criteria:** Equivalent retries do not create a second case. Non-equivalent duplicate attempts return conflict. Closed-case behavior follows documented policy and does not reopen history silently.
-- **Verification:** Cover duplicate active case, equivalent idempotent replay, changed-payload conflict, closed prior case, and concurrent double-submit tests.
-
-#### M1.5 Idempotent dispute creation with `case_` reference
 - **Supports:** M1, M4, M5
-- **Implementation prompt:** Create the successful intake command that persists the dispute and returns a stable user-facing case reference.
-- **Create or update:** Create the dispute creation command, idempotency-key handling, `case_` reference generation, initial queue metadata, and `dispute_submitted` audit write.
-- **Core behavior:** On valid submission, create one `Dispute` in `submitted` status with `idempotency_key_hash`, version `1`, safe summary, reason category, and linked transaction identifiers.
-- **Edge cases and failure modes:** Missing idempotency key, reused key with different payload, audit write failure, queue metadata failure, and retry after client timeout must not produce duplicate cases.
-- **Acceptance criteria:** Successful intake returns one stable `case_` reference. Equivalent retry returns the original result. No success is returned unless the dispute and audit event are both durably recorded.
-- **Verification:** Cover happy-path create, missing idempotency key, key replay, key collision with changed payload, audit-write failure, retry after timeout, and read-after-write visibility within 2 seconds.
+- **Implementation prompt:**
+  - **Context:** Dispute creation must fail closed unless the transaction is confirmed to be a posted transaction owned by the authenticated user.
+  - **Task:** Implement the pre-create eligibility guard used by the submit command.
+  - **Constraints:** Run permission and ownership checks before creating any dispute state, use stable safe error codes, record rejected-intake audit only when actor/correlation context exists and the target can be safely referenced, preserve privacy for wrong-owner lookups, and include negative-path tests.
+  - **Examples:** Owned pending transaction returns `transaction_not_posted`; missing or wrong-owner transaction returns generic not-found or ineligible messaging; transaction dependency outage returns a retryable dependency error.
+  - **Output format:** Provide guard rules, error mapping, audit behavior, and test matrix.
+- **Create or update:** Create the eligibility validator, posted-transaction ownership check, transaction-state exclusions, safe validation errors, rejected-intake audit hook, and dependency-failure behavior.
+- **Core behavior:** Allow intake only when the transaction exists, belongs to the authenticated user, is posted, and is not excluded by known transaction state. Block mutation when ownership cannot be confirmed.
+- **Edge cases and failure modes:** Owned pending, reversed, missing, wrong-owner, permission-check failure, transaction-service timeout, and ambiguous transaction responses must not create a dispute or reveal another user's resource.
+- **Acceptance criteria:** Ineligible submissions do not create `Dispute`, `DisputeEvidenceMetadata`, queue records, user notifications, or success responses. Owned pending transactions produce a specific safe error. Wrong-owner and missing transactions do not leak target details.
+- **Verification:** Cover owned posted, owned pending, missing, wrong-owner, reversed, permission-denied, transaction-service-unavailable, audit-safe rejected intake, and fail-closed dependency cases with unit and integration eligibility tests.
+
+#### M1.3 Intake request contract and safe field validation
+- **Supports:** M1, M2, M4
+- **Implementation prompt:**
+  - **Context:** The intake form collects only the minimum data needed to register a dispute and route later review.
+  - **Task:** Define and validate the create-dispute request contract, including reason category and safe user summary.
+  - **Constraints:** Use the allowlisted reason categories in this spec, apply privacy minimization, reject or mask unsafe free text before persistence, avoid raw PII/PAN/account/authentication values in logs and audit, return stable validation errors, and include security/compliance tests.
+  - **Examples:** Allow `unauthorized_payment` and `incorrect_amount`; reject an unknown category, an oversized summary, or a summary containing card-like or token-like text.
+  - **Output format:** Provide request fields, validation rules, safe error codes, redaction behavior, and unit/integration/log-redaction test cases.
+- **Create or update:** Create the intake request shape, reason-category validation, safe summary length rules, redaction checks, unsafe-content error handling, and validation fixtures.
+- **Core behavior:** Accept only allowlisted reason categories and persist a redacted, length-limited `safe_user_summary` suitable for user detail, operator queue preview, and audit context. Do not require or accept binary evidence files during M1 intake.
+- **Edge cases and failure modes:** Reject unknown categories, empty required summaries, oversized summaries, raw account-like values, PAN-like values, authentication values, secrets, raw provider responses, unsupported legal conclusions, and unsafe accusations.
+- **Acceptance criteria:** Invalid categories return a stable validation code. Unsafe summaries are rejected or masked according to the future implementation's documented redaction policy before persistence. Raw unsafe input is not copied into audit, logs, queue previews, or operator notes.
+- **Verification:** Cover valid categories, invalid categories, empty summary, oversized summary, PAN-like text, account-like text, token-like text, secret-like text, unsupported legal/refund wording, and log/audit redaction assertions.
+
+#### M1.4 Idempotency key ownership and retry contract
+- **Supports:** M1, M5
+- **Implementation prompt:**
+  - **Context:** Client retries are expected in finance workflows and must not create duplicate active cases or contradictory audit history.
+  - **Task:** Implement idempotency-key ownership, payload matching, replay behavior, and rate-limit-safe retry semantics for create-dispute submissions.
+  - **Constraints:** Require a user/session-owned idempotency key, hash or otherwise protect key storage, bind the key to actor and command payload, return safe conflicts for changed payloads, prevent cross-user key reuse, preserve audit trail needs, and test timeout/replay scenarios.
+  - **Examples:** An equivalent retry returns the original `case_` response; the same key with a different summary returns a stable idempotency conflict; excessive retries return a safe rate-limit error.
+  - **Output format:** Provide key rules, replay response shape, error semantics, audit behavior, and retry/idempotency tests.
+- **Create or update:** Create idempotency-key validation, key ownership checks, payload fingerprinting, replay response behavior, changed-payload conflict handling, and retry/rate-limit coverage fixtures.
+- **Core behavior:** Require an idempotency key for retryable user submissions. Equivalent replay by the same actor returns the original result. Non-equivalent replay with the same key returns a stable conflict and does not create or mutate a dispute.
+- **Edge cases and failure modes:** Missing key, duplicate network delivery, client timeout after success, same key with changed payload, key used by another user, repeated unsafe submissions, and retry while audit or transaction dependencies are degraded must resolve without duplicates.
+- **Acceptance criteria:** Idempotency keys are scoped to the actor and command payload. Equivalent retries do not duplicate cases, queue records, notifications, or audit history. Changed-payload and cross-user key attempts return safe errors without exposing sensitive payload details.
+- **Verification:** Cover missing key, equivalent replay, changed-payload replay, cross-user key reuse, timeout retry, duplicate delivery, repeated unsafe content, rate-limit response, duplicate audit prevention, and retry after dependency failure.
+
+#### M1.5 Duplicate active dispute policy
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** A user must have at most one active dispute for the same transaction and reason category unless a documented closed-case policy allows a new intake.
+  - **Task:** Implement duplicate active dispute detection after eligibility validation and before case creation.
+  - **Constraints:** Use the durable state machine, treat active statuses consistently, keep duplicate errors safe, record duplicate-attempt audit when safe actor/correlation context exists, avoid leaking wrong-owner or restricted target details, and include concurrency tests.
+  - **Examples:** An existing `submitted`, `under_review`, or `needs_information` case for the same `txn_` and reason blocks a non-equivalent submit with `duplicate_active_dispute`; an equivalent idempotent retry returns the original `case_`; a closed prior dispute follows the documented closed-case policy.
+  - **Output format:** Provide duplicate definition, error mapping, audit handling, and unit/integration/concurrency tests.
+- **Create or update:** Create duplicate lookup rules, active-status definition, closed-case policy hook, conflict response, duplicate-attempt audit event, and concurrent submission guard.
+- **Core behavior:** Treat `submitted`, `under_review`, and `needs_information` as active for duplicate prevention. Return the existing `case_` reference only for an equivalent idempotent retry; otherwise return `duplicate_active_dispute`.
+- **Edge cases and failure modes:** Different reason category, changed summary, changed evidence metadata, closed prior dispute, concurrent submissions, audit write failure, and ambiguous lookup timeout must produce deterministic fail-closed behavior.
+- **Acceptance criteria:** Equivalent retries do not create a second case. Non-equivalent duplicate attempts return conflict. Closed-case behavior follows documented policy and does not reopen history silently. Duplicate attempts never expose another user's dispute reference.
+- **Verification:** Cover duplicate active case, equivalent idempotent replay, changed-payload conflict, different reason category, closed prior case, wrong-owner non-disclosure, concurrent double-submit, audit event assertions, and duplicate lookup dependency failure.
+
+#### M1.6 Dispute creation and `case_` response
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** After lookup, eligibility, validation, idempotency, and duplicate checks pass, the system creates the initial dispute case for internal tracking only.
+  - **Task:** Implement the successful create-dispute command and user-safe response.
+  - **Constraints:** Generate an opaque `case_` reference, create only `submitted` intake state, link to opaque transaction/account IDs, persist safe summary and reason category, write the `dispute_submitted` audit event before returning success, fail closed on audit persistence failure, avoid any refund/chargeback/legal outcome wording, and include happy-path plus failure tests.
+  - **Examples:** Create `case_123` for `usr_123` and `txn_123` with version `1`; return a safe confirmation containing current status and no internal notes.
+  - **Output format:** Provide command contract, persisted fields, response shape, audit event fields, error handling, and tests.
+- **Create or update:** Create the dispute creation command, `case_` reference generation, initial `submitted` state persistence, initial queue metadata, read-after-write projection behavior, and `dispute_submitted` audit write.
+- **Core behavior:** On valid submission, create one `Dispute` in `submitted` status with `idempotency_key_hash`, version `1`, safe user summary, reason category, linked opaque transaction identifiers, and safe creation timestamps.
+- **Edge cases and failure modes:** Audit write failure, partial dispute write, queue metadata failure, response projection lag, retry after client timeout, and dependency timeout after commit boundary must not produce duplicate or unaudited visible cases.
+- **Acceptance criteria:** Successful intake returns one stable `case_` reference and safe status text. No success is returned unless the dispute and audit event are both durably recorded. Queue projection can recover asynchronously only if durable dispute and audit state are consistent and the user response remains accurate.
+- **Verification:** Cover happy-path create, audit-write failure, partial-write rollback or compensation, queue metadata failure, retry after timeout, safe response wording, linked transaction immutability, and read-after-write visibility within 2 seconds.
+
+#### M1.7 Intake error semantics and rejected-submission audit
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** Rejected intake attempts must be understandable to users, useful for operators, safe for privacy, and auditable when actor/correlation context exists.
+  - **Task:** Define M1 error semantics and rejected-submission audit behavior across validation, permission, duplicate, idempotency, rate-limit, dependency, unsafe-content, and audit-write failures.
+  - **Constraints:** Return stable machine-readable error codes with safe summaries, do not echo sensitive input, do not reveal another user's transaction or dispute, fail closed when audit persistence or permission checks are unavailable, and include tests for every error class.
+  - **Examples:** Use `transaction_not_posted`, `duplicate_active_dispute`, `permission_denied`, `unsafe_summary_content` or equivalent unsafe-content code, `rate_limited`, `transaction_lookup_unavailable`, and `audit_write_unavailable` as safe codes.
+  - **Output format:** Provide error catalog entries, user/operator visibility rules, audit-event mapping, recoverability classification, and verification cases.
+- **Create or update:** Create the M1 error catalog, rejected-intake audit mapping, recoverability labels, user/operator-safe response shapes, correlation-ID handling, and negative-path coverage matrix.
+- **Core behavior:** Return deterministic safe errors for rejected intake and record safe audit evidence for blocked or rejected attempts when doing so will not expose another user's target details or raw unsafe content.
+- **Edge cases and failure modes:** Wrong-owner transaction, missing transaction, unsafe summary, duplicate active dispute, changed idempotency payload, rate limit, permission service outage, transaction lookup outage, audit writer outage, and malformed request must not create visible state.
+- **Acceptance criteria:** User-facing errors contain safe codes, safe summaries, and correlation IDs where appropriate. Operator-facing errors may include safe reason codes and correlation IDs only. Rejected-submission audit records contain actor, attempted action, safe reason code, and safe state labels without raw sensitive values.
+- **Verification:** Cover validation, permission, duplicate, idempotency conflict, unsafe content, rate limit, transaction dependency failure, audit-write failure, malformed request, wrong-owner privacy assertions, rejected-intake audit assertions, and no-mutation checks.
 
 ### M2 - Evidence And User Follow-Up
 
