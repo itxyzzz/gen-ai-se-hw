@@ -1,5 +1,30 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 8
+
+### Added
+
+- Added `Implementation Notes` subsections for domain assumptions, actors/roles/permissions, and builder guardrails in `specification.md`.
+
+### Changed
+
+- Moved jurisdiction/domain rationale, agent-control guardrails, and detailed role definitions out of the top of `specification.md` so the document flows from objective and scope directly into mid-level objectives.
+- Consolidated seven mid-level objectives into five broader, observable objectives covering intake eligibility, evidence/follow-up, internal review, audit/privacy/compliance controls, and reliability/performance.
+- Remapped verification and current low-level task traceability references from `M1-M7` to `M1-M5` without performing the later detailed low-level task rewrite.
+
+### Fixed
+
+- Reduced structural noise between the high-level objective and mid-level objectives.
+- Kept compliance, audit, redaction, role, and performance controls present in `specification.md` while preserving `docs/domain-rules.md`, `agents.md`, and `README.md` as the owning support documents for rationale and agent workflow.
+
+### Tests
+
+- Verified there are no domain-rationale, agent-control, or detailed role sections between the high-level objective and mid-level objectives.
+- Verified `specification.md` contains exactly five mid-level objectives.
+- Verified old `M6` and `M7` references were removed from `specification.md`.
+- Verified role permissions remain explicit in `Implementation Notes`.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 7
 
 ### Added
