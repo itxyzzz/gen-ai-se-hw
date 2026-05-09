@@ -43,6 +43,7 @@ flowchart TB
 | [docs/development-process.md](docs/development-process.md) | Required spec-first workflow without assuming external addons. |
 | [docs/operator-manual.md](docs/operator-manual.md) | Feature-specific internal operator, queue, review, escalation, and audit-note expectations for Dispute Intake. |
 | **Evidence and archive docs** | Historical evidence that explains how the package evolved. |
+| [docs/low-level-task-rewrite-handoff.md](docs/low-level-task-rewrite-handoff.md) | Focused handoff for the next low-level task rewrite increment. |
 | [docs/superpowers/plans/](docs/superpowers/plans/) | Historical AI-assistance implementation plans. These files explain how the package evolved and are not active normative requirements. |
 | [CHANGELOG.md](CHANGELOG.md) | Increment history for Homework 3. |
 

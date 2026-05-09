@@ -1,5 +1,25 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 9
+
+### Added
+
+- Added `docs/low-level-task-rewrite-handoff.md` as a focused handoff for starting the low-level task rewrite in a clean thread.
+
+### Changed
+
+- Documented the current five-objective specification shape, rewrite goals, task-format expectations, coverage targets, guardrails, and verification checklist for the next increment.
+- Linked the handoff document from the README package map.
+
+### Fixed
+
+- Reduced the amount of prior-thread context needed before rewriting the `Low-Level Tasks` section.
+
+### Tests
+
+- Verified the handoff document exists and is linked from `README.md`.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 8
 
 ### Added
