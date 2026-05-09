@@ -1,5 +1,28 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 14
+
+### Added
+
+- Added a refined M3-only low-level task rewrite for internal review workflow, including permissions, queues, assignment, transitions, notes, and sensitive approvals.
+
+### Changed
+
+- Reworked M3 implementation prompts into structured context, task, constraints, examples, and output-format blocks.
+- Expanded M3 task details for role permission checks, field-level visibility, queue pagination, assignment ownership, transition preconditions, operator note redaction, and self-approval prevention.
+- Strengthened M3 acceptance criteria and verification coverage for audit trails, stale-state behavior, restricted visibility, concurrency, performance, and fail-closed dependency handling.
+
+### Fixed
+
+- Reduced ambiguity in the M3 task depth by making support, ops, compliance, fraud/risk, and system-job boundaries explicit in executable task cards.
+
+### Tests
+
+- Reviewed the M3 task shape against the low-level task handoff and prompt-structure guidance.
+- Verified the change remains documentation-only and scoped to the M3 section of `specification.md`.
+- Counted six `M3.x` task cards and six M3 implementation prompts containing context, task, constraints, examples, and output-format guidance.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 13
 
 ### Added

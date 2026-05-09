@@ -383,57 +383,87 @@ The following task cards describe future implementation slices for the Dispute I
 
 #### M3.1 Role permission matrix enforcement
 - **Supports:** M3, M4
-- **Implementation prompt:** Enforce the documented role model across user, support, ops, compliance, fraud/risk, and system-job actions.
-- **Create or update:** Create authorization policy checks, forbidden-action responses, role-specific test fixtures, and permission-denial audit coverage.
-- **Core behavior:** Permit each actor only the actions listed for its role and deny status changes, restricted data access, and internal notes to unauthorized roles.
-- **Edge cases and failure modes:** Missing role claim, multiple role claims, expired operator session, support attempting outcome changes, system job attempting user-created dispute, and fraud/risk exposing user-visible conclusions.
-- **Acceptance criteria:** Every protected command checks role and case access before reading or mutating restricted fields. Permission failures return safe errors and do not change dispute state.
-- **Verification:** Cover role matrix tests for end user, support, ops, compliance, fraud/risk, and system job, including at least one allowed and one forbidden action per role.
+- **Implementation prompt:**
+  - **Context:** Internal review is safe only if end users, support, ops reviewers, compliance reviewers, fraud/risk reviewers, and system jobs can perform only their documented actions.
+  - **Task:** Implement the role permission matrix and protected-action guards for queue access, assignment, notes, restricted metadata, state transitions, information requests, and closure.
+  - **Constraints:** Enforce least privilege before reading restricted fields, use safe permission errors, avoid revealing restricted dispute details, record safe permission-denial audit evidence when actor/correlation context exists, and include role-by-role tests.
+  - **Examples:** Support can view masked status and add support-safe notes but cannot accept/reject/close; fraud/risk can add restricted classifications but cannot expose fraud conclusions to users; system jobs can update workflow metadata but cannot create user disputes.
+  - **Output format:** Provide permission matrix, guard placement, safe error semantics, audit behavior, role-specific fixtures, and authorization tests.
+- **Create or update:** Create authorization policy checks, protected resource access checks, forbidden-action responses, role-specific fixtures, permission-denial audit coverage, and field-level visibility guards.
+- **Core behavior:** Permit each actor only the actions listed for its role and deny status changes, restricted data access, internal notes, queue access, and sensitive outcome actions to unauthorized roles.
+- **Edge cases and failure modes:** Missing role claim, multiple conflicting role claims, expired operator session, support attempting outcome changes, system job attempting user-created dispute, fraud/risk exposing user-visible conclusions, and permission-service outage must fail safely.
+- **Acceptance criteria:** Every protected command checks role and case access before reading or mutating restricted fields. Permission failures return safe errors and do not change dispute state, notes, queue ownership, or audit-sensitive fields.
+- **Verification:** Cover role matrix tests for end user, support, ops, compliance, fraud/risk, and system job, including at least one allowed action and one forbidden action per role, field-level visibility assertions, permission-denial audit assertions, and permission-service-unavailable behavior.
 
 #### M3.2 Ops queue filters, sorting, and pagination
 - **Supports:** M3, M5
-- **Implementation prompt:** Build role-shaped operator queue views for actionable disputes.
-- **Create or update:** Create queue projection, filters, deterministic sorting, cursor pagination, role restrictions, and queue performance checks.
+- **Implementation prompt:**
+  - **Context:** Operators need scan-friendly queues for new submissions, in-review cases, needs-information cases, compliance review, and fraud/risk review, with role-shaped visibility.
+  - **Task:** Build operator queue projections, filters, deterministic sorting, cursor pagination, and role restrictions.
+  - **Constraints:** Use cursor pagination with default 25 and maximum 100 items, order by oldest actionable item with deterministic dispute-ID tie-break, omit raw user narratives by default, enforce restricted queue access, handle mutable data between pages, and include p95 queue tests.
+  - **Examples:** Filter by status, reason category, assigned reviewer, age bucket, compliance flag, fraud/risk flag, and requires-user-response flag; compliance queue results are visible only to authorized compliance reviewers.
+  - **Output format:** Provide queue response schema, filter catalog, sorting rules, pagination contract, role-filtered field allowlists, dependency/error behavior, and queue tests.
+- **Create or update:** Create queue projection, queue response shape, filter catalog, deterministic sorting, cursor pagination, role restrictions, no-results state, and queue performance checks.
 - **Core behavior:** Support filters for status, reason category, assigned reviewer, age bucket, compliance flag, fraud/risk flag, and requires-user-response flag. Default page size is 25 and maximum is 100.
-- **Edge cases and failure modes:** Invalid cursor, page size over maximum, restricted queue access, changed data between pages, no queue results, and queue dependency timeout must resolve safely.
-- **Acceptance criteria:** Queue results are ordered by oldest actionable item first with deterministic tie-break by dispute ID. Restricted queues expose only authorized items and omit raw user narratives.
-- **Verification:** Cover filter combinations, default and maximum page sizes, invalid cursor, deterministic ordering, no-results state, compliance/fraud queue restrictions, mutable-data pagination, and p95 <= 800 ms queue smoke checks.
+- **Edge cases and failure modes:** Invalid cursor, page size over maximum, restricted queue access, changed data between pages, no queue results, queue projection lag, queue dependency timeout, and unsafe preview fields must resolve safely.
+- **Acceptance criteria:** Queue results are ordered by oldest actionable item first with deterministic tie-break by dispute ID. Restricted queues expose only authorized items and omit raw user narratives, internal rationale, and restricted evidence details by default.
+- **Verification:** Cover filter combinations, default and maximum page sizes, invalid cursor, deterministic ordering, no-results state, compliance/fraud queue restrictions, mutable-data pagination, unsafe field omission, projection-lag behavior, and p95 <= 800 ms queue smoke checks.
 
 #### M3.3 Assignment and review ownership
 - **Supports:** M3, M4, M5
-- **Implementation prompt:** Implement reviewer assignment, ownership changes, and version-aware coordination.
-- **Create or update:** Create assignment command, assignment reason codes, owner field updates, queue projection refresh, and assignment audit event.
-- **Core behavior:** Authorized ops or compliance reviewers can assign eligible cases to a reviewer or team when the current dispute version matches.
-- **Edge cases and failure modes:** Assigning closed cases, assigning to unauthorized reviewer, stale version, self-assignment for sensitive cases, missing reason code, and audit write failure must not create misleading ownership.
-- **Acceptance criteria:** Assignment changes preserve previous owner in safe audit metadata. Stale assignment attempts return conflict. Queue views reflect assignment changes within the read-after-write target.
-- **Verification:** Cover assignment happy path, reassignment, unauthorized assignee, closed-case rejection, stale version conflict, missing reason code, audit-write failure, and queue projection refresh.
+- **Implementation prompt:**
+  - **Context:** Review ownership coordinates internal work and must be version-aware so reviewers do not overwrite each other's assignments or create misleading queue state.
+  - **Task:** Implement assignment, reassignment, ownership clearing where permitted, queue refresh, and assignment audit behavior.
+  - **Constraints:** Allow only authorized ops or compliance reviewers, require current version and reason code, validate assignee role/team eligibility, preserve previous owner in safe audit metadata, fail closed on audit write failure, and include stale-version tests.
+  - **Examples:** Assign `case_123` to `usr_ops_123` or an eligible review team; reject assignment to a support operator, closed case, stale version, or sensitive self-assignment path when dual review would be undermined.
+  - **Output format:** Provide command contract, assignee validation rules, version behavior, audit event shape, queue update behavior, error mapping, and tests.
+- **Create or update:** Create assignment command, reassignment behavior, assignment reason codes, assignee eligibility checks, owner field updates, queue projection refresh, stale-version handling, and assignment audit event.
+- **Core behavior:** Authorized ops or compliance reviewers can assign eligible cases to a reviewer or team when the current dispute version matches and the target assignee is permitted for the queue or sensitivity level.
+- **Edge cases and failure modes:** Assigning closed cases, assigning to unauthorized reviewer, stale version, self-assignment for sensitive cases, missing reason code, audit write failure, concurrent reassignment, and queue projection failure must not create misleading ownership.
+- **Acceptance criteria:** Assignment changes preserve previous owner in safe audit metadata. Stale assignment attempts return conflict and do not overwrite owner. Queue views reflect assignment changes within the read-after-write target or document safe projection recovery.
+- **Verification:** Cover assignment happy path, reassignment, owner clearing if allowed, unauthorized assignee, closed-case rejection, stale version conflict, concurrent reassignment, missing reason code, audit-write failure, and queue projection refresh.
 
 #### M3.4 State transition executor
 - **Supports:** M3, M4, M5
-- **Implementation prompt:** Implement the transition matrix for `submitted`, `under_review`, `needs_information`, `accepted`, `rejected`, and `closed`.
-- **Create or update:** Create transition guard, precondition checks, status update command, transition reason codes, and transition audit events.
-- **Core behavior:** Allow only documented transitions by the documented actor, with current version, required reason code, required evidence or approval, and safe user-visible outcome text.
-- **Edge cases and failure modes:** Invalid transition, wrong actor, stale version, missing evidence, missing approval, unsafe rejection summary, closure without policy, and audit write failure must block the transition.
-- **Acceptance criteria:** Every durable state can reach its documented next states and cannot skip required review. Accepted and rejected remain internal intake outcomes. No transition mutates the linked transaction record.
-- **Verification:** Cover full transition matrix tests, invalid-transition tests, stale version tests, missing-precondition tests, audit event assertions, safe outcome wording, and linked-transaction immutability checks.
+- **Implementation prompt:**
+  - **Context:** The durable dispute state machine is the core internal review workflow and must preserve intake-only semantics for `accepted` and `rejected`.
+  - **Task:** Implement the transition executor for `submitted`, `under_review`, `needs_information`, `accepted`, `rejected`, and `closed`.
+  - **Constraints:** Enforce documented actors, current version, required reason codes, required evidence or documented exception, required approval for sensitive cases, safe user-visible outcome text, audit persistence before success, and linked-transaction immutability.
+  - **Examples:** Ops can move `submitted` to `under_review`; authorized reviewers can request information; sensitive `accepted` or `rejected` transitions require compliance approval; closure from `needs_information` requires documented withdrawal or timeout policy without legal-deadline claims.
+  - **Output format:** Provide transition matrix implementation contract, precondition checks, safe error codes, audit event mapping, user-visible wording rules, and transition tests.
+- **Create or update:** Create transition guard, precondition checks, status update command, transition reason codes, safe outcome summary validation, blocked-transition behavior, and transition audit events.
+- **Core behavior:** Allow only documented transitions by the documented actor, with current version, required reason code, required evidence or approval, safe user-visible outcome text, and durable audit evidence.
+- **Edge cases and failure modes:** Invalid transition, wrong actor, stale version, missing evidence, missing approval, unsafe rejection summary, closure without policy, concurrent transition, dependency timeout, and audit write failure must block the transition.
+- **Acceptance criteria:** Every durable state can reach only its documented next states and cannot skip required review. Accepted and rejected remain internal intake outcomes only. No transition mutates the linked transaction record or deletes audit/evidence history.
+- **Verification:** Cover full transition matrix tests, invalid-transition tests, stale version tests, missing-precondition tests, sensitive approval requirements, audit event assertions, safe outcome wording, closure policy checks, concurrent transition behavior, and linked-transaction immutability checks.
 
 #### M3.5 Operator notes with scoped visibility
 - **Supports:** M3, M4
-- **Implementation prompt:** Implement structured operator notes with role-scoped visibility and redaction.
-- **Create or update:** Create `OperatorNote` persistence, note type allowlist, visibility rules, correction-note behavior, redaction validation, and note-created audit event.
+- **Implementation prompt:**
+  - **Context:** Operator notes support later review and audit, but they are sensitive because they may contain internal rationale, fraud/risk context, or compliance analysis.
+  - **Task:** Implement structured `OperatorNote` persistence with role-scoped visibility, append-only corrections, redaction validation, and note-created audit events.
+  - **Constraints:** Require `note_type`, `reason_code`, `safe_body`, author role, and visibility; reject or mask unsafe text before persistence; never expose internal notes to user detail; keep fraud/risk notes restricted; fail closed on redaction or audit failure; include log/audit privacy tests.
+  - **Examples:** Support adds a support-visible routing note; compliance adds a compliance-visible review note; fraud/risk adds a restricted classification note that support and users cannot see.
+  - **Output format:** Provide note schema, type and visibility allowlists, correction behavior, redaction rules, audit event shape, field-level projections, and tests.
+- **Create or update:** Create `OperatorNote` persistence, note type allowlist, role-scoped visibility rules, correction-note behavior, redaction validation, closed-case note policy, and note-created audit event.
 - **Core behavior:** Allow support, ops, compliance, and fraud/risk reviewers to add notes only within permitted visibility scopes using `note_type`, `reason_code`, and `safe_body`.
-- **Edge cases and failure modes:** Unsafe note text, missing reason code, unsupported note type, editing historical note, wrong role visibility, note on closed case, and redaction failure must resolve safely.
-- **Acceptance criteria:** Notes are append-only; corrections create new notes. User detail never exposes internal notes. Fraud/risk notes are hidden from support and user-facing outputs unless explicitly permitted by role policy.
-- **Verification:** Cover note creation per role, unsafe content rejection, append-only correction, visibility filtering, closed-case note policy, redaction failure, and audit/log allowlist assertions.
+- **Edge cases and failure modes:** Unsafe note text, missing reason code, unsupported note type, editing historical note, wrong role visibility, note on closed case, redaction failure, audit write failure, and log serialization failure must resolve safely.
+- **Acceptance criteria:** Notes are append-only; corrections create new notes that reference prior note IDs. User detail never exposes internal notes. Fraud/risk notes are hidden from support and user-facing outputs unless explicitly permitted by role policy.
+- **Verification:** Cover note creation per role, unsafe content rejection, append-only correction, visibility filtering, user-detail omission, closed-case note policy, redaction failure, audit-write failure, and audit/log allowlist assertions.
 
 #### M3.6 Sensitive outcome review and self-approval prevention
 - **Supports:** M3, M4
-- **Implementation prompt:** Enforce additional review requirements for sensitive accepted, rejected, or closed outcomes.
-- **Create or update:** Create sensitive-case flag evaluation, approval record reference, dual-review guard, self-approval denial, and blocked-transition audit event.
+- **Implementation prompt:**
+  - **Context:** Sensitive accepted, rejected, or closed outcomes require separation of duties so one operator cannot self-approve a restricted or high-risk decision.
+  - **Task:** Enforce sensitive-case flag evaluation, approval references, dual-review guards, self-approval prevention, and blocked-transition audit events.
+  - **Constraints:** Identify sensitivity by reason, amount, restricted data, fraud/risk signal, or policy flag; require configured compliance approval when dual review applies; block same-actor approval; hide restricted rationale from users; avoid legal/refund conclusions; and include sensitive/low-risk path tests.
+  - **Examples:** A flagged fraud/risk case cannot be rejected by the same ops reviewer who requested the sensitive outcome without compliance approval; a low-risk case may follow a documented single-review path.
+  - **Output format:** Provide sensitivity rules, approval record requirements, self-approval checks, blocked-transition errors, user-visible wording rules, audit metadata, and tests.
+- **Create or update:** Create sensitive-case flag evaluation, approval record reference, dual-review guard, self-approval denial, low-risk single-review rationale, restricted-rationale projection rules, and blocked-transition audit event.
 - **Core behavior:** When a case is marked sensitive by reason, amount, restricted data, fraud/risk signal, or policy flag, outcome transitions require the configured compliance approval and cannot be approved by the same actor who requested the sensitive outcome.
-- **Edge cases and failure modes:** Missing approval, approval by same operator, approval by wrong role, stale approval, removed sensitivity flag, and conflicting fraud/compliance recommendations must block or route the action safely.
-- **Acceptance criteria:** Sensitive accepted/rejected outcomes include an approval reference in audit metadata. Self-approval is rejected when dual review is required. User-visible text does not expose restricted rationale.
-- **Verification:** Cover sensitive accept, sensitive reject, low-risk single-review path, missing approval, wrong-role approval, self-approval denial, stale approval, restricted-rationale hiding, and audit approval-reference assertions.
+- **Edge cases and failure modes:** Missing approval, approval by same operator, approval by wrong role, stale approval, removed sensitivity flag, conflicting fraud/compliance recommendations, dependency failure, and audit write failure must block or route the action safely.
+- **Acceptance criteria:** Sensitive accepted/rejected/closed outcomes include an approval reference in audit metadata. Self-approval is rejected when dual review is required. User-visible text does not expose restricted rationale or imply a refund, chargeback, liability, or legal conclusion.
+- **Verification:** Cover sensitive accept, sensitive reject, sensitive close, low-risk single-review path, missing approval, wrong-role approval, self-approval denial, stale approval, conflicting recommendation routing, restricted-rationale hiding, and audit approval-reference assertions.
 
 ### M4 - Audit, Privacy, And Compliance Controls
 
