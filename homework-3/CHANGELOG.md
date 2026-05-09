@@ -1,5 +1,28 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 13
+
+### Added
+
+- Added a refined M2-only low-level task rewrite for evidence metadata, reviewer information requests, user responses, and user-safe case detail.
+
+### Changed
+
+- Reworked M2 implementation prompts into structured context, task, constraints, examples, and output-format blocks.
+- Expanded M2 task details for metadata-only evidence handling, evidence type requiredness, redaction, safe request text, user response ownership, audit events, stale-state behavior, and read-after-write visibility.
+- Strengthened M2 acceptance criteria and verification coverage for privacy, audit trails, safe errors, permission boundaries, duplicate retries, dependency failures, and performance expectations.
+
+### Fixed
+
+- Reduced ambiguity in the M2 task depth by making binary-file exclusions, real URL exclusions, restricted rationale hiding, and safe user-visible status behavior explicit.
+
+### Tests
+
+- Reviewed the M2 task shape against the low-level task handoff and prompt-structure guidance.
+- Verified the change remains documentation-only and scoped to the M2 section of `specification.md`.
+- Counted six `M2.x` task cards and six M2 implementation prompts containing context, task, constraints, examples, and output-format guidance.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 12
 
 ### Added

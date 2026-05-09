@@ -295,59 +295,89 @@ The following task cards describe future implementation slices for the Dispute I
 
 ### M2 - Evidence And User Follow-Up
 
-#### M2.1 Evidence metadata schema
+#### M2.1 Evidence metadata record contract
 - **Supports:** M2, M4
-- **Implementation prompt:** Define metadata-only evidence records linked to a dispute without implementing binary file storage.
-- **Create or update:** Create the `DisputeEvidenceMetadata` model, persistence contract, safe response shape, and metadata-only fixtures.
-- **Core behavior:** Persist `evidence_id`, `dispute_id`, `submitted_by`, `evidence_type`, `safe_description`, `redacted_reference`, and `received_at` with opaque IDs and UTC timestamps.
-- **Edge cases and failure modes:** Reject binary payloads, real file URLs, storage-provider references, malware-scan fields, missing dispute IDs, and evidence for disputes the actor cannot access.
-- **Acceptance criteria:** Evidence records contain metadata only. No task, fixture, response, audit event, or example contains a real file body or real download URL. Evidence cannot be attached across user boundaries.
-- **Verification:** Cover schema validation, metadata-only enforcement, forbidden binary/file URL fields, wrong-dispute permission denial, and synthetic fixture review.
+- **Implementation prompt:**
+  - **Context:** Evidence in this feature is metadata-only and supports intake review without storing real files, storage URLs, malware-scan details, or raw user documents.
+  - **Task:** Define the `DisputeEvidenceMetadata` record contract, persistence rules, safe response shape, and synthetic fixtures.
+  - **Constraints:** Use opaque IDs, UTC timestamps, least-privilege access, GDPR-style minimization, safe audit references, no binary payloads, no external file URLs, no raw PII/PAN/account/authentication values, and no storage-provider design.
+  - **Examples:** Persist `evidence_id`, `dispute_id`, `submitted_by`, `evidence_type`, `safe_description`, `redacted_reference`, and `received_at`; reject any field that implies a real file body or download location.
+  - **Output format:** Provide record fields, allowed and forbidden fields, persistence behavior, user/operator response projections, audit considerations, and schema/permission tests.
+- **Create or update:** Create the `DisputeEvidenceMetadata` model, persistence contract, field allowlist, safe response shape, metadata-only fixtures, and permission checks for evidence access.
+- **Core behavior:** Persist metadata with opaque identifiers and UTC timestamps, linked to an existing dispute the actor may access. Store enough safe context for reviewers without accepting binary content or external storage references.
+- **Edge cases and failure modes:** Reject binary payloads, real file URLs, storage-provider references, malware-scan fields, missing dispute IDs, wrong-dispute access, wrong-owner access, deleted or unavailable dispute lookup, and duplicate metadata identifiers.
+- **Acceptance criteria:** Evidence records contain metadata only. No task, fixture, response, audit event, or example contains a real file body, real download URL, raw provider response, or storage-provider implementation detail. Evidence cannot be attached across user boundaries.
+- **Verification:** Cover schema validation, metadata-only enforcement, forbidden binary/file URL/storage fields, wrong-dispute permission denial, missing dispute handling, duplicate identifier handling, audit-safe reference assertions, and synthetic fixture review.
 
 #### M2.2 Evidence type allowlist and requiredness rules
 - **Supports:** M2, M3, M4
-- **Implementation prompt:** Implement allowed evidence types and reason-category-specific evidence expectations.
-- **Create or update:** Create evidence type allowlist, optional-versus-required evidence rules, and reviewer-facing missing-evidence indicators.
-- **Core behavior:** Accept only configured evidence types and mark whether the current reason category can proceed with no evidence, needs reviewer follow-up, or blocks sensitive outcome decisions.
-- **Edge cases and failure modes:** Unknown evidence type, duplicate metadata reference, missing evidence for sensitive acceptance or rejection, and evidence submitted after closure must resolve safely.
-- **Acceptance criteria:** Invalid evidence type returns a stable validation error. Missing evidence can route a case to `needs_information` without inventing legal deadlines. Closed cases cannot receive new evidence metadata unless a documented policy allows correction notes.
-- **Verification:** Cover valid type, invalid type, duplicate evidence reference, no-evidence permitted category, no-evidence needs-information path, sensitive outcome blocked for missing evidence, and closed-case update rejection.
+- **Implementation prompt:**
+  - **Context:** Reviewers need structured evidence expectations, but the feature must avoid legal conclusions, refund obligations, chargeback rules, and exact external deadlines.
+  - **Task:** Implement the evidence type allowlist and reason-category-specific requiredness rules used by intake, reviewer follow-up, and sensitive outcome checks.
+  - **Constraints:** Accept only configured metadata types, keep requiredness as intake-review guidance, use safe validation errors, avoid unsupported legal or liability wording, preserve audit trail needs, and include tests for missing and invalid metadata.
+  - **Examples:** Mark some reason categories as allowed to proceed with no evidence, some as needing reviewer follow-up, and sensitive outcome decisions as blocked until required metadata or a documented reason is present.
+  - **Output format:** Provide allowlist entries, requiredness matrix, reviewer indicators, error codes, audit behavior for missing evidence, and validation/state-transition tests.
+- **Create or update:** Create evidence type allowlist, optional-versus-required evidence rules, reviewer-facing missing-evidence indicators, safe validation errors, and missing-evidence audit markers.
+- **Core behavior:** Accept only configured evidence types and mark whether the current reason category can proceed with no evidence, needs reviewer follow-up, or blocks sensitive accepted/rejected outcome decisions until required metadata or a documented exception exists.
+- **Edge cases and failure modes:** Unknown evidence type, duplicate metadata reference, missing evidence for sensitive acceptance or rejection, evidence submitted after closure, withdrawn dispute, mismatched reason category, and stale reviewer decision must resolve safely.
+- **Acceptance criteria:** Invalid evidence type returns a stable validation error. Missing evidence can route a case to `needs_information` without inventing legal deadlines. Closed cases cannot receive new evidence metadata unless a documented correction policy allows a metadata-only correction.
+- **Verification:** Cover valid type, invalid type, duplicate evidence reference, no-evidence permitted category, no-evidence needs-information path, sensitive outcome blocked for missing evidence, documented exception path, closed-case update rejection, and audit assertions for missing evidence.
 
 #### M2.3 Safe descriptions and redacted references
 - **Supports:** M2, M4
-- **Implementation prompt:** Apply redaction and safe-text validation to evidence descriptions and references.
-- **Create or update:** Create redaction checks for `safe_description`, redacted reference formatting, unsafe-content rejection, and audit-safe failure markers.
-- **Core behavior:** Store short descriptions that help reviewers understand the evidence type without storing raw personal data, account numbers, PAN, CVV, authentication values, secrets, or raw provider responses.
-- **Edge cases and failure modes:** Unsafe pasted text, realistic account values, token-like strings, excessive detail, unsupported fraud accusations, and redaction service outage must not persist raw unsafe content.
-- **Acceptance criteria:** Unsafe values are rejected or masked before persistence. Rejected unsafe values are not written into audit events or logs. Evidence references remain opaque or redacted.
-- **Verification:** Cover redaction unit tests for PAN-like, account-like, token-like, authentication-like, long free-text, and raw-provider-response examples plus log and audit allowlist assertions.
+- **Implementation prompt:**
+  - **Context:** Evidence descriptions and references are free-text-adjacent fields, so they are high-risk for accidental sensitive data, unsupported accusations, and raw provider details.
+  - **Task:** Apply safe-text validation, redaction, length limits, and audit-safe failure handling for `safe_description` and `redacted_reference`.
+  - **Constraints:** Reject or mask unsafe content before persistence, never copy raw unsafe values into logs or audit events, use stable safe error codes, fail closed when redaction is unavailable, and include security/privacy tests.
+  - **Examples:** Permit a short neutral description such as "receipt metadata provided"; reject or mask account-like, PAN-like, token-like, authentication-like, secret-like, raw-provider-response, or unsupported fraud-accusation text.
+  - **Output format:** Provide validation rules, redaction policy behavior, safe error mapping, audit/log allowlist behavior, and redaction unit/integration tests.
+- **Create or update:** Create redaction checks for `safe_description`, `redacted_reference` formatting, unsafe-content rejection, redaction dependency handling, and audit-safe failure markers.
+- **Core behavior:** Store short descriptions that help reviewers understand the evidence type without storing raw personal data, account numbers, PAN, CVV, authentication values, secrets, unsupported accusations, or raw provider responses.
+- **Edge cases and failure modes:** Unsafe pasted text, realistic account values, token-like strings, excessive detail, unsupported fraud accusations, raw provider responses, redaction service outage, and log serialization failures must not persist raw unsafe content.
+- **Acceptance criteria:** Unsafe values are rejected or masked before persistence. Rejected unsafe values are not written into audit events, logs, queue previews, or user detail. Evidence references remain opaque or redacted.
+- **Verification:** Cover redaction unit tests for PAN-like, account-like, token-like, authentication-like, secret-like, long free-text, unsupported accusation, and raw-provider-response examples plus log, audit, and response allowlist assertions.
 
 #### M2.4 Reviewer information request flow
 - **Supports:** M2, M3, M4
-- **Implementation prompt:** Allow authorized reviewers to request more information from the user with safe user-visible text.
-- **Create or update:** Create information-request command, request reason codes, user-visible request text validation, status transition to `needs_information`, and `dispute_information_requested` audit event.
-- **Core behavior:** From `submitted` or `under_review`, an authorized reviewer can request specific missing metadata or clarification and move the case to `needs_information`.
-- **Edge cases and failure modes:** Vague request text, unsafe request text, wrong role, stale version, missing reason code, and audit write failure must block the request.
-- **Acceptance criteria:** Valid requests are visible to the user without internal rationale. Invalid or unsafe requests do not change state. The audit event records actor, role, reason code, before/after state, and correlation ID.
-- **Verification:** Cover happy-path request, support-role denial, unsafe request text, missing reason code, stale version, audit-write failure, and user-visible text redaction.
+- **Implementation prompt:**
+  - **Context:** Reviewers can ask users for missing metadata or clarification, but user-facing request text must be specific, safe, and separated from internal rationale.
+  - **Task:** Implement the reviewer information-request command and transition to `needs_information`.
+  - **Constraints:** Enforce role permissions, current dispute version, allowlisted reason codes, safe user-visible wording, audit persistence before success, no fraud/compliance rationale exposure, no legal deadline invention, and stale-state tests.
+  - **Examples:** From `submitted` or `under_review`, an ops reviewer requests "Please provide receipt metadata or a short clarification" with reason code `missing_evidence_metadata`; support users cannot create the request.
+  - **Output format:** Provide command contract, permitted actors, request text rules, state transition behavior, audit event shape, error mapping, and role/stale/audit tests.
+- **Create or update:** Create information-request command, request reason codes, user-visible request text validation, permission guard, status transition to `needs_information`, queue marker update, and `dispute_information_requested` audit event.
+- **Core behavior:** From `submitted` or `under_review`, an authorized reviewer can request specific missing metadata or clarification and move the case to `needs_information` when the version is current and audit can be written.
+- **Edge cases and failure modes:** Vague request text, unsafe request text, wrong role, stale version, missing reason code, audit write failure, request on closed case, duplicate open request, and restricted rationale leakage must block the request.
+- **Acceptance criteria:** Valid requests are visible to the user without internal rationale. Invalid or unsafe requests do not change state. The audit event records actor, role, reason code, before/after state, target IDs, and correlation ID using safe values only.
+- **Verification:** Cover happy-path request, support-role denial, wrong-state rejection, duplicate open request, unsafe request text, missing reason code, stale version, audit-write failure, user-visible text redaction, and restricted-rationale hiding.
 
 #### M2.5 User response to information request
 - **Supports:** M2, M3, M5
-- **Implementation prompt:** Let users respond to an information request by adding safe metadata or clarification and returning the case to review.
-- **Create or update:** Create user response command, evidence metadata attachment path, safe response summary, status transition from `needs_information` to `under_review`, and `dispute_information_received` audit event.
-- **Core behavior:** Accept a response only from the dispute owner while the case is in `needs_information`; record safe metadata and make the case actionable for reviewers again.
-- **Edge cases and failure modes:** Response by wrong user, response in wrong state, unsafe response text, duplicate response retry, evidence validation failure, and concurrent closure must not corrupt state.
-- **Acceptance criteria:** Valid response moves the case back to `under_review` or marks reviewer action required according to queue rules. Invalid metadata leaves the state unchanged and records only safe failure context when appropriate.
-- **Verification:** Cover owner response happy path, wrong-user denial, wrong-state conflict, unsafe text rejection, idempotent duplicate response, concurrent close conflict, and queue read-after-write visibility.
+- **Implementation prompt:**
+  - **Context:** Users can answer reviewer requests by adding safe metadata or clarification, and the response must make the case actionable without exposing internal notes or creating duplicate updates.
+  - **Task:** Implement the user response command for disputes in `needs_information`, including metadata attachment and return-to-review behavior.
+  - **Constraints:** Allow only the dispute owner, validate evidence metadata and safe text, use idempotent retry behavior where applicable, protect against stale or concurrent closure, write safe audit evidence, and include permission/concurrency tests.
+  - **Examples:** The owner of `case_123` submits a safe clarification and receipt metadata; the case returns to `under_review` or becomes reviewer-actionable, while a wrong-user response receives a safe denial.
+  - **Output format:** Provide command contract, ownership and state guards, metadata validation, transition or queue update behavior, audit event shape, error semantics, and tests.
+- **Create or update:** Create user response command, evidence metadata attachment path, safe response summary, status transition from `needs_information` to `under_review`, queue actionable marker, idempotent retry handling, and `dispute_information_received` audit event.
+- **Core behavior:** Accept a response only from the dispute owner while the case is in `needs_information`; record safe metadata and make the case actionable for reviewers again without exposing internal rationale.
+- **Edge cases and failure modes:** Response by wrong user, response in wrong state, unsafe response text, duplicate response retry, evidence validation failure, concurrent closure, audit write failure, and queue projection lag must not corrupt state.
+- **Acceptance criteria:** Valid response moves the case back to `under_review` or marks reviewer action required according to queue rules. Invalid metadata leaves the state unchanged and records only safe failure context when appropriate. Duplicate retries do not duplicate evidence metadata or audit history.
+- **Verification:** Cover owner response happy path, wrong-user denial, wrong-state conflict, unsafe text rejection, invalid evidence metadata, idempotent duplicate response, audit-write failure, concurrent close conflict, queue read-after-write visibility, and stale-version behavior.
 
 #### M2.6 User dispute detail and status visibility
 - **Supports:** M2, M3, M4, M5
-- **Implementation prompt:** Build the user-safe dispute detail view for status, submitted metadata, requests, and responses.
-- **Create or update:** Create user detail response shape, role-filtered visibility rules, status timeline projection, and safe evidence metadata projection.
-- **Core behavior:** Show the dispute owner the `case_` reference, current status, reason category, safe summary, safe evidence metadata, outstanding information requests, and user-facing outcome text.
-- **Edge cases and failure modes:** Hide internal notes, fraud/risk classifications, compliance rationale, restricted evidence fields, another user's case, stale reads after transition, and dependency failures.
-- **Acceptance criteria:** Users can see their own safe case details and cannot see internal-only fields. Accepted and rejected labels are described as intake outcomes only. Detail view meets the p95 target and read-after-write expectation.
-- **Verification:** Cover own-case detail, wrong-user denial, role-filtered field assertions, accepted/rejected safe wording, outstanding request display, read-after-write after create and response, and detail p95 smoke checks.
+- **Implementation prompt:**
+  - **Context:** Users need a safe detail/status view for their own case, but internal notes, fraud/risk classifications, compliance rationale, and restricted evidence fields must remain hidden.
+  - **Task:** Build the user-safe dispute detail view for submitted metadata, evidence metadata, outstanding requests, user responses, status timeline, and outcome wording.
+  - **Constraints:** Enforce ownership before detail lookup, apply role-filtered field allowlists, use safe intake-outcome language for `accepted` and `rejected`, meet detail performance/read-after-write targets, handle dependency failures safely, and include privacy tests.
+  - **Examples:** Show `case_123`, current status, reason category, safe summary, safe evidence metadata, and outstanding request text; hide internal notes, fraud/risk flags, compliance rationale, and another user's case.
+  - **Output format:** Provide response schema, visibility allowlists, status timeline rules, safe wording, error behavior, performance expectations, and detail-view tests.
+- **Create or update:** Create user detail response shape, ownership guard, role-filtered visibility rules, status timeline projection, safe evidence metadata projection, outstanding request projection, and detail performance checks.
+- **Core behavior:** Show the dispute owner the `case_` reference, current status, reason category, safe summary, safe evidence metadata, outstanding information requests, user responses, and user-facing outcome text.
+- **Edge cases and failure modes:** Hide internal notes, fraud/risk classifications, compliance rationale, restricted evidence fields, another user's case, stale reads after transition, missing projections, and dependency failures.
+- **Acceptance criteria:** Users can see their own safe case details and cannot see internal-only fields. Accepted and rejected labels are described as intake outcomes only. Detail view meets p95 <= 400 ms and read-after-write visibility within 2 seconds under healthy dependencies.
+- **Verification:** Cover own-case detail, wrong-user denial, role-filtered field assertions, accepted/rejected safe wording, outstanding request display, response history display, missing projection behavior, read-after-write after create/request/response, and detail p95 smoke checks.
 
 ### M3 - Internal Review Workflow
 
