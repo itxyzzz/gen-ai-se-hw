@@ -1,5 +1,21 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 17
+
+### Changed
+
+- Ran the final consistency pass for the low-level task rewrite.
+- Aligned the `needs_information` to `under_review` state-machine actor list with the operator manual by including ops reviewer action when marking a response sufficient.
+- Strengthened M2.1 evidence metadata audit coverage and added M4 traceability to user response and queue task cards that already enforce audit/privacy controls.
+
+### Tests
+
+- Verified every low-level task remains mapped to `M1` through `M5`.
+- Verified the low-level task hierarchy has 31 task cards: seven `M1.x`, six `M2.x`, six `M3.x`, six `M4.x`, and six `M5.x`.
+- Verified no active `M6` or `M7` references are present in `specification.md`.
+- Verified the final pass remains documentation-only and scoped to compliance, audit, redaction, edge-case, and performance consistency.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 16
 
 ### Added

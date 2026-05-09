@@ -37,7 +37,7 @@ Durable states:
 | `submitted` | `under_review` | Ops reviewer | Reviewer has queue permission and current version matches. | Return stale-state or permission error. | `dispute_review_started` |
 | `submitted` | `needs_information` | Ops reviewer | Missing information is specific and user-visible text is safe. | Return validation error for vague or unsafe request text. | `dispute_information_requested` |
 | `under_review` | `needs_information` | Ops reviewer or compliance reviewer | Required information is documented with reason code. | Return validation or stale-state error. | `dispute_information_requested` |
-| `needs_information` | `under_review` | End user or system job | User supplies requested evidence metadata or reviewer marks response sufficient. | Keep state unchanged and record safe failed-response event when metadata is invalid. | `dispute_information_received` |
+| `needs_information` | `under_review` | End user, ops reviewer, or system job | User supplies requested evidence metadata or reviewer marks response sufficient. | Keep state unchanged and record safe failed-response event when metadata is invalid. | `dispute_information_received` |
 | `under_review` | `accepted` | Ops reviewer with compliance review when required | Required evidence and reason code exist; sensitive cases have required approval. | Return missing-evidence, missing-approval, permission, or stale-state error. | `dispute_accepted` |
 | `under_review` | `rejected` | Ops reviewer with compliance review when required | Rejection reason is selected from allowlisted codes and user-facing summary is safe. | Return missing-reason, permission, or stale-state error. | `dispute_rejected` |
 | `accepted` | `closed` | Ops reviewer or system job | Closure reason states intake complete and no required review is pending. | Return invalid-transition or missing-review error. | `dispute_closed` |
@@ -191,7 +191,7 @@ These are assumed homework targets, not production service-level agreements.
 
 ## Low-Level Tasks
 
-The following task cards describe future implementation slices for the Dispute Intake feature. They are intentionally written as implementation-ready work items, not as document-maintenance steps. Each task preserves the required fields while avoiding a wide table that is difficult to read.
+The following task cards describe future implementation slices for the Dispute Intake feature. They are intentionally written as implementation-ready product work items rather than package-edit chores. Each task preserves the required fields while avoiding a wide table that is difficult to read.
 
 ### M1 - Intake Eligibility And Submission
 
@@ -303,11 +303,11 @@ The following task cards describe future implementation slices for the Dispute I
   - **Constraints:** Use opaque IDs, UTC timestamps, least-privilege access, GDPR-style minimization, safe audit references, no binary payloads, no external file URLs, no raw PII/PAN/account/authentication values, and no storage-provider design.
   - **Examples:** Persist `evidence_id`, `dispute_id`, `submitted_by`, `evidence_type`, `safe_description`, `redacted_reference`, and `received_at`; reject any field that implies a real file body or download location.
   - **Output format:** Provide record fields, allowed and forbidden fields, persistence behavior, user/operator response projections, audit considerations, and schema/permission tests.
-- **Create or update:** Create the `DisputeEvidenceMetadata` model, persistence contract, field allowlist, safe response shape, metadata-only fixtures, and permission checks for evidence access.
+- **Create or update:** Create the `DisputeEvidenceMetadata` model, persistence contract, field allowlist, safe response shape, metadata-only fixtures, permission checks for evidence access, and evidence-metadata audit hook.
 - **Core behavior:** Persist metadata with opaque identifiers and UTC timestamps, linked to an existing dispute the actor may access. Store enough safe context for reviewers without accepting binary content or external storage references.
 - **Edge cases and failure modes:** Reject binary payloads, real file URLs, storage-provider references, malware-scan fields, missing dispute IDs, wrong-dispute access, wrong-owner access, deleted or unavailable dispute lookup, and duplicate metadata identifiers.
-- **Acceptance criteria:** Evidence records contain metadata only. No task, fixture, response, audit event, or example contains a real file body, real download URL, raw provider response, or storage-provider implementation detail. Evidence cannot be attached across user boundaries.
-- **Verification:** Cover schema validation, metadata-only enforcement, forbidden binary/file URL/storage fields, wrong-dispute permission denial, missing dispute handling, duplicate identifier handling, audit-safe reference assertions, and synthetic fixture review.
+- **Acceptance criteria:** Evidence records contain metadata only. No task, fixture, response, audit event, or example contains a real file body, real download URL, raw provider response, or storage-provider implementation detail. Evidence cannot be attached across user boundaries. Successful evidence metadata changes emit safe audit evidence without raw descriptions or file references.
+- **Verification:** Cover schema validation, metadata-only enforcement, forbidden binary/file URL/storage fields, wrong-dispute permission denial, missing dispute handling, duplicate identifier handling, evidence-update audit assertions, audit-safe reference assertions, and synthetic fixture review.
 
 #### M2.2 Evidence type allowlist and requiredness rules
 - **Supports:** M2, M3, M4
@@ -352,7 +352,7 @@ The following task cards describe future implementation slices for the Dispute I
 - **Verification:** Cover happy-path request, support-role denial, wrong-state rejection, duplicate open request, unsafe request text, missing reason code, stale version, audit-write failure, user-visible text redaction, and restricted-rationale hiding.
 
 #### M2.5 User response to information request
-- **Supports:** M2, M3, M5
+- **Supports:** M2, M3, M4, M5
 - **Implementation prompt:**
   - **Context:** Users can answer reviewer requests by adding safe metadata or clarification, and the response must make the case actionable without exposing internal notes or creating duplicate updates.
   - **Task:** Implement the user response command for disputes in `needs_information`, including metadata attachment and return-to-review behavior.
@@ -396,7 +396,7 @@ The following task cards describe future implementation slices for the Dispute I
 - **Verification:** Cover role matrix tests for end user, support, ops, compliance, fraud/risk, and system job, including at least one allowed action and one forbidden action per role, field-level visibility assertions, permission-denial audit assertions, and permission-service-unavailable behavior.
 
 #### M3.2 Ops queue filters, sorting, and pagination
-- **Supports:** M3, M5
+- **Supports:** M3, M4, M5
 - **Implementation prompt:**
   - **Context:** Operators need scan-friendly queues for new submissions, in-review cases, needs-information cases, compliance review, and fraud/risk review, with role-shaped visibility.
   - **Task:** Build operator queue projections, filters, deterministic sorting, cursor pagination, and role restrictions.
