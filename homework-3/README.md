@@ -21,6 +21,7 @@ flowchart TB
     Spec --> Tasks[Low-Level Tasks]
     Readme --> Agents[agents.md]
     Readme --> Docs[docs folder]
+    Readme --> Archive[docs/superpowers/plans]
     Agents --> Domain[docs/domain-rules.md]
     Agents --> Technical[docs/technical-conventions.md]
     Agents --> Process[docs/development-process.md]
@@ -29,16 +30,33 @@ flowchart TB
     Domain --> Regs[EU Payment Rules and Privacy Rationale]
 ```
 
-| File | Responsibility |
+| File or folder | Responsibility |
 | --- | --- |
+| **Required deliverables** | Assignment files required by `TASKS.md`. |
 | [specification.md](specification.md) | Core layered Dispute Intake specification: objective, scope, state machine, data concepts, edge cases, verification, performance, and low-level tasks. |
 | [agents.md](agents.md) | AI and human agent behavior contract for Dispute Intake documentation and future implementation planning. |
 | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Editor-specific AI rules that point Copilot-style tools back to the package rules. |
+| [README.md](README.md) | Reviewer entry point, package map, rationale, ownership rules, and best-practice references. |
+| **Active supporting docs** | Normative package docs that support the selected Dispute Intake feature. |
 | [docs/domain-rules.md](docs/domain-rules.md) | EU payment-account domain rationale and scoped PSD2, GDPR, DORA, EBA, complaints, and ADR context. |
 | [docs/technical-conventions.md](docs/technical-conventions.md) | Reusable engineering conventions, including audit, redaction, idempotency, state machines, IDs, timestamps, errors, and pagination. |
 | [docs/development-process.md](docs/development-process.md) | Required spec-first workflow without assuming external addons. |
-| [docs/operator-manual.md](docs/operator-manual.md) | Internal operator, queue, review, escalation, and audit-note expectations for Dispute Intake. |
+| [docs/operator-manual.md](docs/operator-manual.md) | Feature-specific internal operator, queue, review, escalation, and audit-note expectations for Dispute Intake. |
+| **Evidence and archive docs** | Historical evidence that explains how the package evolved. |
+| [docs/superpowers/plans/](docs/superpowers/plans/) | Historical AI-assistance implementation plans. These files explain how the package evolved and are not active normative requirements. |
 | [CHANGELOG.md](CHANGELOG.md) | Increment history for Homework 3. |
+
+## Ownership And Non-Redundancy Rules
+
+To keep the harness easy to maintain, each document has one primary owner:
+
+- `specification.md` owns product behavior, traceability, edge cases, verification, performance, and feature-specific acceptance criteria.
+- `docs/domain-rules.md` owns regulatory and domain rationale, scoped assumptions, sensitive-data categories, and rules to avoid without further research.
+- `docs/technical-conventions.md` owns reusable engineering conventions only; `specification.md` specializes those conventions for Dispute Intake.
+- `docs/operator-manual.md` owns operator workflows, queues, role-specific review behavior, audit-safe notes, and escalation behavior.
+- `agents.md` owns agent workflow, context order, and enforcement routing. It should link to source documents instead of copying their full policy tables.
+- `.github/copilot-instructions.md` stays a compact editor-specific pointer to `agents.md` and the active source-of-truth documents.
+- `docs/superpowers/plans/` contains historical plan artifacts. They may include older scaffold language and should not override active package docs.
 
 ## Rationale
 

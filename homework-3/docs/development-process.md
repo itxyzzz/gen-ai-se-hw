@@ -2,11 +2,11 @@
 
 ## Purpose
 
-This document defines the required workflow for future Homework 3 specification work without relying on Superpowers, GitHub Spec Kit, or any other addon. If such tools are later used, they may assist the process but do not replace these gates.
+This document defines the required workflow for Homework 3 Dispute Intake specification work without relying on Superpowers, GitHub Spec Kit, or any other addon. If such tools are used, they may assist the process but do not replace these gates.
 
 ## Operating Mode
 
-Homework 3 is documentation-only. Future increments should refine the specification package, not build the described application.
+Homework 3 is documentation-only. Selected-feature increments should refine the Dispute Intake specification package, not build the described application.
 
 Use this process for every meaningful change:
 
@@ -36,7 +36,7 @@ Supporting SPEC-style files may be added under `docs/` only when they keep the c
 
 ## Documentation-First Gate
 
-Before adding or changing future feature requirements:
+Before adding or changing selected-feature requirements:
 
 - State what user, operator, compliance, or reviewer outcome the change supports.
 - Identify the document that owns the change.
@@ -49,11 +49,11 @@ For documentation-only changes, define the review check before editing. Examples
 
 - Required files exist.
 - Links resolve within the package.
-- No unfinished marker text outside intentionally deferred documents.
+- No unfinished marker text outside intentionally archived or quoted examples.
 - The spec keeps required Homework 3 layers.
 - Agent rules do not contradict repository instructions.
 
-For future feature-spec changes, define how each mid-level objective would be verified by a builder or reviewer. Include acceptance criteria, test categories, manual review steps, audit checks, and performance checks as appropriate for the chosen feature.
+For selected-feature spec changes, define how each mid-level objective would be verified by a builder or reviewer. Include acceptance criteria, test categories, manual review steps, audit checks, and performance checks as appropriate for Dispute Intake.
 
 ## TDD-Style Specification Practice
 
@@ -71,11 +71,12 @@ Before finishing an increment, check:
 - The change stays within Homework 3 documentation scope.
 - `CHANGELOG.md` has a useful entry.
 - Links in changed files are correct.
-- Feature-specific content is not added before feature selection.
+- Feature changes stay aligned with EU/EEA payment-account Dispute Intake unless the homework scope is intentionally changed and documented.
 - Regulatory or compliance statements are either researched or clearly marked for later research.
 - Required deliverables remain easy for a reviewer to find.
 - The package does not require optional tools to be understood or followed.
+- Historical plan artifacts under `docs/superpowers/plans/` are treated as evidence and are excluded from active unfinished-marker scans unless the review intentionally targets the archive.
 
 ## Optional Tooling
 
-Agents may use available local tools, AI assistants, or workflow plugins, but the written process must remain executable without them. If a future increment uses optional tooling, document the tool's role and any missing quality controls in the relevant changelog or AI-assistance notes.
+Agents may use available local tools, AI assistants, or workflow plugins, but the written process must remain executable without them. If an increment uses optional tooling, document the tool's role and any missing quality controls in the relevant changelog or AI-assistance notes.

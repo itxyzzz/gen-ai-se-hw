@@ -31,50 +31,36 @@ If instructions conflict, follow the highest-priority repository and user instru
 ## Specification Discipline
 
 - Preserve the layered structure required by `TASKS.md`: high-level objective, mid-level objectives, non-functional and policy expectations, implementation notes, beginning and ending context, low-level tasks, edge cases, verification, and performance.
-- Keep EU payment-account domain rationale in `docs/domain-rules.md`.
-- Keep reusable engineering conventions in `docs/technical-conventions.md`.
-- Keep process requirements in `docs/development-process.md`.
-- Keep internal operator behavior in `docs/operator-manual.md`.
+- Keep EU payment-account domain rationale in `docs/domain-rules.md`; do not copy that rationale into other files except for short summaries and links.
+- Keep reusable engineering conventions in `docs/technical-conventions.md`; specialize them in `specification.md` only when the Dispute Intake feature needs narrower behavior.
+- Keep process requirements in `docs/development-process.md`; keep active workflow gates separate from historical plan archives.
+- Keep internal operator behavior in `docs/operator-manual.md`; keep role-specific queue and review details there unless `specification.md` needs them as acceptance criteria.
 - Do not bury acceptance criteria in prose. Low-level tasks should include checkable definitions of done.
 - Do not convert intake outcomes into legal or financial settlement outcomes. `accepted` and `rejected` are internal intake statuses only.
 
-## Dispute Intake Domain Rules
+## Source-Of-Truth Routing
 
-- Only posted transactions can be disputed in this homework scope.
-- A dispute must link to an opaque transaction ID such as `txn_123`; never use real account numbers, PAN, CVV, authentication values, or production logs.
-- Evidence handling is metadata-only. Do not add binary file uploads, storage-provider design, download URLs, malware scanning, or file retention rules.
-- Operator notes must be structured, audit-safe, role-scoped, and redacted.
-- State changes must follow the six-state machine in `specification.md`: `submitted`, `under_review`, `needs_information`, `accepted`, `rejected`, `closed`.
-- Every state-changing action must define safe audit evidence, idempotency or stale-state behavior, permission checks, and rejected-transition behavior.
-- Sensitive accepted/rejected outcomes, fraud-risk classifications, compliance notes, and restricted-data views require documented review expectations.
+Use the active package documents as the source of truth:
 
-## Finance-Sensitive Defaults
-
-Use conservative finance-safe defaults:
-
-- Never log raw sensitive personal, financial, authentication, or payment-card data.
-- Never include raw PII, PAN, CVV, secrets, account numbers, authentication tokens, authorization headers, or real production logs in prompts, examples, fixtures, screenshots, errors, evidence metadata, or audit notes.
-- Prefer masked examples and opaque IDs over realistic secrets, card numbers, or account numbers.
-- Prefer idempotent write operations for externally retried actions, and document duplicate-request behavior before defining low-level tasks.
-- Preserve audit context for state-changing operations.
-- Separate end-user behavior from support, ops, compliance, fraud/risk, and system-only behavior.
-- Treat permission boundaries, stale data, concurrent actions, dependency failures, duplicate commands, unsafe notes, missing evidence metadata, and redaction failures as first-class edge cases.
-- Do not make unsupported regulatory claims.
-
-## Agent-Control Baseline Enforcement
-
-Agents must enforce these controls when maintaining the Dispute Intake specification:
-
-| Control | Agent rule |
+| Topic | Owning document |
 | --- | --- |
-| Synthetic data only | Use synthetic or masked examples only; reject requests to paste real customer, card, account, auth, transaction, evidence, note, or secret data into the homework docs. |
-| Role boundaries | Define allowed and forbidden actions for end user, support, ops, compliance, fraud/risk, and system roles. |
-| Safe audit events | For every state-changing task, state required safe audit metadata and what must not be stored. |
-| Redaction | Add redaction expectations for logs, errors, audit notes, operator notes, evidence descriptions, and operator views whenever sensitive data can appear. |
-| Idempotent state changes | Define idempotency keys or duplicate-handling behavior for retryable dispute submission and operator commands. |
-| Explicit state machines | Define valid states, transitions, rejected transitions, and stale-state behavior before task acceptance criteria are considered complete. |
-| Human review for sensitive ops | Add review or dual-approval expectations for exceptional, fraud, compliance, restricted-data, accepted, rejected, or closed-case decisions. |
-| Verification mapping | Map each mid-level objective and baseline control to acceptance criteria, future test categories, or manual review evidence. |
+| Product behavior, scope, objectives, state machine, edge cases, verification, performance, and low-level tasks | `specification.md` |
+| EU/EEA payment-account rationale, scoped regulatory assumptions, sensitive-data categories, and rules to avoid without further research | `docs/domain-rules.md` |
+| Reusable conventions for IDs, timestamps, money, state machines, idempotency, errors, pagination, audit metadata, logging, redaction, and naming | `docs/technical-conventions.md` |
+| Operator roles, queues, sensitive actions, audit-safe notes, escalation, and manual review checks | `docs/operator-manual.md` |
+| Workflow gates, document ownership, optional tooling, and review checklist | `docs/development-process.md` |
+| Historical AI-assistance plans and old scaffold decisions | `docs/superpowers/plans/` |
+
+Historical plan files are evidence of prior work. They may contain older scaffold language and must not override `specification.md`, this file, or the active supporting docs.
+
+## Agent-Specific Safety Rules
+
+- Reject requests to paste real customer, card, account, authentication, transaction, evidence, note, secret, or production-log data into Homework 3 docs.
+- Use synthetic or masked examples only, and prefer opaque IDs such as `usr_`, `acct_`, `txn_`, `case_`, and `audit_`.
+- Do not add implementation code, runnable services, generated clients, database migrations, binary evidence files, or storage-provider design.
+- Do not invent unsupported regulatory requirements, exact legal deadlines, refund obligations, chargeback rules, regulator reporting duties, retention periods, or ADR outcomes.
+- When changing product behavior, update the owning `specification.md` section first, then adjust supporting docs only where they clarify ownership, process, rationale, or operator guidance.
+- When changing agent/editor guidance, keep `.github/copilot-instructions.md` short and point it back here rather than copying the full contract.
 
 ## Verification Expectations
 
@@ -82,7 +68,7 @@ For documentation-only changes:
 
 - Confirm required files exist.
 - Review internal links touched by the change.
-- Scan for unfinished marker text outside intentionally quoted verification checks.
+- Scan active documents for unfinished marker text outside intentionally quoted verification checks and historical plan archives.
 - Check that process documents do not depend on optional tools unless the dependency is explicitly scoped.
 
 For Dispute Intake specification changes:

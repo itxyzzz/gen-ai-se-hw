@@ -4,6 +4,8 @@
 
 This manual defines internal operator and compliance expectations for the Homework 3 Dispute Intake specification. The selected feature is EU/EEA payment-account dispute intake and internal tracking.
 
+This is a feature-specific supporting document. `specification.md` remains the product source of truth; this manual owns operator workflow detail that would otherwise make the core spec harder to scan.
+
 The manual supports the specification. It does not create legal deadlines, refund obligations, chargeback procedures, regulator reporting, or external ADR workflows.
 
 ## Operator Principles

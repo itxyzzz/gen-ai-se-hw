@@ -1,12 +1,39 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 7
+
+### Added
+
+- Added a clearer README document taxonomy that separates required deliverables, active supporting docs, and historical AI-assistance plan artifacts.
+- Added `docs/superpowers/plans/README.md` to explain that archived plans are evidence, not active normative requirements.
+- Added ownership and non-redundancy rules so each Homework 3 document has one clear responsibility.
+
+### Changed
+
+- Refactored `agents.md` to route agents to source-of-truth documents instead of repeating full domain, finance-sensitive, and control-baseline tables.
+- Tightened `.github/copilot-instructions.md` into a compact editor-specific pointer back to `agents.md` and the active source documents.
+- Updated `docs/development-process.md`, `docs/technical-conventions.md`, and `docs/operator-manual.md` language to reflect the selected Dispute Intake package and plan-archive status.
+
+### Fixed
+
+- Reduced cross-document duplication that could drift between agent rules, Copilot rules, domain rules, technical conventions, and the product specification.
+- Clarified that historical plan artifacts may contain superseded scaffold language and do not override active Homework 3 docs.
+
+### Tests
+
+- Verified required Homework 3 deliverables are present.
+- Verified relative Markdown links resolve across Homework 3 Markdown files.
+- Verified active-doc stale-marker scan has no matches outside archived plan files.
+- Verified detailed control-baseline tables remain in source documents while `agents.md` uses source-of-truth routing.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 6
 
 ### Added
 
 - Added the approved Dispute Intake implementation plan under `docs/superpowers/plans/`.
 - Selected EU payment-account Dispute Intake as the Homework 3 finance feature.
-- Replaced the deferred scaffold in `specification.md` with a layered dispute-intake specification covering objective, scope, stakeholders, state machine, data concepts, edge cases, verification, performance targets, and low-level tasks.
+- Replaced the earlier scaffold in `specification.md` with a layered dispute-intake specification covering objective, scope, stakeholders, state machine, data concepts, edge cases, verification, performance targets, and low-level tasks.
 - Added feature-specific PSD2, GDPR, DORA, EBA ICT/security, EBA complaints-handling, and FIN-NET/ADR context to `docs/domain-rules.md`.
 - Added dispute queue roles, review queues, sensitive operator actions, audit-safe notes, and escalation rules to `docs/operator-manual.md`.
 
@@ -15,11 +42,11 @@
 - Updated `README.md` to explain the selected feature, EU jurisdiction decision, scope exclusions, performance-target rationale, verification depth, and industry practices.
 - Updated `agents.md` and `.github/copilot-instructions.md` so AI agents apply dispute-specific rules for posted transactions, evidence metadata, audit-safe notes, redaction, role boundaries, and state transitions.
 - Preserved the existing Agent-Control Baseline while applying it directly to Dispute Intake.
-- Reworded stale deferred-marker phrasing in the earlier outer-harness plan artifact so active package scans do not look unfinished.
+- Reworded stale scaffold-marker phrasing in the earlier outer-harness plan artifact so active package scans do not look unfinished.
 
 ### Fixed
 
-- Removed deferred feature-selection language from the active Homework 3 specification package.
+- Removed planned-later feature-selection language from the active Homework 3 specification package.
 - Reduced unsupported compliance risk by documenting regulatory sources as design rationale and excluding exact legal deadlines, refund obligations, chargeback processing, regulator reporting, and ADR outcomes.
 
 ### Tests
@@ -69,7 +96,7 @@
 
 ### Fixed
 
-- Reduced the risk of unsupported compliance claims by labeling EU banking controls as homework assumptions and deferring feature-specific legal obligations.
+- Reduced the risk of unsupported compliance claims by labeling EU banking controls as homework assumptions and reserving feature-specific legal obligations for later review.
 
 ### Tests
 
@@ -124,11 +151,11 @@
 - Added `agents.md` as the AI and human agent behavior contract.
 - Added `.github/copilot-instructions.md` as the editor-specific AI rules file.
 - Added feature-neutral technical conventions, development process, and operator manual documents under `docs/`.
-- Added deferred scaffolds for `specification.md` and `docs/domain-rules.md`.
+- Added initial scaffolds for `specification.md` and `docs/domain-rules.md`.
 
 ### Changed
 
-- Established that feature selection, domain research, final edge cases, verification targets, and performance targets are deferred to the next specification increment.
+- Established that feature selection, domain research, final edge cases, verification targets, and performance targets would be completed in the next specification increment.
 
 ### Fixed
 
@@ -138,5 +165,5 @@
 
 - Verified required deliverable files exist.
 - Verified relative markdown links resolve.
-- Verified unfinished marker text is absent from non-deferred documents.
+- Verified unfinished marker text is absent from active documents.
 - Verified the development process treats Superpowers, GitHub Spec Kit, and similar addons as optional support rather than required dependencies.

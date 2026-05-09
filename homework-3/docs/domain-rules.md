@@ -119,4 +119,4 @@ Before a real implementation plan is produced, a reviewer should confirm:
 - Operator notes and evidence metadata cannot store raw sensitive values.
 - The dispute state machine and queue behavior match `specification.md`.
 - Every state-changing action has a safe audit event.
-- Any real retention, timing, refund, or external complaint obligations are deferred to legal/compliance review.
+- Any real retention, timing, refund, or external complaint obligations are reserved for legal/compliance review.

@@ -2,13 +2,13 @@
 
 ## Purpose
 
-This document defines feature-neutral conventions for a future finance-oriented implementation. The final `specification.md` may tighten these conventions for the selected feature, but future agents should not contradict them without documenting the reason.
+This document defines reusable engineering conventions for the active Dispute Intake specification and for later finance-oriented specs. `specification.md` may specialize these conventions for Dispute Intake, but contradictions must be documented with the reason and reviewer impact.
 
 ## Identifiers
 
 - Use stable opaque identifiers for public references.
 - Do not expose sequential database IDs in user-facing examples.
-- Use clear prefixes when a future feature needs multiple identifier types, such as `usr_`, `acct_`, `card_`, `txn_`, `case_`, or `audit_`.
+- Use clear prefixes when a finance spec needs multiple identifier types, such as `usr_`, `acct_`, `card_`, `txn_`, `case_`, or `audit_`.
 - Treat identifiers as strings, not numbers, to avoid truncation and formatting problems.
 
 ## Time And Dates
