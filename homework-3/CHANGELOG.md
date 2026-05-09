@@ -1,5 +1,29 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 15
+
+### Added
+
+- Added a refined M4-only low-level task rewrite for audit, privacy, and compliance controls.
+- Added a new M4.6 task card for scoped compliance controls, sensitive-data governance, restricted metadata access, unsupported-claim review gates, and synthetic-data checks.
+
+### Changed
+
+- Reworked M4 implementation prompts into structured context, task, constraints, examples, and output-format blocks.
+- Expanded M4 task details for safe audit-event contracts, blocked-action audit evidence, redaction and minimization, safe error semantics, fail-closed dependency controls, and compliance guardrails.
+- Strengthened M4 acceptance criteria and verification coverage for per-action audit assertions, wrong-owner privacy, unsafe-content omission, role-shaped projections, dependency outages, restricted-access audit, and unsupported legal/refund/retention claim checks.
+
+### Fixed
+
+- Reduced ambiguity in the M4 task depth by making audit persistence ordering, privacy boundaries, restricted access, and compliance-scope limits explicit in executable task cards.
+
+### Tests
+
+- Reviewed the M4 task shape against the low-level task handoff and existing M1-M3 prompt-structure pattern.
+- Verified the change remains documentation-only and scoped to the M4 section of `specification.md`.
+- Counted six `M4.x` task cards and six M4 implementation prompts containing context, task, constraints, examples, and output-format guidance.
+- Verified `git diff --check` passes.
+
 ## Homework 3 - Step 14
 
 ### Added
