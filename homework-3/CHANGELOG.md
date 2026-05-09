@@ -1,5 +1,17 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 18
+
+### Changed
+
+- Reconciled `specification-TEMPLATE-example.md` with the fixed template formatting reference.
+- Split the generic, banking, API, and testing examples into separate Markdown code fences so the template headings render correctly.
+
+### Tests
+
+- Compared the template file against the fixed reference file at `C:\DDL\Home\specification-TEMPLATE-example_FIXED.md`.
+- Verified the change remains documentation-only and scoped to the template example plus changelog.
+
 ## Homework 3 - Step 17
 
 ### Changed

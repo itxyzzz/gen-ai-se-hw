@@ -1,8 +1,6 @@
-# Specification Templates for AI-Assisted Development
+## Generic Specification Template
 
-## Basic Specification Template
-
-```markdown
+``` markdown
 # [Feature Name] Specification
 
 > Ingest the information from this file, implement the Low-Level Tasks, and generate the code that will satisfy the High and Mid-Level Objectives.
@@ -77,9 +75,11 @@ What function do you want to CREATE or UPDATE?
 
 What are details you want to add to drive the code changes?
 [Specific requirements and constraints]
+```
 
 ## Banking-Specific Specification Template
 
+``` markdown
 # [Feature] Specification
 
 > Ingest the information from this file, implement the Low-Level Tasks, and generate the code that will satisfy the High and Mid-Level Objectives.
@@ -159,6 +159,7 @@ What function do you want to CREATE or UPDATE?
 
 What are details you want to add to drive the code changes?
 [Business requirements]
+```
 
 ## API Development Specification Template
 
@@ -241,6 +242,7 @@ What function do you want to CREATE or UPDATE?
 
 What are details you want to add to drive the code changes?
 [Specific testing requirements]
+```
 
 ## Testing Specification Template
 
@@ -323,7 +325,7 @@ What function do you want to CREATE or UPDATE?
 
 What are details you want to add to drive the code changes?
 [Specific performance requirements]
-
+```
 
 ## Prompt Engineering Best Practices
 
@@ -345,45 +347,3 @@ What are details you want to add to drive the code changes?
 ### Common Prompt Patterns
 
 #### Code Generation
-```
-Create a [function/class] that [specific functionality] with the following requirements:
-- [Requirement 1]
-- [Requirement 2]
-- [Requirement 3]
-
-Include proper error handling, logging, and tests.
-```
-
-#### Refactoring
-```
-Refactor the following code to [specific improvement] while maintaining the same functionality:
-- [Current code]
-
-Requirements:
-- [Requirement 1]
-- [Requirement 2]
-```
-
-#### Testing
-```
-Create comprehensive tests for the following [function/class]:
-- [Code to test]
-
-Test cases should include:
-- [Test case 1]
-- [Test case 2]
-- [Edge cases]
-- [Error conditions]
-```
-
-#### Documentation
-```
-Generate documentation for the following [function/class]:
-- [Code to document]
-
-Include:
-- [Documentation requirement 1]
-- [Documentation requirement 2]
-- [Examples]
-- [Usage instructions]
-```
