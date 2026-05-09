@@ -21,6 +21,7 @@ flowchart TB
     Spec --> Tasks[Low-Level Tasks]
     Readme --> Agents[agents.md]
     Readme --> Docs[docs folder]
+    Readme --> ProcessArtifacts[docs/process-artifacts]
     Readme --> Archive[docs/superpowers/plans]
     Agents --> Domain[docs/domain-rules.md]
     Agents --> Technical[docs/technical-conventions.md]
@@ -37,14 +38,16 @@ flowchart TB
 | [agents.md](agents.md) | AI and human agent behavior contract for Dispute Intake documentation and future implementation planning. |
 | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Editor-specific AI rules that point Copilot-style tools back to the package rules. |
 | [README.md](README.md) | Reviewer entry point, package map, rationale, ownership rules, and best-practice references. |
+| [HOWTORUN.md](HOWTORUN.md) | Documentation-only review and verification guide for this homework package. |
 | **Active supporting docs** | Normative package docs that support the selected Dispute Intake feature. |
 | [docs/domain-rules.md](docs/domain-rules.md) | EU payment-account domain rationale and scoped PSD2, GDPR, DORA, EBA, complaints, and ADR context. |
 | [docs/technical-conventions.md](docs/technical-conventions.md) | Reusable engineering conventions, including audit, redaction, idempotency, state machines, IDs, timestamps, errors, and pagination. |
 | [docs/development-process.md](docs/development-process.md) | Required spec-first workflow without assuming external addons. |
 | [docs/operator-manual.md](docs/operator-manual.md) | Feature-specific internal operator, queue, review, escalation, and audit-note expectations for Dispute Intake. |
 | **Evidence and archive docs** | Historical evidence that explains how the package evolved. |
-| [docs/low-level-task-rewrite-handoff.md](docs/low-level-task-rewrite-handoff.md) | Focused handoff for the next low-level task rewrite increment. |
+| [docs/process-artifacts/2026-05-09-low-level-task-rewrite-handoff.md](docs/process-artifacts/2026-05-09-low-level-task-rewrite-handoff.md) | Historical handoff artifact for the low-level task rewrite increment. |
 | [docs/superpowers/plans/](docs/superpowers/plans/) | Historical AI-assistance implementation plans. These files explain how the package evolved and are not active normative requirements. |
+| [docs/screenshots/](docs/screenshots/) | Visual evidence of AI-assisted workflow and verification steps for the PR description. |
 | [CHANGELOG.md](CHANGELOG.md) | Increment history for Homework 3. |
 
 ## Ownership And Non-Redundancy Rules

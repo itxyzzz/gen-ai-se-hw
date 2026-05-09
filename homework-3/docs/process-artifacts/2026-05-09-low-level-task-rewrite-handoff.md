@@ -116,7 +116,7 @@ The low-level task rewrite should cover at least these product slices:
 ## Suggested New-Thread Prompt
 
 ```text
-We are continuing Homework 3 in C:\Work\Codex\SETU-HW\gen-ai-se-hw on branch homework-3-submission. Read homework-3/docs/low-level-task-rewrite-handoff.md first, then read the files it lists.
+We are continuing Homework 3 in C:\Work\Codex\SETU-HW\gen-ai-se-hw on branch homework-3-submission. Read homework-3/docs/process-artifacts/2026-05-09-low-level-task-rewrite-handoff.md first, then read the files it lists.
 
 Your task is to rewrite only the Low-Level Tasks section of homework-3/specification.md so it becomes a concrete, multi-level, implementable task hierarchy mapped to M1-M5. Preserve the tightened top-level structure and the five mid-level objectives. Keep the work documentation-only and update CHANGELOG.md.
 ```

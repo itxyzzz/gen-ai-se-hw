@@ -1,5 +1,22 @@
 # Homework 3 Changelog
 
+## Homework 3 - Step 19
+
+### Added
+
+- Added `HOWTORUN.md` as a documentation-only review and verification guide.
+- Added `docs/screenshots/` to the README package map as visual PR evidence.
+
+### Changed
+
+- Moved the low-level task rewrite handoff into `docs/process-artifacts/` so it remains preserved as historical process evidence without appearing as an active normative doc.
+- Updated README and process-archive links after moving the handoff artifact.
+
+### Tests
+
+- Rechecked Homework 3 deliverables against repository-level README requirements and Homework 3 `TASKS.md`.
+- Ran `git diff --check`.
+
 ## Homework 3 - Step 18
 
 ### Changed
@@ -192,7 +209,7 @@
 
 ### Added
 
-- Added `docs/low-level-task-rewrite-handoff.md` as a focused handoff for starting the low-level task rewrite in a clean thread.
+- Added the low-level task rewrite handoff as a focused artifact for starting the rewrite in a clean thread. It now lives under `docs/process-artifacts/`.
 
 ### Changed
 
