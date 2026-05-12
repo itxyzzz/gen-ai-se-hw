@@ -1,0 +1,638 @@
+# EU Payment-Account Dispute Intake Specification
+
+> **Status**: Selected feature specification for Homework 3. This document is a documentation-only product and implementation specification. It does not create application code, APIs, UI screens, database migrations, or legal compliance guarantees.
+
+## High-Level Objective
+
+Enable EU/EEA payment-account users to file disputes against posted transactions while giving authorized internal ops and compliance users a controlled workflow to review, request more information, assign outcomes, close cases, and preserve audit-safe evidence.
+
+## Scope Boundary
+
+This specification covers dispute intake and internal case tracking only. It excludes chargeback processing, provisional credits, card-network arbitration, legal deadline enforcement, regulator reporting, customer reimbursement execution, and real file upload or storage handling.
+
+## Mid-Level Objectives
+
+| ID | Objective | Observable success |
+| --- | --- | --- |
+| M1 | Intake Eligibility And Submission | Users can create one dispute for their own eligible posted transaction, while ineligible, duplicate, and retried submissions have safe deterministic outcomes. |
+| M2 | Evidence And User Follow-Up | The case captures safe user summaries, evidence metadata, information requests, and user responses without storing real files or unsafe free text. |
+| M3 | Internal Review Workflow | Authorized support, ops, compliance, fraud/risk, and system actors can perform only their permitted queue, assignment, note, review, and state-transition actions. |
+| M4 | Audit, Privacy, And Compliance Controls | State-changing actions preserve audit evidence, redaction, minimization, safe errors, restricted visibility, and scoped EU/EEA compliance assumptions. |
+| M5 | Reliability, Concurrency, And Performance | Idempotency, stale-state handling, fail-closed audit behavior, pagination, latency, and read-after-write expectations are measurable for future builders. |
+
+## Dispute State Machine
+
+Durable states:
+
+- `submitted`: user created the dispute and initial metadata is stored.
+- `under_review`: an authorized reviewer has started internal review.
+- `needs_information`: reviewer requested more user information or evidence metadata.
+- `accepted`: internal intake review accepts the dispute for the next business process outside this scope.
+- `rejected`: internal intake review rejects the dispute for a documented reason.
+- `closed`: final tracking state after accepted, rejected, or withdrawn/intake-complete handling.
+
+| From | To | Actor | Preconditions | Rejected transition behavior | Audit event |
+| --- | --- | --- | --- | --- | --- |
+| None | `submitted` | End user | Transaction exists, is posted, belongs to user, and no active dispute exists for the same transaction and reason category. | Return safe validation or conflict error; do not create a dispute; record rejected-intake audit when a correlation ID exists. | `dispute_submitted` |
+| `submitted` | `under_review` | Ops reviewer | Reviewer has queue permission and current version matches. | Return stale-state or permission error. | `dispute_review_started` |
+| `submitted` | `needs_information` | Ops reviewer | Missing information is specific and user-visible text is safe. | Return validation error for vague or unsafe request text. | `dispute_information_requested` |
+| `under_review` | `needs_information` | Ops reviewer or compliance reviewer | Required information is documented with reason code. | Return validation or stale-state error. | `dispute_information_requested` |
+| `needs_information` | `under_review` | End user, ops reviewer, or system job | User supplies requested evidence metadata or reviewer marks response sufficient. | Keep state unchanged and record safe failed-response event when metadata is invalid. | `dispute_information_received` |
+| `under_review` | `accepted` | Ops reviewer with compliance review when required | Required evidence and reason code exist; sensitive cases have required approval. | Return missing-evidence, missing-approval, permission, or stale-state error. | `dispute_accepted` |
+| `under_review` | `rejected` | Ops reviewer with compliance review when required | Rejection reason is selected from allowlisted codes and user-facing summary is safe. | Return missing-reason, permission, or stale-state error. | `dispute_rejected` |
+| `accepted` | `closed` | Ops reviewer or system job | Closure reason states intake complete and no required review is pending. | Return invalid-transition or missing-review error. | `dispute_closed` |
+| `rejected` | `closed` | Ops reviewer or system job | Closure reason states rejection communicated or intake complete. | Return invalid-transition or missing-review error. | `dispute_closed` |
+| `needs_information` | `closed` | Ops reviewer or system job | User withdrew dispute or internal timeout policy is documented; no legal deadline is asserted. | Return invalid-transition if timeout policy is absent. | `dispute_closed` |
+
+No transition may delete a dispute, erase audit history, or mutate the linked transaction record.
+
+## Non-Functional And Policy Expectations
+
+| Area | Requirement |
+| --- | --- |
+| Security | Enforce least-privilege access for user and operator actions. All examples and future fixtures must use opaque IDs such as `usr_`, `acct_`, `txn_`, `case_`, and `audit_`. |
+| Privacy | Apply GDPR-style minimization: collect only dispute reason, safe description, evidence metadata, transaction reference, and workflow metadata required for intake. |
+| Auditability | State-changing actions succeed only if the dispute change and safe audit event are both recorded. Audit records contain safe state labels and redacted references, not raw sensitive data. |
+| Reliability | Retried dispute submission uses an idempotency key owned by the user/session and returns the original dispute reference for an equivalent retry. |
+| Concurrency | Operator state changes require a current dispute version. Stale writes return a conflict and do not overwrite a newer status or note. |
+| Redaction | Operator notes and evidence descriptions are allowlisted or scanned before persistence. Unsafe values are rejected or masked according to the future implementation's documented redaction policy. |
+| Performance | Targets are assumed homework targets: user dispute creation p95 <= 500 ms, dispute detail p95 <= 400 ms, ops queue p95 <= 800 ms for paginated views, audit event write completed before success. |
+| Pagination | Ops queue uses cursor pagination with default 25 items and maximum 100 items, ordered by oldest actionable item first with deterministic tie-break by dispute ID. |
+| Availability | Intake should fail closed when audit persistence or permission checks are unavailable. It may show a safe retry message, but must not create unaudited state changes. |
+
+## Implementation Notes
+
+### Domain Assumptions
+
+The primary regulatory framing is an EU/EEA payment-account context. The feature is informed by PSD2, GDPR, DORA, EBA ICT/security guidance, and EBA complaints-handling guidance as design rationale for a realistic homework specification, not as a claim that this repository implements legal compliance. Detailed rationale and limits live in `docs/domain-rules.md`; reviewer-facing rationale lives in `README.md`.
+
+The dispute flow treats `accepted` and `rejected` as internal intake outcomes. They do not mean statutory liability has been determined, a refund has been issued, a chargeback has been filed, or an external dispute-resolution process has completed.
+
+### Actors, Roles, And Permissions
+
+| Role | Purpose | Allowed actions | Forbidden actions |
+| --- | --- | --- | --- |
+| End user | Account holder who disputes a posted transaction. | Create a dispute for their own posted transaction, view their own dispute status, add evidence metadata, respond to information requests. | View another user's disputes, edit internal notes, assign statuses, close cases, dispute pending transactions. |
+| Support operator | First-line helper for user questions. | View masked dispute summaries, explain status, add support-safe notes, route to ops. | Accept, reject, or close disputes; view restricted evidence fields; override audit records. |
+| Ops reviewer | Internal reviewer responsible for queue handling. | Review queue, assign case owner, move to `under_review`, request information, add structured notes, recommend accepted or rejected outcome. | Self-approve sensitive compliance/fraud decisions when dual review is required. |
+| Compliance reviewer | Reviewer for policy-sensitive or escalation cases. | Review restricted queue items, approve sensitive outcomes, add compliance notes, close reviewed cases. | Alter transaction records, delete audit events, bypass redaction rules. |
+| Fraud/risk reviewer | Reviewer for suspected misuse or fraud indicators. | Add fraud-risk classification, request escalation, provide fraud-review input. | Make unsupported legal conclusions or expose fraud signals to the user. |
+| System job | Background service or workflow automation. | Apply timeout markers, emit reminders, maintain queue metadata, record audit events. | Create user disputes without a user action, suppress notes, change final outcomes without a configured rule. |
+
+### Builder Guardrails
+
+These controls apply to future implementation tasks derived from this specification. The full homework control baseline remains in `docs/domain-rules.md`, and agent workflow enforcement remains in `agents.md`.
+
+| Control | Dispute Intake requirement | Later code-enforcement path |
+| --- | --- | --- |
+| Synthetic data only | Use synthetic users, accounts, transactions, dispute IDs, notes, and evidence metadata. Do not include real customer records, production logs, personal data, account numbers, PAN, CVV, authentication data, or secrets. | Fixture review, secret scanning, PII/PAN pattern checks, safe sample-data generators. |
+| Role boundaries | Define end-user, support, ops reviewer, compliance reviewer, fraud/risk reviewer, and system-only actions before low-level tasks are considered complete. | Authorization middleware, role tests, forbidden-action tests, operator-view restrictions. |
+| Safe audit events | Every create, evidence update, note creation, assignment, status transition, information request, and closure must describe safe audit evidence. | Audit-event schema, required event assertions in integration tests, correlation-ID checks. |
+| Redaction | Logs, errors, audit notes, operator views, examples, and evidence metadata must mask sensitive values and avoid raw request/response bodies. | Structured logging filters, error-contract tests, redaction unit tests, log review checks. |
+| Idempotent state changes | Retried dispute submission and retryable operator commands must define duplicate behavior and avoid duplicate cases or contradictory audit records. | Idempotency-key validation, duplicate-command tests, replay tests. |
+| Explicit state machines | The durable dispute states, allowed transitions, rejected transitions, stale-state behavior, and audit expectations are defined below. | State-transition guards, transition matrix tests, stale-state conflict tests. |
+| Human review for sensitive ops | Sensitive outcomes and fraud/compliance-sensitive decisions must identify whether single review or dual review is required and why. | Approval workflow states, reviewer-role checks, self-approval rejection tests. |
+| Verification mapping | Each mid-level objective maps to acceptance criteria, future test categories, manual review evidence, and performance checks. | Test matrix, CI checks, manual review checklist, performance smoke checks. |
+
+### Hypothetical Data Concepts
+
+| Concept | Required fields | Notes |
+| --- | --- | --- |
+| `Dispute` | `dispute_id`, `user_id`, `account_id`, `transaction_id`, `status`, `reason_category`, `safe_user_summary`, `created_at`, `updated_at`, `version`, `idempotency_key_hash` | `safe_user_summary` must be redacted and length-limited. |
+| `DisputeEvidenceMetadata` | `evidence_id`, `dispute_id`, `submitted_by`, `evidence_type`, `safe_description`, `redacted_reference`, `received_at` | No binary content, external file URL, malware scan status, or storage provider details are in scope. |
+| `DisputeAuditEvent` | `event_id`, `occurred_at`, `actor_type`, `actor_id`, `actor_role`, `action`, `target_type`, `target_id`, `correlation_id`, `reason_code`, `before_state`, `after_state`, `sensitive_data_present` | Aligns with `docs/technical-conventions.md`; snapshots are labels or redacted fields only. |
+| `OperatorNote` | `note_id`, `dispute_id`, `author_id`, `author_role`, `note_type`, `safe_body`, `reason_code`, `created_at`, `visibility` | `visibility` is one of `support`, `ops`, `compliance`, or `fraud`. |
+| `OpsQueueView` | `dispute_id`, `status`, `age_bucket`, `assigned_to`, `reason_category`, `last_action_at`, `requires_compliance_review`, `requires_user_response` | Excludes raw user narrative and restricted evidence details by default. |
+
+### Command And Error Semantics
+
+- User-created disputes require a client-provided idempotency key for retryable submissions.
+- Operator transitions require a current `version` or equivalent compare-and-swap token.
+- Errors use stable codes such as `transaction_not_posted`, `transaction_not_found`, `duplicate_active_dispute`, `permission_denied`, `invalid_transition`, `stale_dispute_version`, `unsafe_note_content`, and `audit_write_unavailable`.
+- User-facing errors must not reveal whether another user's transaction exists.
+- Operator-facing errors may include safe reason codes and correlation IDs, but not raw provider responses or sensitive narratives.
+
+### Reason Categories
+
+Use an allowlisted set for intake examples:
+
+- `unauthorized_payment`
+- `incorrect_amount`
+- `duplicate_payment`
+- `merchant_not_recognized`
+- `goods_or_services_issue`
+- `other_payment_problem`
+
+These categories support intake triage only. They do not determine statutory liability or refund eligibility.
+
+## Context
+
+### Beginning Context
+
+Before implementation work begins, the hypothetical product has:
+
+- A user identity system with opaque user IDs and role claims.
+- Posted transaction records with opaque transaction IDs, account ownership, amount, currency, merchant label, and posted timestamp.
+- No dispute records, no dispute-specific audit events, no evidence metadata model, and no operator queue.
+- Existing engineering conventions for IDs, timestamps, money, state machines, redaction, pagination, and audit metadata in `docs/technical-conventions.md`.
+- Domain-control baseline and EU banking-style rationale in `docs/domain-rules.md`.
+
+### Ending Context
+
+After the low-level tasks are complete, the specification package should describe:
+
+- Dispute creation for eligible posted transactions.
+- Evidence metadata capture without real file handling.
+- A role-controlled ops/compliance queue.
+- The complete dispute state machine and transition guardrails.
+- Safe audit events and redaction rules for every state-changing flow.
+- Edge cases, verification expectations, and assumed performance targets.
+- Supporting agent, operator, README, and domain-rule guidance aligned to EU payment-account intake.
+
+## Edge Cases And Failure Modes
+
+| Case | Expected user-visible behavior | Audit/compliance implication |
+| --- | --- | --- |
+| User has no posted transactions | Show empty state explaining there are no eligible transactions to dispute. | No dispute audit event; optional safe page-view telemetry only. |
+| Transaction is pending | Reject with `transaction_not_posted`. | Record rejected-intake audit with transaction reference only if it belongs to the user. |
+| Transaction does not belong to user | Return generic not-found or ineligible message. | Record permission failure with actor and correlation ID, not target details. |
+| Duplicate active dispute | Return existing dispute reference for idempotent equivalent retry; return conflict for different reason/details. | Audit duplicate attempt without creating another active case. |
+| Existing closed dispute | Allow new dispute only if policy permits a new reason category; otherwise return conflict. | Audit reopened/new-intake decision with reason code. |
+| Evidence metadata missing | Allow initial dispute only if reason category permits no evidence yet; otherwise move to or remain in `needs_information`. | Audit missing-evidence condition and reviewer request. |
+| Unsafe evidence description or note | Reject or redact according to policy and return safe validation message. | Audit redaction failure marker without storing raw unsafe value. |
+| Concurrent operator decisions | First valid version wins; later stale version receives conflict. | Audit rejected stale action with actor, attempted action, and current state label. |
+| Audit store unavailable | Do not commit visible state change. | Return retryable service error; emit operational alert outside dispute audit if available. |
+| Fraud-ish pattern across disputes | Case may be routed to fraud/risk review using safe classification. | Do not expose fraud rationale to end user; restrict note visibility. |
+| User withdraws during review | Transition to `closed` with withdrawal reason if policy allows. | Audit actor, state, and reason without deleting previous evidence metadata. |
+| Compliance approval missing | Block `accepted`, `rejected`, or `closed` transition when marked sensitive. | Audit blocked transition and required reviewer role. |
+
+## Verification Plan
+
+| Objective | Acceptance evidence | Future test categories | Manual review evidence |
+| --- | --- | --- | --- |
+| M1 | User can create one dispute for own posted transaction and receives `case_` reference; ineligible and duplicate attempts resolve safely. | Unit validation, integration create flow, idempotent retry test, negative eligibility tests for pending, missing, wrong owner, reversed, and duplicate transactions. | Sample happy-path request/response in future API docs; reviewer confirms errors do not leak another user's data. |
+| M2 | Evidence metadata and user responses are stored without real files or unsafe content. | Schema tests, evidence-type validation tests, safe-description tests, information-request and response-flow tests. | Evidence examples contain metadata only, no real file URLs, and safe user-facing request text. |
+| M3 | Ops/compliance/fraud queues and transitions obey role boundaries and the transition matrix. | Authorization tests, queue filter tests, state-transition matrix tests, stale-version tests. | Operator manual shows allowed/forbidden actions and review expectations per role. |
+| M4 | State-changing actions write audit evidence and apply redaction, minimization, and scoped compliance controls. | Audit-event integration tests, redaction unit tests, unsafe-note validation tests, log allowlist tests, permission-denial tests. | Audit field checklist completed for each transition; document scan confirms synthetic data and no raw sensitive values. |
+| M5 | Reliability and performance targets are measurable. | Performance smoke tests for create/detail/queue, pagination tests, idempotency replay tests, audit-failure tests, stale-state conflict tests. | Performance assumptions and rationale are visible in this spec and README. |
+
+## Expected Performance
+
+These are assumed homework targets, not production service-level agreements.
+
+| Flow | Target | Rationale |
+| --- | --- | --- |
+| Create dispute | p95 <= 500 ms when transaction lookup and audit store are healthy. | A user filing a dispute expects immediate confirmation, and the flow writes only a case record, metadata, and audit event. |
+| View dispute detail | p95 <= 400 ms for the user's own dispute. | Detail view is a bounded read by dispute ID with role filtering. |
+| Ops queue list | p95 <= 800 ms for default 25-item cursor page; maximum page size 100. | Operators need scan-friendly queues, but the query includes filters and permission shaping. |
+| State transition | p95 <= 500 ms when audit store is healthy. | Transition writes one dispute update and one audit event. |
+| Read-after-write | Newly created or transitioned dispute visible in detail view within 2 seconds. | Strong or near-strong consistency is appropriate for user trust and operator coordination. |
+| Audit write | Must complete before success is returned. | Dispute state changes are compliance-sensitive and must not become unaudited. |
+
+## Low-Level Tasks
+
+The following task cards describe future implementation slices for the Dispute Intake feature. They are intentionally written as implementation-ready product work items rather than package-edit chores. Each task preserves the required fields while avoiding a wide table that is difficult to read.
+
+### M1 - Intake Eligibility And Submission
+
+#### M1.1 Eligible transaction lookup and empty state
+- **Supports:** M1, M5
+- **Implementation prompt:**
+  - **Context:** The product is EU/EEA payment-account dispute intake, and M1 succeeds only when users can choose from their own eligible posted transactions without exposing any other user's data.
+  - **Task:** Build the lookup path that returns dispute-eligible transaction summaries and the empty state used before a dispute is submitted.
+  - **Constraints:** Enforce least privilege, GDPR-style minimization, opaque identifiers, safe errors, no raw account/card/authentication data, no dispute mutation, no dispute audit event for passive empty-state lookup, and measurable latency contribution to the create flow.
+  - **Examples:** Return `txn_123` with `acct_123`, amount, currency, merchant label, and posted timestamp; hide pending, reversed, missing, and wrong-owner transactions.
+  - **Output format:** Provide response contract, dependency/error behavior, audit/telemetry decision, and unit/integration/performance test cases.
+- **Create or update:** Create the eligible-transaction query, transaction-summary response shape, empty-state response, dependency error mapping, and lookup coverage fixtures.
+- **Core behavior:** Return only posted transactions owned by the authenticated user with opaque `txn_` and `acct_` identifiers, amount, currency, merchant label, and posted timestamp. If none are eligible, return a safe empty state that explains there are no eligible transactions to dispute without presenting a transaction-specific dispute form.
+- **Edge cases and failure modes:** Hide pending, reversed, missing, and wrong-owner transactions. Do not reveal whether another user's transaction exists. Treat transaction lookup outage as a retryable dependency failure and avoid logging raw provider responses.
+- **Acceptance criteria:** A user with eligible posted transactions sees only their own eligible items. A user with no eligible transactions receives the documented empty state. Empty-state behavior creates no `Dispute`, no `DisputeEvidenceMetadata`, and no dispute audit event.
+- **Verification:** Cover happy-path lookup, empty eligible state, pending transaction exclusion, reversed transaction exclusion, wrong-owner non-disclosure, transaction lookup dependency failure, log redaction assertions, and p95 lookup contribution to the create-dispute target.
+
+#### M1.2 Posted-transaction ownership and eligibility guard
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** Dispute creation must fail closed unless the transaction is confirmed to be a posted transaction owned by the authenticated user.
+  - **Task:** Implement the pre-create eligibility guard used by the submit command.
+  - **Constraints:** Run permission and ownership checks before creating any dispute state, use stable safe error codes, record rejected-intake audit only when actor/correlation context exists and the target can be safely referenced, preserve privacy for wrong-owner lookups, and include negative-path tests.
+  - **Examples:** Owned pending transaction returns `transaction_not_posted`; missing or wrong-owner transaction returns generic not-found or ineligible messaging; transaction dependency outage returns a retryable dependency error.
+  - **Output format:** Provide guard rules, error mapping, audit behavior, and test matrix.
+- **Create or update:** Create the eligibility validator, posted-transaction ownership check, transaction-state exclusions, safe validation errors, rejected-intake audit hook, and dependency-failure behavior.
+- **Core behavior:** Allow intake only when the transaction exists, belongs to the authenticated user, is posted, and is not excluded by known transaction state. Block mutation when ownership cannot be confirmed.
+- **Edge cases and failure modes:** Owned pending, reversed, missing, wrong-owner, permission-check failure, transaction-service timeout, and ambiguous transaction responses must not create a dispute or reveal another user's resource.
+- **Acceptance criteria:** Ineligible submissions do not create `Dispute`, `DisputeEvidenceMetadata`, queue records, user notifications, or success responses. Owned pending transactions produce a specific safe error. Wrong-owner and missing transactions do not leak target details.
+- **Verification:** Cover owned posted, owned pending, missing, wrong-owner, reversed, permission-denied, transaction-service-unavailable, audit-safe rejected intake, and fail-closed dependency cases with unit and integration eligibility tests.
+
+#### M1.3 Intake request contract and safe field validation
+- **Supports:** M1, M2, M4
+- **Implementation prompt:**
+  - **Context:** The intake form collects only the minimum data needed to register a dispute and route later review.
+  - **Task:** Define and validate the create-dispute request contract, including reason category and safe user summary.
+  - **Constraints:** Use the allowlisted reason categories in this spec, apply privacy minimization, reject or mask unsafe free text before persistence, avoid raw PII/PAN/account/authentication values in logs and audit, return stable validation errors, and include security/compliance tests.
+  - **Examples:** Allow `unauthorized_payment` and `incorrect_amount`; reject an unknown category, an oversized summary, or a summary containing card-like or token-like text.
+  - **Output format:** Provide request fields, validation rules, safe error codes, redaction behavior, and unit/integration/log-redaction test cases.
+- **Create or update:** Create the intake request shape, reason-category validation, safe summary length rules, redaction checks, unsafe-content error handling, and validation fixtures.
+- **Core behavior:** Accept only allowlisted reason categories and persist a redacted, length-limited `safe_user_summary` suitable for user detail, operator queue preview, and audit context. Do not require or accept binary evidence files during M1 intake.
+- **Edge cases and failure modes:** Reject unknown categories, empty required summaries, oversized summaries, raw account-like values, PAN-like values, authentication values, secrets, raw provider responses, unsupported legal conclusions, and unsafe accusations.
+- **Acceptance criteria:** Invalid categories return a stable validation code. Unsafe summaries are rejected or masked according to the future implementation's documented redaction policy before persistence. Raw unsafe input is not copied into audit, logs, queue previews, or operator notes.
+- **Verification:** Cover valid categories, invalid categories, empty summary, oversized summary, PAN-like text, account-like text, token-like text, secret-like text, unsupported legal/refund wording, and log/audit redaction assertions.
+
+#### M1.4 Idempotency key ownership and retry contract
+- **Supports:** M1, M5
+- **Implementation prompt:**
+  - **Context:** Client retries are expected in finance workflows and must not create duplicate active cases or contradictory audit history.
+  - **Task:** Implement idempotency-key ownership, payload matching, replay behavior, and rate-limit-safe retry semantics for create-dispute submissions.
+  - **Constraints:** Require a user/session-owned idempotency key, hash or otherwise protect key storage, bind the key to actor and command payload, return safe conflicts for changed payloads, prevent cross-user key reuse, preserve audit trail needs, and test timeout/replay scenarios.
+  - **Examples:** An equivalent retry returns the original `case_` response; the same key with a different summary returns a stable idempotency conflict; excessive retries return a safe rate-limit error.
+  - **Output format:** Provide key rules, replay response shape, error semantics, audit behavior, and retry/idempotency tests.
+- **Create or update:** Create idempotency-key validation, key ownership checks, payload fingerprinting, replay response behavior, changed-payload conflict handling, and retry/rate-limit coverage fixtures.
+- **Core behavior:** Require an idempotency key for retryable user submissions. Equivalent replay by the same actor returns the original result. Non-equivalent replay with the same key returns a stable conflict and does not create or mutate a dispute.
+- **Edge cases and failure modes:** Missing key, duplicate network delivery, client timeout after success, same key with changed payload, key used by another user, repeated unsafe submissions, and retry while audit or transaction dependencies are degraded must resolve without duplicates.
+- **Acceptance criteria:** Idempotency keys are scoped to the actor and command payload. Equivalent retries do not duplicate cases, queue records, notifications, or audit history. Changed-payload and cross-user key attempts return safe errors without exposing sensitive payload details.
+- **Verification:** Cover missing key, equivalent replay, changed-payload replay, cross-user key reuse, timeout retry, duplicate delivery, repeated unsafe content, rate-limit response, duplicate audit prevention, and retry after dependency failure.
+
+#### M1.5 Duplicate active dispute policy
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** A user must have at most one active dispute for the same transaction and reason category unless a documented closed-case policy allows a new intake.
+  - **Task:** Implement duplicate active dispute detection after eligibility validation and before case creation.
+  - **Constraints:** Use the durable state machine, treat active statuses consistently, keep duplicate errors safe, record duplicate-attempt audit when safe actor/correlation context exists, avoid leaking wrong-owner or restricted target details, and include concurrency tests.
+  - **Examples:** An existing `submitted`, `under_review`, or `needs_information` case for the same `txn_` and reason blocks a non-equivalent submit with `duplicate_active_dispute`; an equivalent idempotent retry returns the original `case_`; a closed prior dispute follows the documented closed-case policy.
+  - **Output format:** Provide duplicate definition, error mapping, audit handling, and unit/integration/concurrency tests.
+- **Create or update:** Create duplicate lookup rules, active-status definition, closed-case policy hook, conflict response, duplicate-attempt audit event, and concurrent submission guard.
+- **Core behavior:** Treat `submitted`, `under_review`, and `needs_information` as active for duplicate prevention. Return the existing `case_` reference only for an equivalent idempotent retry; otherwise return `duplicate_active_dispute`.
+- **Edge cases and failure modes:** Different reason category, changed summary, changed evidence metadata, closed prior dispute, concurrent submissions, audit write failure, and ambiguous lookup timeout must produce deterministic fail-closed behavior.
+- **Acceptance criteria:** Equivalent retries do not create a second case. Non-equivalent duplicate attempts return conflict. Closed-case behavior follows documented policy and does not reopen history silently. Duplicate attempts never expose another user's dispute reference.
+- **Verification:** Cover duplicate active case, equivalent idempotent replay, changed-payload conflict, different reason category, closed prior case, wrong-owner non-disclosure, concurrent double-submit, audit event assertions, and duplicate lookup dependency failure.
+
+#### M1.6 Dispute creation and `case_` response
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** After lookup, eligibility, validation, idempotency, and duplicate checks pass, the system creates the initial dispute case for internal tracking only.
+  - **Task:** Implement the successful create-dispute command and user-safe response.
+  - **Constraints:** Generate an opaque `case_` reference, create only `submitted` intake state, link to opaque transaction/account IDs, persist safe summary and reason category, write the `dispute_submitted` audit event before returning success, fail closed on audit persistence failure, avoid any refund/chargeback/legal outcome wording, and include happy-path plus failure tests.
+  - **Examples:** Create `case_123` for `usr_123` and `txn_123` with version `1`; return a safe confirmation containing current status and no internal notes.
+  - **Output format:** Provide command contract, persisted fields, response shape, audit event fields, error handling, and tests.
+- **Create or update:** Create the dispute creation command, `case_` reference generation, initial `submitted` state persistence, initial queue metadata, read-after-write projection behavior, and `dispute_submitted` audit write.
+- **Core behavior:** On valid submission, create one `Dispute` in `submitted` status with `idempotency_key_hash`, version `1`, safe user summary, reason category, linked opaque transaction identifiers, and safe creation timestamps.
+- **Edge cases and failure modes:** Audit write failure, partial dispute write, queue metadata failure, response projection lag, retry after client timeout, and dependency timeout after commit boundary must not produce duplicate or unaudited visible cases.
+- **Acceptance criteria:** Successful intake returns one stable `case_` reference and safe status text. No success is returned unless the dispute and audit event are both durably recorded. Queue projection can recover asynchronously only if durable dispute and audit state are consistent and the user response remains accurate.
+- **Verification:** Cover happy-path create, audit-write failure, partial-write rollback or compensation, queue metadata failure, retry after timeout, safe response wording, linked transaction immutability, and read-after-write visibility within 2 seconds.
+
+#### M1.7 Intake error semantics and rejected-submission audit
+- **Supports:** M1, M4, M5
+- **Implementation prompt:**
+  - **Context:** Rejected intake attempts must be understandable to users, useful for operators, safe for privacy, and auditable when actor/correlation context exists.
+  - **Task:** Define M1 error semantics and rejected-submission audit behavior across validation, permission, duplicate, idempotency, rate-limit, dependency, unsafe-content, and audit-write failures.
+  - **Constraints:** Return stable machine-readable error codes with safe summaries, do not echo sensitive input, do not reveal another user's transaction or dispute, fail closed when audit persistence or permission checks are unavailable, and include tests for every error class.
+  - **Examples:** Use `transaction_not_posted`, `duplicate_active_dispute`, `permission_denied`, `unsafe_summary_content` or equivalent unsafe-content code, `rate_limited`, `transaction_lookup_unavailable`, and `audit_write_unavailable` as safe codes.
+  - **Output format:** Provide error catalog entries, user/operator visibility rules, audit-event mapping, recoverability classification, and verification cases.
+- **Create or update:** Create the M1 error catalog, rejected-intake audit mapping, recoverability labels, user/operator-safe response shapes, correlation-ID handling, and negative-path coverage matrix.
+- **Core behavior:** Return deterministic safe errors for rejected intake and record safe audit evidence for blocked or rejected attempts when doing so will not expose another user's target details or raw unsafe content.
+- **Edge cases and failure modes:** Wrong-owner transaction, missing transaction, unsafe summary, duplicate active dispute, changed idempotency payload, rate limit, permission service outage, transaction lookup outage, audit writer outage, and malformed request must not create visible state.
+- **Acceptance criteria:** User-facing errors contain safe codes, safe summaries, and correlation IDs where appropriate. Operator-facing errors may include safe reason codes and correlation IDs only. Rejected-submission audit records contain actor, attempted action, safe reason code, and safe state labels without raw sensitive values.
+- **Verification:** Cover validation, permission, duplicate, idempotency conflict, unsafe content, rate limit, transaction dependency failure, audit-write failure, malformed request, wrong-owner privacy assertions, rejected-intake audit assertions, and no-mutation checks.
+
+### M2 - Evidence And User Follow-Up
+
+#### M2.1 Evidence metadata record contract
+- **Supports:** M2, M4
+- **Implementation prompt:**
+  - **Context:** Evidence in this feature is metadata-only and supports intake review without storing real files, storage URLs, malware-scan details, or raw user documents.
+  - **Task:** Define the `DisputeEvidenceMetadata` record contract, persistence rules, safe response shape, and synthetic fixtures.
+  - **Constraints:** Use opaque IDs, UTC timestamps, least-privilege access, GDPR-style minimization, safe audit references, no binary payloads, no external file URLs, no raw PII/PAN/account/authentication values, and no storage-provider design.
+  - **Examples:** Persist `evidence_id`, `dispute_id`, `submitted_by`, `evidence_type`, `safe_description`, `redacted_reference`, and `received_at`; reject any field that implies a real file body or download location.
+  - **Output format:** Provide record fields, allowed and forbidden fields, persistence behavior, user/operator response projections, audit considerations, and schema/permission tests.
+- **Create or update:** Create the `DisputeEvidenceMetadata` model, persistence contract, field allowlist, safe response shape, metadata-only fixtures, permission checks for evidence access, and evidence-metadata audit hook.
+- **Core behavior:** Persist metadata with opaque identifiers and UTC timestamps, linked to an existing dispute the actor may access. Store enough safe context for reviewers without accepting binary content or external storage references.
+- **Edge cases and failure modes:** Reject binary payloads, real file URLs, storage-provider references, malware-scan fields, missing dispute IDs, wrong-dispute access, wrong-owner access, deleted or unavailable dispute lookup, and duplicate metadata identifiers.
+- **Acceptance criteria:** Evidence records contain metadata only. No task, fixture, response, audit event, or example contains a real file body, real download URL, raw provider response, or storage-provider implementation detail. Evidence cannot be attached across user boundaries. Successful evidence metadata changes emit safe audit evidence without raw descriptions or file references.
+- **Verification:** Cover schema validation, metadata-only enforcement, forbidden binary/file URL/storage fields, wrong-dispute permission denial, missing dispute handling, duplicate identifier handling, evidence-update audit assertions, audit-safe reference assertions, and synthetic fixture review.
+
+#### M2.2 Evidence type allowlist and requiredness rules
+- **Supports:** M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Reviewers need structured evidence expectations, but the feature must avoid legal conclusions, refund obligations, chargeback rules, and exact external deadlines.
+  - **Task:** Implement the evidence type allowlist and reason-category-specific requiredness rules used by intake, reviewer follow-up, and sensitive outcome checks.
+  - **Constraints:** Accept only configured metadata types, keep requiredness as intake-review guidance, use safe validation errors, avoid unsupported legal or liability wording, preserve audit trail needs, and include tests for missing and invalid metadata.
+  - **Examples:** Mark some reason categories as allowed to proceed with no evidence, some as needing reviewer follow-up, and sensitive outcome decisions as blocked until required metadata or a documented reason is present.
+  - **Output format:** Provide allowlist entries, requiredness matrix, reviewer indicators, error codes, audit behavior for missing evidence, and validation/state-transition tests.
+- **Create or update:** Create evidence type allowlist, optional-versus-required evidence rules, reviewer-facing missing-evidence indicators, safe validation errors, and missing-evidence audit markers.
+- **Core behavior:** Accept only configured evidence types and mark whether the current reason category can proceed with no evidence, needs reviewer follow-up, or blocks sensitive accepted/rejected outcome decisions until required metadata or a documented exception exists.
+- **Edge cases and failure modes:** Unknown evidence type, duplicate metadata reference, missing evidence for sensitive acceptance or rejection, evidence submitted after closure, withdrawn dispute, mismatched reason category, and stale reviewer decision must resolve safely.
+- **Acceptance criteria:** Invalid evidence type returns a stable validation error. Missing evidence can route a case to `needs_information` without inventing legal deadlines. Closed cases cannot receive new evidence metadata unless a documented correction policy allows a metadata-only correction.
+- **Verification:** Cover valid type, invalid type, duplicate evidence reference, no-evidence permitted category, no-evidence needs-information path, sensitive outcome blocked for missing evidence, documented exception path, closed-case update rejection, and audit assertions for missing evidence.
+
+#### M2.3 Safe descriptions and redacted references
+- **Supports:** M2, M4
+- **Implementation prompt:**
+  - **Context:** Evidence descriptions and references are free-text-adjacent fields, so they are high-risk for accidental sensitive data, unsupported accusations, and raw provider details.
+  - **Task:** Apply safe-text validation, redaction, length limits, and audit-safe failure handling for `safe_description` and `redacted_reference`.
+  - **Constraints:** Reject or mask unsafe content before persistence, never copy raw unsafe values into logs or audit events, use stable safe error codes, fail closed when redaction is unavailable, and include security/privacy tests.
+  - **Examples:** Permit a short neutral description such as "receipt metadata provided"; reject or mask account-like, PAN-like, token-like, authentication-like, secret-like, raw-provider-response, or unsupported fraud-accusation text.
+  - **Output format:** Provide validation rules, redaction policy behavior, safe error mapping, audit/log allowlist behavior, and redaction unit/integration tests.
+- **Create or update:** Create redaction checks for `safe_description`, `redacted_reference` formatting, unsafe-content rejection, redaction dependency handling, and audit-safe failure markers.
+- **Core behavior:** Store short descriptions that help reviewers understand the evidence type without storing raw personal data, account numbers, PAN, CVV, authentication values, secrets, unsupported accusations, or raw provider responses.
+- **Edge cases and failure modes:** Unsafe pasted text, realistic account values, token-like strings, excessive detail, unsupported fraud accusations, raw provider responses, redaction service outage, and log serialization failures must not persist raw unsafe content.
+- **Acceptance criteria:** Unsafe values are rejected or masked before persistence. Rejected unsafe values are not written into audit events, logs, queue previews, or user detail. Evidence references remain opaque or redacted.
+- **Verification:** Cover redaction unit tests for PAN-like, account-like, token-like, authentication-like, secret-like, long free-text, unsupported accusation, and raw-provider-response examples plus log, audit, and response allowlist assertions.
+
+#### M2.4 Reviewer information request flow
+- **Supports:** M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Reviewers can ask users for missing metadata or clarification, but user-facing request text must be specific, safe, and separated from internal rationale.
+  - **Task:** Implement the reviewer information-request command and transition to `needs_information`.
+  - **Constraints:** Enforce role permissions, current dispute version, allowlisted reason codes, safe user-visible wording, audit persistence before success, no fraud/compliance rationale exposure, no legal deadline invention, and stale-state tests.
+  - **Examples:** From `submitted` or `under_review`, an ops reviewer requests "Please provide receipt metadata or a short clarification" with reason code `missing_evidence_metadata`; support users cannot create the request.
+  - **Output format:** Provide command contract, permitted actors, request text rules, state transition behavior, audit event shape, error mapping, and role/stale/audit tests.
+- **Create or update:** Create information-request command, request reason codes, user-visible request text validation, permission guard, status transition to `needs_information`, queue marker update, and `dispute_information_requested` audit event.
+- **Core behavior:** From `submitted` or `under_review`, an authorized reviewer can request specific missing metadata or clarification and move the case to `needs_information` when the version is current and audit can be written.
+- **Edge cases and failure modes:** Vague request text, unsafe request text, wrong role, stale version, missing reason code, audit write failure, request on closed case, duplicate open request, and restricted rationale leakage must block the request.
+- **Acceptance criteria:** Valid requests are visible to the user without internal rationale. Invalid or unsafe requests do not change state. The audit event records actor, role, reason code, before/after state, target IDs, and correlation ID using safe values only.
+- **Verification:** Cover happy-path request, support-role denial, wrong-state rejection, duplicate open request, unsafe request text, missing reason code, stale version, audit-write failure, user-visible text redaction, and restricted-rationale hiding.
+
+#### M2.5 User response to information request
+- **Supports:** M2, M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** Users can answer reviewer requests by adding safe metadata or clarification, and the response must make the case actionable without exposing internal notes or creating duplicate updates.
+  - **Task:** Implement the user response command for disputes in `needs_information`, including metadata attachment and return-to-review behavior.
+  - **Constraints:** Allow only the dispute owner, validate evidence metadata and safe text, use idempotent retry behavior where applicable, protect against stale or concurrent closure, write safe audit evidence, and include permission/concurrency tests.
+  - **Examples:** The owner of `case_123` submits a safe clarification and receipt metadata; the case returns to `under_review` or becomes reviewer-actionable, while a wrong-user response receives a safe denial.
+  - **Output format:** Provide command contract, ownership and state guards, metadata validation, transition or queue update behavior, audit event shape, error semantics, and tests.
+- **Create or update:** Create user response command, evidence metadata attachment path, safe response summary, status transition from `needs_information` to `under_review`, queue actionable marker, idempotent retry handling, and `dispute_information_received` audit event.
+- **Core behavior:** Accept a response only from the dispute owner while the case is in `needs_information`; record safe metadata and make the case actionable for reviewers again without exposing internal rationale.
+- **Edge cases and failure modes:** Response by wrong user, response in wrong state, unsafe response text, duplicate response retry, evidence validation failure, concurrent closure, audit write failure, and queue projection lag must not corrupt state.
+- **Acceptance criteria:** Valid response moves the case back to `under_review` or marks reviewer action required according to queue rules. Invalid metadata leaves the state unchanged and records only safe failure context when appropriate. Duplicate retries do not duplicate evidence metadata or audit history.
+- **Verification:** Cover owner response happy path, wrong-user denial, wrong-state conflict, unsafe text rejection, invalid evidence metadata, idempotent duplicate response, audit-write failure, concurrent close conflict, queue read-after-write visibility, and stale-version behavior.
+
+#### M2.6 User dispute detail and status visibility
+- **Supports:** M2, M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** Users need a safe detail/status view for their own case, but internal notes, fraud/risk classifications, compliance rationale, and restricted evidence fields must remain hidden.
+  - **Task:** Build the user-safe dispute detail view for submitted metadata, evidence metadata, outstanding requests, user responses, status timeline, and outcome wording.
+  - **Constraints:** Enforce ownership before detail lookup, apply role-filtered field allowlists, use safe intake-outcome language for `accepted` and `rejected`, meet detail performance/read-after-write targets, handle dependency failures safely, and include privacy tests.
+  - **Examples:** Show `case_123`, current status, reason category, safe summary, safe evidence metadata, and outstanding request text; hide internal notes, fraud/risk flags, compliance rationale, and another user's case.
+  - **Output format:** Provide response schema, visibility allowlists, status timeline rules, safe wording, error behavior, performance expectations, and detail-view tests.
+- **Create or update:** Create user detail response shape, ownership guard, role-filtered visibility rules, status timeline projection, safe evidence metadata projection, outstanding request projection, and detail performance checks.
+- **Core behavior:** Show the dispute owner the `case_` reference, current status, reason category, safe summary, safe evidence metadata, outstanding information requests, user responses, and user-facing outcome text.
+- **Edge cases and failure modes:** Hide internal notes, fraud/risk classifications, compliance rationale, restricted evidence fields, another user's case, stale reads after transition, missing projections, and dependency failures.
+- **Acceptance criteria:** Users can see their own safe case details and cannot see internal-only fields. Accepted and rejected labels are described as intake outcomes only. Detail view meets p95 <= 400 ms and read-after-write visibility within 2 seconds under healthy dependencies.
+- **Verification:** Cover own-case detail, wrong-user denial, role-filtered field assertions, accepted/rejected safe wording, outstanding request display, response history display, missing projection behavior, read-after-write after create/request/response, and detail p95 smoke checks.
+
+### M3 - Internal Review Workflow
+
+#### M3.1 Role permission matrix enforcement
+- **Supports:** M3, M4
+- **Implementation prompt:**
+  - **Context:** Internal review is safe only if end users, support, ops reviewers, compliance reviewers, fraud/risk reviewers, and system jobs can perform only their documented actions.
+  - **Task:** Implement the role permission matrix and protected-action guards for queue access, assignment, notes, restricted metadata, state transitions, information requests, and closure.
+  - **Constraints:** Enforce least privilege before reading restricted fields, use safe permission errors, avoid revealing restricted dispute details, record safe permission-denial audit evidence when actor/correlation context exists, and include role-by-role tests.
+  - **Examples:** Support can view masked status and add support-safe notes but cannot accept/reject/close; fraud/risk can add restricted classifications but cannot expose fraud conclusions to users; system jobs can update workflow metadata but cannot create user disputes.
+  - **Output format:** Provide permission matrix, guard placement, safe error semantics, audit behavior, role-specific fixtures, and authorization tests.
+- **Create or update:** Create authorization policy checks, protected resource access checks, forbidden-action responses, role-specific fixtures, permission-denial audit coverage, and field-level visibility guards.
+- **Core behavior:** Permit each actor only the actions listed for its role and deny status changes, restricted data access, internal notes, queue access, and sensitive outcome actions to unauthorized roles.
+- **Edge cases and failure modes:** Missing role claim, multiple conflicting role claims, expired operator session, support attempting outcome changes, system job attempting user-created dispute, fraud/risk exposing user-visible conclusions, and permission-service outage must fail safely.
+- **Acceptance criteria:** Every protected command checks role and case access before reading or mutating restricted fields. Permission failures return safe errors and do not change dispute state, notes, queue ownership, or audit-sensitive fields.
+- **Verification:** Cover role matrix tests for end user, support, ops, compliance, fraud/risk, and system job, including at least one allowed action and one forbidden action per role, field-level visibility assertions, permission-denial audit assertions, and permission-service-unavailable behavior.
+
+#### M3.2 Ops queue filters, sorting, and pagination
+- **Supports:** M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** Operators need scan-friendly queues for new submissions, in-review cases, needs-information cases, compliance review, and fraud/risk review, with role-shaped visibility.
+  - **Task:** Build operator queue projections, filters, deterministic sorting, cursor pagination, and role restrictions.
+  - **Constraints:** Use cursor pagination with default 25 and maximum 100 items, order by oldest actionable item with deterministic dispute-ID tie-break, omit raw user narratives by default, enforce restricted queue access, handle mutable data between pages, and include p95 queue tests.
+  - **Examples:** Filter by status, reason category, assigned reviewer, age bucket, compliance flag, fraud/risk flag, and requires-user-response flag; compliance queue results are visible only to authorized compliance reviewers.
+  - **Output format:** Provide queue response schema, filter catalog, sorting rules, pagination contract, role-filtered field allowlists, dependency/error behavior, and queue tests.
+- **Create or update:** Create queue projection, queue response shape, filter catalog, deterministic sorting, cursor pagination, role restrictions, no-results state, and queue performance checks.
+- **Core behavior:** Support filters for status, reason category, assigned reviewer, age bucket, compliance flag, fraud/risk flag, and requires-user-response flag. Default page size is 25 and maximum is 100.
+- **Edge cases and failure modes:** Invalid cursor, page size over maximum, restricted queue access, changed data between pages, no queue results, queue projection lag, queue dependency timeout, and unsafe preview fields must resolve safely.
+- **Acceptance criteria:** Queue results are ordered by oldest actionable item first with deterministic tie-break by dispute ID. Restricted queues expose only authorized items and omit raw user narratives, internal rationale, and restricted evidence details by default.
+- **Verification:** Cover filter combinations, default and maximum page sizes, invalid cursor, deterministic ordering, no-results state, compliance/fraud queue restrictions, mutable-data pagination, unsafe field omission, projection-lag behavior, and p95 <= 800 ms queue smoke checks.
+
+#### M3.3 Assignment and review ownership
+- **Supports:** M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** Review ownership coordinates internal work and must be version-aware so reviewers do not overwrite each other's assignments or create misleading queue state.
+  - **Task:** Implement assignment, reassignment, ownership clearing where permitted, queue refresh, and assignment audit behavior.
+  - **Constraints:** Allow only authorized ops or compliance reviewers, require current version and reason code, validate assignee role/team eligibility, preserve previous owner in safe audit metadata, fail closed on audit write failure, and include stale-version tests.
+  - **Examples:** Assign `case_123` to `usr_ops_123` or an eligible review team; reject assignment to a support operator, closed case, stale version, or sensitive self-assignment path when dual review would be undermined.
+  - **Output format:** Provide command contract, assignee validation rules, version behavior, audit event shape, queue update behavior, error mapping, and tests.
+- **Create or update:** Create assignment command, reassignment behavior, assignment reason codes, assignee eligibility checks, owner field updates, queue projection refresh, stale-version handling, and assignment audit event.
+- **Core behavior:** Authorized ops or compliance reviewers can assign eligible cases to a reviewer or team when the current dispute version matches and the target assignee is permitted for the queue or sensitivity level.
+- **Edge cases and failure modes:** Assigning closed cases, assigning to unauthorized reviewer, stale version, self-assignment for sensitive cases, missing reason code, audit write failure, concurrent reassignment, and queue projection failure must not create misleading ownership.
+- **Acceptance criteria:** Assignment changes preserve previous owner in safe audit metadata. Stale assignment attempts return conflict and do not overwrite owner. Queue views reflect assignment changes within the read-after-write target or document safe projection recovery.
+- **Verification:** Cover assignment happy path, reassignment, owner clearing if allowed, unauthorized assignee, closed-case rejection, stale version conflict, concurrent reassignment, missing reason code, audit-write failure, and queue projection refresh.
+
+#### M3.4 State transition executor
+- **Supports:** M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** The durable dispute state machine is the core internal review workflow and must preserve intake-only semantics for `accepted` and `rejected`.
+  - **Task:** Implement the transition executor for `submitted`, `under_review`, `needs_information`, `accepted`, `rejected`, and `closed`.
+  - **Constraints:** Enforce documented actors, current version, required reason codes, required evidence or documented exception, required approval for sensitive cases, safe user-visible outcome text, audit persistence before success, and linked-transaction immutability.
+  - **Examples:** Ops can move `submitted` to `under_review`; authorized reviewers can request information; sensitive `accepted` or `rejected` transitions require compliance approval; closure from `needs_information` requires documented withdrawal or timeout policy without legal-deadline claims.
+  - **Output format:** Provide transition matrix implementation contract, precondition checks, safe error codes, audit event mapping, user-visible wording rules, and transition tests.
+- **Create or update:** Create transition guard, precondition checks, status update command, transition reason codes, safe outcome summary validation, blocked-transition behavior, and transition audit events.
+- **Core behavior:** Allow only documented transitions by the documented actor, with current version, required reason code, required evidence or approval, safe user-visible outcome text, and durable audit evidence.
+- **Edge cases and failure modes:** Invalid transition, wrong actor, stale version, missing evidence, missing approval, unsafe rejection summary, closure without policy, concurrent transition, dependency timeout, and audit write failure must block the transition.
+- **Acceptance criteria:** Every durable state can reach only its documented next states and cannot skip required review. Accepted and rejected remain internal intake outcomes only. No transition mutates the linked transaction record or deletes audit/evidence history.
+- **Verification:** Cover full transition matrix tests, invalid-transition tests, stale version tests, missing-precondition tests, sensitive approval requirements, audit event assertions, safe outcome wording, closure policy checks, concurrent transition behavior, and linked-transaction immutability checks.
+
+#### M3.5 Operator notes with scoped visibility
+- **Supports:** M3, M4
+- **Implementation prompt:**
+  - **Context:** Operator notes support later review and audit, but they are sensitive because they may contain internal rationale, fraud/risk context, or compliance analysis.
+  - **Task:** Implement structured `OperatorNote` persistence with role-scoped visibility, append-only corrections, redaction validation, and note-created audit events.
+  - **Constraints:** Require `note_type`, `reason_code`, `safe_body`, author role, and visibility; reject or mask unsafe text before persistence; never expose internal notes to user detail; keep fraud/risk notes restricted; fail closed on redaction or audit failure; include log/audit privacy tests.
+  - **Examples:** Support adds a support-visible routing note; compliance adds a compliance-visible review note; fraud/risk adds a restricted classification note that support and users cannot see.
+  - **Output format:** Provide note schema, type and visibility allowlists, correction behavior, redaction rules, audit event shape, field-level projections, and tests.
+- **Create or update:** Create `OperatorNote` persistence, note type allowlist, role-scoped visibility rules, correction-note behavior, redaction validation, closed-case note policy, and note-created audit event.
+- **Core behavior:** Allow support, ops, compliance, and fraud/risk reviewers to add notes only within permitted visibility scopes using `note_type`, `reason_code`, and `safe_body`.
+- **Edge cases and failure modes:** Unsafe note text, missing reason code, unsupported note type, editing historical note, wrong role visibility, note on closed case, redaction failure, audit write failure, and log serialization failure must resolve safely.
+- **Acceptance criteria:** Notes are append-only; corrections create new notes that reference prior note IDs. User detail never exposes internal notes. Fraud/risk notes are hidden from support and user-facing outputs unless explicitly permitted by role policy.
+- **Verification:** Cover note creation per role, unsafe content rejection, append-only correction, visibility filtering, user-detail omission, closed-case note policy, redaction failure, audit-write failure, and audit/log allowlist assertions.
+
+#### M3.6 Sensitive outcome review and self-approval prevention
+- **Supports:** M3, M4
+- **Implementation prompt:**
+  - **Context:** Sensitive accepted, rejected, or closed outcomes require separation of duties so one operator cannot self-approve a restricted or high-risk decision.
+  - **Task:** Enforce sensitive-case flag evaluation, approval references, dual-review guards, self-approval prevention, and blocked-transition audit events.
+  - **Constraints:** Identify sensitivity by reason, amount, restricted data, fraud/risk signal, or policy flag; require configured compliance approval when dual review applies; block same-actor approval; hide restricted rationale from users; avoid legal/refund conclusions; and include sensitive/low-risk path tests.
+  - **Examples:** A flagged fraud/risk case cannot be rejected by the same ops reviewer who requested the sensitive outcome without compliance approval; a low-risk case may follow a documented single-review path.
+  - **Output format:** Provide sensitivity rules, approval record requirements, self-approval checks, blocked-transition errors, user-visible wording rules, audit metadata, and tests.
+- **Create or update:** Create sensitive-case flag evaluation, approval record reference, dual-review guard, self-approval denial, low-risk single-review rationale, restricted-rationale projection rules, and blocked-transition audit event.
+- **Core behavior:** When a case is marked sensitive by reason, amount, restricted data, fraud/risk signal, or policy flag, outcome transitions require the configured compliance approval and cannot be approved by the same actor who requested the sensitive outcome.
+- **Edge cases and failure modes:** Missing approval, approval by same operator, approval by wrong role, stale approval, removed sensitivity flag, conflicting fraud/compliance recommendations, dependency failure, and audit write failure must block or route the action safely.
+- **Acceptance criteria:** Sensitive accepted/rejected/closed outcomes include an approval reference in audit metadata. Self-approval is rejected when dual review is required. User-visible text does not expose restricted rationale or imply a refund, chargeback, liability, or legal conclusion.
+- **Verification:** Cover sensitive accept, sensitive reject, sensitive close, low-risk single-review path, missing approval, wrong-role approval, self-approval denial, stale approval, conflicting recommendation routing, restricted-rationale hiding, and audit approval-reference assertions.
+
+### M4 - Audit, Privacy, And Compliance Controls
+
+#### M4.1 Audit event contract for state-changing actions
+- **Supports:** M4, M1, M2, M3, M5
+- **Implementation prompt:**
+  - **Context:** Auditability is the primary accountability control for Dispute Intake and must cover user, operator, and system-job state changes without storing raw sensitive values.
+  - **Task:** Implement the safe `DisputeAuditEvent` contract and event emission requirements for every state-changing dispute action.
+  - **Constraints:** Require opaque target IDs, actor type and role, correlation ID, safe before/after state labels, reason code when required, UTC timestamp, sensitive-data marker, idempotency or replay marker where applicable, and audit persistence before visible success. Never store raw user narratives, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, full note bodies, or real evidence content.
+  - **Examples:** Emit `dispute_submitted`, `dispute_intake_rejected`, `dispute_evidence_updated`, `operator_note_created`, `dispute_assigned`, `dispute_information_requested`, `dispute_information_received`, `dispute_transition_blocked`, `dispute_stale_action_rejected`, `dispute_accepted`, `dispute_rejected`, and `dispute_closed`.
+  - **Output format:** Provide audit schema, event-name catalog, required fields by action, redacted snapshot rules, audit write ordering, and schema/integration test cases.
+- **Create or update:** Create audit event schema, event-name catalog, event field requirements by command, safe before/after snapshot builder, audit writer integration, idempotency/replay audit rules, and event assertion fixtures.
+- **Core behavior:** Emit safe audit records for create, rejected intake, evidence update, note creation, assignment, information request, user response, transition, blocked transition, stale action, and closure. A state-changing command may return success only after the matching durable state change and safe audit event are both persisted.
+- **Edge cases and failure modes:** Missing correlation ID, missing actor context, unsafe before/after snapshot, unsupported event name, audit store unavailable, duplicate idempotent replay, partial write attempt, clock skew, and retry after ambiguous timeout must not create unaudited visible changes or duplicate contradictory audit history.
+- **Acceptance criteria:** Audit events include actor type, actor ID, role, action, target type and ID, correlation ID, reason code when required, safe before/after state, UTC timestamp, and sensitive-data marker. Retryable commands record idempotency or replay context without duplicating success events. Raw sensitive values are never stored in audit payloads.
+- **Verification:** Cover audit schema validation, required-field validation, per-action event assertions for all required event names, safe snapshot redaction, idempotent replay behavior, duplicate-event prevention, audit write ordering, audit-store outage, partial-write rollback or compensation, and manual audit-field checklist review.
+
+#### M4.2 Blocked, stale, and rejected action audit records
+- **Supports:** M4, M5
+- **Implementation prompt:**
+  - **Context:** Rejected and blocked actions are important compliance evidence, but recording them can leak resource existence or unsafe payloads if the audit path is too eager.
+  - **Task:** Implement safe audit records for blocked actions, stale writes, rejected intake attempts, duplicate attempts, unsafe-content attempts, and missing-approval decisions when actor and correlation context exist.
+  - **Constraints:** Do not record another user's transaction or dispute details for wrong-owner attempts. Do not copy unsafe free text into audit. Use safe attempted-action labels, safe error codes, and current state labels only when the actor is permitted to know them. Treat audit writer outage as a mutation blocker for commands that would otherwise change state.
+  - **Examples:** Record a stale operator transition as `dispute_stale_action_rejected` with current safe status; record an invalid sensitive outcome as `dispute_transition_blocked` with missing approval reason; record wrong-owner intake only as a permission failure with actor and correlation ID, not target details.
+  - **Output format:** Provide blocked-action mapping, visibility rules for target identifiers, stale-action event shape, rejected-intake event shape, unsafe-content omission rules, and negative-path tests.
+- **Create or update:** Create blocked-action audit mapping, stale-action event shape, rejected-intake event shape, duplicate-attempt event shape, missing-approval audit reason codes, unsafe-content omission rules, and safe target-detail rules.
+- **Core behavior:** Preserve accountability for permission failures, invalid transitions, stale versions, duplicate attempts, rejected intake, unsafe content attempts, missing approval, and unsupported closure attempts without storing raw unsafe payloads or disclosing protected target details.
+- **Edge cases and failure modes:** Wrong-owner transaction attempts, missing transaction, unsafe text, stale operator decision, duplicate active dispute, permission denial before target lookup, missing approval for sensitive outcome, redaction failure, and audit writer outage must avoid leaking target details and must not mutate state.
+- **Acceptance criteria:** Blocked-action audit records contain actor, attempted action, safe reason code, correlation ID, and safe state labels only when permitted. Wrong-owner attempts do not record another user's transaction or dispute identifiers. Unsafe raw content is never copied into audit, logs, notes, or error payloads.
+- **Verification:** Cover rejected-intake audit, stale-action audit, blocked-transition audit, duplicate-attempt audit, missing-approval audit, wrong-owner privacy assertions, unsafe-content audit omission, permission-denial-before-target-lookup behavior, redaction failure behavior, and audit-writer outage behavior.
+
+#### M4.3 Redaction and minimization across views and logs
+- **Supports:** M4, M2, M3
+- **Implementation prompt:**
+  - **Context:** Privacy controls must be applied at the projection boundary, not after raw sensitive values have already been written to logs, audit, notes, or user-visible responses.
+  - **Task:** Implement field allowlists, redaction validation, safe projection rules, and structured logging controls across user views, operator views, errors, logs, audit records, notes, and evidence metadata.
+  - **Constraints:** Expose only the fields needed for the actor and workflow. Reject or mask account-like, card-like, token-like, authentication-like, secret-like, raw provider-response, and full-narrative values before persistence or serialization. Keep user-visible views free of internal rationale, fraud/risk notes, compliance notes, and restricted evidence details.
+  - **Examples:** User dispute detail shows status, safe reason category, safe summary, safe evidence metadata, and safe information-request text; ops queue previews omit raw narratives; fraud/risk notes are hidden from support and end users; logs include correlation ID and safe code only.
+  - **Output format:** Provide per-view field allowlists, redaction rule catalog, structured log schema, unsafe fixture scanner rules, projection tests, and manual privacy checklist.
+- **Create or update:** Create field allowlists per user, support, ops, compliance, fraud/risk, and system-job view; redaction utility; unsafe-content validators; structured logging rules; audit snapshot allowlists; unsafe fixture scanner; and privacy review checklist.
+- **Core behavior:** Expose only the fields each actor needs for the workflow and mask or reject account-like, card-like, token-like, authentication-like, secret-like, raw provider-response, unsupported legal-conclusion, and full-narrative values.
+- **Edge cases and failure modes:** Free-text summaries, evidence descriptions, operator notes, information-request text, user responses, error messages, queue previews, audit snapshots, structured logs, debug traces, and synthetic fixtures must not bypass allowlists or persist raw unsafe content.
+- **Acceptance criteria:** User-facing views contain no internal rationale, fraud/risk signals, compliance rationale, or operator notes. Operator queues omit raw narratives by default. Logs and errors include correlation IDs and safe codes, not raw request bodies, raw provider responses, secrets, authentication values, or sensitive user input.
+- **Verification:** Cover redaction unit tests, per-role projection tests, support/ops/compliance/fraud visibility assertions, log allowlist tests, error payload tests, audit snapshot tests, unsafe fixture scans, debug-trace redaction checks, and manual synthetic-data review.
+
+#### M4.4 Safe error semantics and permission boundaries
+- **Supports:** M4, M1, M3, M5
+- **Implementation prompt:**
+  - **Context:** Dispute Intake errors must be specific enough for recovery and verification while staying safe for users, operators, logs, and support conversations.
+  - **Task:** Implement a stable error catalog and response contract for validation, permission, stale-state, duplicate, unsafe-content, rate-limit, dependency, invalid-transition, missing-approval, and audit-write failures.
+  - **Constraints:** Use machine-readable codes, safe human summaries, optional correlation IDs, recoverability labels, and role-specific detail levels. Do not expose stack traces, raw provider responses, secrets, authentication data, another user's resource existence, unsafe input, or restricted internal rationale.
+  - **Examples:** Use safe codes such as `validation_failed`, `transaction_not_posted`, `permission_denied`, `stale_dispute_version`, `duplicate_active_dispute`, `unsafe_content`, `rate_limited`, `transaction_lookup_unavailable`, `audit_write_unavailable`, `invalid_transition`, and `approval_required`.
+  - **Output format:** Provide error catalog entries, user/operator/system response shapes, recoverability classification, privacy rules, audit mapping, and error coverage tests.
+- **Create or update:** Create error code catalog, user-safe response shape, operator-safe response shape, recoverability classification, role-specific detail rules, permission-boundary checks, error-to-audit mapping, and error coverage tests.
+- **Core behavior:** Return machine-readable error codes with safe summaries and correlation IDs where appropriate, while avoiding stack traces, raw provider responses, secrets, authentication data, sensitive input echoing, and resource-existence leaks.
+- **Edge cases and failure modes:** Wrong-owner lookup, missing transaction, unsafe note, unsafe evidence description, stale transition, duplicate active dispute, audit store outage, rate limit, transaction dependency outage, permission service outage, invalid transition, and missing approval require distinct safe handling.
+- **Acceptance criteria:** End-user errors do not reveal another user's resource or internal review rationale. Operator errors may include safe reason codes, current safe state labels, and correlation IDs only when the operator is permitted to know them. Each error class states whether the actor can retry, correct input, wait, or escalate.
+- **Verification:** Cover validation, permission, stale version, duplicate active dispute, unsafe content, rate limit, transaction dependency failure, permission dependency failure, audit-write failure, invalid transition, missing approval, wrong-owner privacy assertions, stack-trace omission, and role-specific error-detail tests.
+
+#### M4.5 Fail-closed critical dependency controls
+- **Supports:** M4, M5
+- **Implementation prompt:**
+  - **Context:** A regulated dispute workflow must prefer a safe refusal over an unaudited, unauthorized, or ownership-ambiguous mutation.
+  - **Task:** Enforce fail-closed behavior when audit persistence, permission checks, redaction checks, or critical transaction lookup are unavailable or ambiguous.
+  - **Constraints:** Run permission, ownership, redaction, and audit preflight checks before returning success. Use transactional write ordering or documented rollback/compensation so durable dispute state and audit state stay consistent. Return safe retryable errors for dependency outages and emit operational alerts without leaking sensitive payloads.
+  - **Examples:** Block dispute creation if transaction ownership cannot be confirmed; block note creation if redaction service fails; block transition if audit store times out; allow queue projection recovery only when durable dispute and audit records are already consistent.
+  - **Output format:** Provide dependency classification, command preflight gates, write-ordering contract, rollback or compensation strategy, safe retry responses, alert metadata, and dependency-failure tests.
+- **Create or update:** Create dependency health checks, command preflight gates, permission/ownership/redaction/audit dependency classification, transactional write ordering, partial-write rollback or compensation behavior, safe retry responses, queue projection recovery rules, and operational alert hooks.
+- **Core behavior:** Do not commit visible dispute state changes unless permission checks pass, ownership can be confirmed when relevant, unsafe content has been rejected or masked, and the matching safe audit event can be persisted. Do not create disputes when transaction ownership cannot be confirmed.
+- **Edge cases and failure modes:** Audit store timeout, permission service timeout, redaction service timeout, transaction lookup timeout, partial dispute write, partial audit write, queue projection failure, log sink failure, retry after ambiguous timeout, and recovery after outage must resolve without duplicate, unauthorized, or unaudited state.
+- **Acceptance criteria:** Audit, permission, redaction, or required ownership dependency failure blocks mutation. Transaction lookup failure blocks intake. Queue projection failure does not claim workflow completion unless durable dispute and audit state are consistent and recovery behavior is documented. Operational alerts use safe metadata only.
+- **Verification:** Cover audit-store-unavailable, permission-service-unavailable, transaction-service-unavailable, redaction-service-unavailable, partial-write rollback or compensation, partial audit write, queue-projection failure, log-sink failure, retry after timeout, recovery after outage, operational alert assertions, and no-raw-payload alert checks.
+
+#### M4.6 Scoped compliance controls and sensitive-data governance
+- **Supports:** M4, M2, M3
+- **Implementation prompt:**
+  - **Context:** The feature uses EU/EEA payment-account, PSD2-informed, GDPR-informed, and DORA-informed assumptions as design rationale, but it must not invent legal deadlines, refund obligations, chargeback outcomes, retention periods, regulator reporting duties, or ADR results.
+  - **Task:** Implement compliance-control guardrails that classify sensitive fields, enforce scoped purpose and access rules, preserve synthetic-only examples and fixtures, and flag unsupported compliance claims for review.
+  - **Constraints:** Treat dispute data as collected for intake, review, user follow-up, audit, and controlled escalation only. Keep evidence metadata-only. Require role-scoped access reasons for restricted metadata and sensitive notes. Record safe audit evidence for restricted access. Route real retention, legal timing, refund, regulator, and external complaint obligations to legal/compliance review rather than hard-coding them.
+  - **Examples:** A compliance reviewer may access restricted evidence metadata with an allowlisted reason and `restricted_metadata_viewed` audit event; support cannot see fraud/risk rationale; fixtures use `usr_`, `acct_`, `txn_`, `case_`, and `audit_` identifiers only; a proposed refund-deadline rule is rejected as outside scope.
+  - **Output format:** Provide sensitive-field classification, purpose and access policy, restricted-access audit events, unsupported-claim guardrails, synthetic-data scan rules, and compliance-review checklist tests.
+- **Create or update:** Create sensitive-field classification, purpose-use allowlist, restricted metadata access policy, role-scoped access reason codes, `restricted_metadata_viewed` audit event, unsupported compliance-claim review gate, synthetic-data fixture scanner rules, and compliance review checklist.
+- **Core behavior:** Enforce minimization, purpose limitation, restricted access, synthetic-only examples, metadata-only evidence, and scoped compliance assumptions across dispute data, evidence metadata, operator notes, audit records, logs, and future fixtures.
+- **Edge cases and failure modes:** Support requesting restricted evidence metadata, fraud/risk rationale leaking to user detail, compliance note exposed in standard queue, fixture containing realistic PII or account numbers, evidence metadata containing real file URL, proposed fixed retention period, proposed refund/chargeback wording, and missing restricted-access reason must be blocked or escalated safely.
+- **Acceptance criteria:** Restricted metadata access requires an authorized role, allowlisted access reason, correlation ID, and safe audit event. No user-facing or support-facing output exposes restricted fraud/risk or compliance rationale. Documentation, fixtures, and examples remain synthetic and do not introduce unsupported legal, refund, chargeback, regulator, ADR, or retention claims.
+- **Verification:** Cover restricted metadata access allowed and denied paths, missing access reason, support visibility denial, fraud/risk rationale hiding, compliance-note projection tests, synthetic fixture scan, evidence URL rejection, unsupported-claim review checks, restricted-access audit assertions, and manual compliance checklist review.
+
+### M5 - Reliability, Concurrency, And Performance
+
+#### M5.1 Stale version and concurrent decision behavior
+- **Supports:** M5, M3, M4
+- **Implementation prompt:**
+  - **Context:** Dispute Intake has multiple actors who may touch the same case, so stale operator or system-job writes must be expected rather than treated as rare failures.
+  - **Task:** Implement current-version checks and deterministic conflict behavior for operator transitions, assignment changes, notes, user responses, evidence metadata updates, and system-job markers.
+  - **Constraints:** Require a current `version` or equivalent compare-and-swap token for mutating commands, return safe `stale_dispute_version` conflicts, preserve the first valid write, never overwrite a newer state, and record stale-action audit evidence when actor and correlation context exist. Do not expose restricted fields in conflict responses.
+  - **Examples:** Concurrent accept/reject decisions resolve with the first valid version winning; an assignment submitted against an old version returns conflict; a system timeout marker does not close a case after a user response has already moved it back to `under_review`.
+  - **Output format:** Provide version contract, compare-and-swap behavior, stale response shape, safe current-state projection, stale-action audit mapping, and concurrency tests.
+- **Create or update:** Create compare-and-swap version checks, current-version command requirements, stale conflict responses, safe current-state labels, stale-action audit events, and concurrency fixtures.
+- **Core behavior:** The first valid state-changing command with the current version wins; later commands using stale versions return `stale_dispute_version` and do not overwrite status, owner, notes, evidence metadata, user-response markers, or system-job markers.
+- **Edge cases and failure modes:** Concurrent accept/reject, assignment during transition, user response during closure, evidence update during information request, note creation during restricted transition, compliance approval race, queue refresh race, and system timeout marker race must resolve deterministically.
+- **Acceptance criteria:** Stale writes return conflict with a safe current-state label. No stale command changes durable dispute state or role-scoped data. Safe audit evidence records the rejected stale action when actor and correlation ID are available.
+- **Verification:** Cover concurrent transition race, assignment race, user-response versus closure race, evidence update race, note versus status race, approval race, queue refresh race, stale system-job marker, no-mutation assertions, safe conflict projection, and stale-action audit assertions.
+
+#### M5.2 Retry, idempotency, and rate-limit behavior
+- **Supports:** M5, M1, M2, M4
+- **Implementation prompt:**
+  - **Context:** User and operator clients may retry after timeouts, duplicate network delivery, or ambiguous dependency failures, but retries must not create duplicate cases, metadata, notifications, or audit history.
+  - **Task:** Implement retry-safe semantics for user submissions and other retryable commands, including idempotency-key ownership, payload fingerprinting, replay responses, duplicate audit prevention, and safe rate limits.
+  - **Constraints:** Scope idempotency keys to actor, session or service identity, command type, and payload fingerprint; protect stored keys; return the original result for equivalent replay; return stable conflict for changed payloads; block cross-user key reuse; and make rate-limit responses safe and non-enumerating.
+  - **Examples:** A duplicate create-dispute request after client timeout returns the original `case_`; the same key with a different evidence description returns idempotency conflict; excessive unsafe retries return `rate_limited` without echoing unsafe input.
+  - **Output format:** Provide idempotency key contract, payload fingerprint rules, replay response shape, conflict behavior, rate-limit policy, audit rules, and retry/idempotency tests.
+- **Create or update:** Create idempotency key ownership rules, protected key storage assumptions, payload fingerprinting, replay response behavior, changed-payload conflict handling, cross-user key denial, retry headers or guidance, rate-limit policy, and retry coverage fixtures.
+- **Core behavior:** User-created disputes require a user/session-owned idempotency key. Equivalent replay returns the original result. Non-equivalent replay with the same key returns a stable conflict. Excessive retries receive a safe rate-limit error and do not reveal sensitive details.
+- **Edge cases and failure modes:** Missing key, client timeout after success, duplicate network delivery, same key with different payload, key used by another user, repeated unsafe submissions, retry after audit timeout, retry while transaction dependency is degraded, and operator command replay must not create duplicates or contradictory audit records.
+- **Acceptance criteria:** Idempotency keys are scoped to the actor and command payload. Duplicate retries do not duplicate cases, evidence metadata, information requests, user notifications, queue records, or audit history. Rate limits use safe errors and preserve privacy boundaries.
+- **Verification:** Cover missing key, equivalent replay, changed-payload replay, cross-user key reuse, timeout retry, duplicate delivery, repeated unsafe content, retry after audit timeout, dependency-degraded retry, operator command replay, rate-limit response, and duplicate audit prevention.
+
+#### M5.3 Read-after-write consistency and projection recovery
+- **Supports:** M5, M1, M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Users and operators need recent dispute changes to become visible quickly, while queue projections may recover asynchronously only when durable dispute and audit records are already consistent.
+  - **Task:** Implement read-after-write expectations for create, detail, evidence metadata, information requests, user responses, assignment, state transitions, and queue projection refresh.
+  - **Constraints:** Target visibility within 2 seconds under healthy dependencies; keep user detail, operator detail, queue projection, and audit state consistent enough to avoid contradictory status; return safe pending/projection-lag behavior when derived views lag; and never claim success for a mutation that lacks durable audit evidence.
+  - **Examples:** A newly created `case_` appears in user detail immediately or within the documented target; ops queue shows the new submission within 2 seconds; if queue projection lags, durable detail still shows the correct state and recovery behavior is documented.
+  - **Output format:** Provide consistency contract, projection refresh triggers, lag response behavior, recovery rules, audit/detail reconciliation checks, and read-after-write tests.
+- **Create or update:** Create read-after-write contract, projection refresh triggers, user and operator detail consistency checks, queue projection recovery behavior, projection-lag safe responses, and audit/detail reconciliation fixtures.
+- **Core behavior:** Durable dispute and audit state are the source of truth. User detail, operator detail, and queue views should reflect successful writes within 2 seconds under healthy dependencies, with safe recovery behavior when derived projections lag.
+- **Edge cases and failure modes:** Queue projection lag, detail read immediately after create, evidence metadata read after attach, information request read after transition, user response during queue lag, assignment projection delay, audit/detail mismatch, duplicate projection event, and projection worker outage must not show contradictory or unauthorized information.
+- **Acceptance criteria:** Successful create, evidence update, information request, user response, assignment, transition, and closure flows have documented read-after-write expectations. Projection lag does not duplicate records, hide durable state from authorized detail views, or expose restricted fields. Audit/detail reconciliation can identify and recover stale projections.
+- **Verification:** Cover create-to-detail visibility, create-to-queue visibility, evidence read-after-write, information-request visibility, user-response visibility, assignment queue refresh, transition queue refresh, closure projection, projection-lag fallback, audit/detail reconciliation, duplicate projection event, and projection-worker outage recovery.
+
+#### M5.4 Performance target measurement
+- **Supports:** M5, M1, M2, M3, M4
+- **Implementation prompt:**
+  - **Context:** Performance expectations in this homework are assumed targets, so future implementers need explicit scenarios, fixture sizes, and thresholds to know whether the feature behaves well enough.
+  - **Task:** Implement performance smoke checks for create dispute, user detail, operator detail, queue listing, state transition, audit write path, and read-after-write visibility.
+  - **Constraints:** Measure p95 <= 500 ms for create dispute, p95 <= 400 ms for user dispute detail, p95 <= 800 ms for ops queue pages of 25 items, p95 <= 500 ms for state transition under healthy dependencies, and read-after-write visibility within 2 seconds. Keep audit persistence inside success timing and label targets as homework assumptions.
+  - **Examples:** Measure create with healthy transaction lookup and audit store; measure queue with 25 returned items and allowed filters; measure transition with current version and required audit event; record dependency-degraded cases separately from healthy p95 checks.
+  - **Output format:** Provide scenario catalog, fixture sizes, timing boundaries, measurement method, pass/fail thresholds, dependency assumptions, and performance smoke tests.
+- **Create or update:** Create performance scenario catalog, fixture-size definitions, timing instrumentation boundaries, healthy-dependency assumptions, audit-write timing inclusion, read-after-write timing checks, and performance smoke reports.
+- **Core behavior:** Measure create dispute p95 <= 500 ms, user detail p95 <= 400 ms, ops queue p95 <= 800 ms for 25 items, state transition p95 <= 500 ms, and read-after-write visibility within 2 seconds under healthy dependencies.
+- **Edge cases and failure modes:** Slow audit write, slow transaction lookup, slow permission check, degraded redaction check, large assigned queue, restricted queue filtering, projection lag, cold cache, and dependency timeout must be measured separately or flagged outside healthy-target results.
+- **Acceptance criteria:** Future test reports can map each performance target to a scenario, fixture size, timing boundary, dependency assumption, and pass/fail threshold. Audit write time is included before success for state-changing commands. Degraded-dependency results do not masquerade as healthy p95 measurements.
+- **Verification:** Cover create, user detail, operator detail, queue listing, state transition, audit-write timing, read-after-write timing, slow audit dependency, slow transaction dependency, projection lag, cold-cache note, and report-to-target traceability.
+
+#### M5.5 Cursor pagination and mutable queue scale behavior
+- **Supports:** M5, M3, M4
+- **Implementation prompt:**
+  - **Context:** Ops queues can grow and mutate while reviewers page through them, so pagination must remain deterministic, role-shaped, and safe under concurrent assignment or transition changes.
+  - **Task:** Implement cursor pagination behavior for operator queues, audit/history-style views, and any dispute lists that can grow beyond a small fixed set.
+  - **Constraints:** Use cursor pagination with default page size 25 and maximum 100, deterministic ordering by oldest actionable item with dispute-ID tie-break for queues, role-filtered field allowlists, safe invalid-cursor errors, and privacy-preserving empty states. Do not expose restricted notes, raw narratives, or unauthorized queue membership through cursors.
+  - **Examples:** An ops reviewer pages through `under_review` cases while another reviewer assigns one; a compliance reviewer sees only compliance queue items; invalid or tampered cursor returns a safe validation error without exposing encoded filter internals.
+  - **Output format:** Provide pagination contract, cursor contents and protection rules, ordering rules, page-size limits, mutable-data behavior, role-filtered projections, and pagination tests.
+- **Create or update:** Create cursor pagination contract, default and maximum page sizes, deterministic queue ordering, cursor validation, mutable-data paging rules, role-filtered projection rules, empty-page behavior, and pagination performance checks.
+- **Core behavior:** Queue and list endpoints use cursor pagination with default 25 items and maximum 100 items. Queue ordering is oldest actionable item first with deterministic dispute-ID tie-break and role-shaped fields.
+- **Edge cases and failure modes:** Invalid cursor, tampered cursor, page size over maximum, empty page, no-results state, restricted queue access, mutable queue while paging, item reassigned between pages, case closed between pages, duplicate sort key, and projection lag must resolve safely.
+- **Acceptance criteria:** Pagination caps requests at 100 items, preserves deterministic ordering, avoids duplicates or skipped items where the documented cursor contract can prevent them, and returns safe validation for invalid cursors. Cursors do not leak restricted filters, internal note text, raw narratives, or unauthorized resource identifiers.
+- **Verification:** Cover default page, max page, over-max page, invalid cursor, tampered cursor, empty page, no-results state, deterministic tie-break, mutable queue pagination, reassignment between pages, closure between pages, restricted queue denial, cursor privacy assertions, and p95 queue smoke checks.
+
+#### M5.6 Verification fixtures and objective traceability
+- **Supports:** M1, M2, M3, M4, M5
+- **Implementation prompt:**
+  - **Context:** The low-level tasks must remain traceable to M1-M5, and future verification needs synthetic fixtures that cover happy paths, negative paths, privacy, audit, concurrency, and performance without real customer data.
+  - **Task:** Build the future verification fixture catalog and objective-to-test matrix that ties tests, manual checks, and performance scenarios back to each mid-level objective.
+  - **Constraints:** Use opaque synthetic identifiers only; include posted and ineligible transactions, active and closed disputes, evidence metadata, operator roles, restricted notes, stale versions, idempotency keys, dependency failures, projection lag, and pagination scenarios. Avoid real PII, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, realistic customer histories, real evidence files, unsupported legal deadlines, refund obligations, chargeback rules, regulator duties, retention periods, or ADR outcomes.
+  - **Examples:** Fixture groups include `usr_` users with posted and pending `txn_` records, `case_` disputes in every durable state, metadata-only evidence rows, support/ops/compliance/fraud role claims, stale version tokens, audit-store outage markers, and queue pages with deterministic tie-break cases.
+  - **Output format:** Provide fixture catalog, objective-to-test matrix, coverage labels, manual review checklist, synthetic-data scan rules, and traceability verification steps.
+- **Create or update:** Create synthetic fixture catalog, objective-to-test matrix, manual review checklist, coverage labels for `M1` through `M5`, fixture lint rules, sensitive-pattern scan rules, and documentation traceability review.
+- **Core behavior:** Provide synthetic users, accounts, posted and pending transactions, active and closed disputes, evidence metadata, operator roles, restricted notes, stale versions, idempotency/retry scenarios, dependency-failure scenarios, projection-lag scenarios, and pagination scenarios using only opaque IDs.
+- **Edge cases and failure modes:** Fixtures must avoid real PII, account numbers, PAN, CVV, authentication values, secrets, raw provider responses, real production logs, realistic customer histories, real evidence files, real file URLs, unsupported legal deadlines, refund obligations, chargeback rules, regulator reporting duties, fixed retention periods, and ADR outcomes.
+- **Acceptance criteria:** Every mid-level objective maps to happy path, negative path, permission, audit, redaction, concurrency, idempotency, dependency failure, pagination, and performance coverage where relevant. Manual review confirms fixtures are synthetic, metadata-only for evidence, and scoped to intake/internal tracking only.
+- **Verification:** Cover fixture linting, secret and sensitive-pattern scans, objective traceability review, audit-event coverage review, role-permission coverage review, stale-state coverage review, idempotency coverage review, projection and pagination coverage review, performance scenario coverage review, and documentation review for unsupported legal or refund claims.
