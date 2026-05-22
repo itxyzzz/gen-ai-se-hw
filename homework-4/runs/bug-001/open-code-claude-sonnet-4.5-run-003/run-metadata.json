@@ -1,0 +1,100 @@
+{
+  "runId": "open-code-claude-sonnet-4.5-run-003",
+  "scenarioId": "bug-001",
+  "adapter": "open-code",
+  "provider": "anthropic",
+  "model": "claude-sonnet-4.5",
+  "runFolderName": "open-code-claude-sonnet-4.5-run-003",
+  "reasoningEffort": "medium",
+  "pipelineVersion": "1.0.0",
+  "baselineCommit": "homework-4-submission",
+  "startedAt": "2026-05-22T00:00:00.000Z",
+  "endedAt": "2026-05-22T00:06:30.000Z",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "testCommand": "node --test --test-isolation=none tests/*.test.js",
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 8,
+    "testsPassing": true,
+    "postChangeTestExitCodes": [1, 1, 0],
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": 0
+  },
+  "manualInterventions": 0,
+  "promoted": false,
+  "stages": [
+    {
+      "stageId": "bug-researcher",
+      "role": "research",
+      "modelPolicy": "research-high",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "high",
+      "skillsLoaded": [],
+      "startedAt": "2026-05-22T00:00:00.000Z",
+      "endedAt": "2026-05-22T00:01:00.000Z",
+      "status": "completed"
+    },
+    {
+      "stageId": "research-verifier",
+      "role": "verification",
+      "modelPolicy": "verification-high",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "high",
+      "skillsLoaded": [
+        "skills/research-quality-measurement.md"
+      ],
+      "startedAt": "2026-05-22T00:01:00.000Z",
+      "endedAt": "2026-05-22T00:02:00.000Z",
+      "status": "completed"
+    },
+    {
+      "stageId": "bug-planner",
+      "role": "planning",
+      "modelPolicy": "planning-high",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "high",
+      "skillsLoaded": [],
+      "startedAt": "2026-05-22T00:02:00.000Z",
+      "endedAt": "2026-05-22T00:03:00.000Z",
+      "status": "completed"
+    },
+    {
+      "stageId": "bug-fixer",
+      "role": "implementation",
+      "modelPolicy": "implementation-medium",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "medium",
+      "skillsLoaded": [],
+      "startedAt": "2026-05-22T00:03:00.000Z",
+      "endedAt": "2026-05-22T00:04:30.000Z",
+      "status": "completed"
+    },
+    {
+      "stageId": "security-verifier",
+      "role": "security-review",
+      "modelPolicy": "security-high",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "high",
+      "skillsLoaded": [],
+      "startedAt": "2026-05-22T00:04:30.000Z",
+      "endedAt": "2026-05-22T00:05:30.000Z",
+      "status": "completed"
+    },
+    {
+      "stageId": "unit-test-generator",
+      "role": "test-generation",
+      "modelPolicy": "test-medium",
+      "model": "claude-sonnet-4.5",
+      "reasoningEffort": "medium",
+      "skillsLoaded": [
+        "skills/unit-tests-FIRST.md"
+      ],
+      "startedAt": "2026-05-22T00:05:30.000Z",
+      "endedAt": "2026-05-22T00:06:30.000Z",
+      "status": "completed"
+    }
+  ]
+}
