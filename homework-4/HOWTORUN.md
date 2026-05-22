@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Node.js 24 or newer for the sample app tests.
-- Codex chat for the canonical one-phrase pipeline run.
+- Codex chat for the canonical one-phrase pipeline run (or Open Code or other compatible agentic tools).
 - No install step is required.
 
 ## Canonical Codex Run
@@ -23,6 +23,24 @@ Expected behavior:
   `homework-4/runs/bug-001/codex-chat-gpt-5.4-run-001`.
 - Codex updates the fixed app evidence in `homework-4/app/current` only after
   required reports are complete.
+
+## Portable Launch Phrases
+
+Use the same short launch phrase across tools:
+
+```text
+Run HW4 pipeline
+```
+
+Adapter selection is automatic from active tool context (`homework-4/AGENTS.md`):
+
+- Codex -> `adapters/codex-chat.md`
+- Claude Code -> `adapters/claude-code.md`
+- Open Code -> `adapters/open-code.md`
+- Google Antigravity -> `adapters/google-antigravity.md`
+- Other capable tools -> `adapters/generic-agent.md`
+
+Each adapter preserves the same stage order and artifact contract.
 
 ## Portable Launch Phrases
 

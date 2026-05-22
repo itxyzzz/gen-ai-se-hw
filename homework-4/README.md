@@ -1,7 +1,8 @@
 # Homework 4: Pure Agentic Bug-Fixing Pipeline
 
 Author: `itanatarov`  
-**AI Tools Used**: Codex (Steps 0–9); Google Antigravity (Step 11 & universal adapter alignment)
+**AI Tools Used**: Codex (Steps 0–9); Google Antigravity (Step 11 & universal adapter alignment)  
+*Note: Additional validation runs performed using Open Code adapter with Nemotron 3 Super (free) model.*
 
 ## Overview
 
