@@ -1,5 +1,23 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 15: Open Code Pipeline Run open-code-run-004
+
+### Added
+- Added a fresh completed pipeline run evidence folder under `runs/bug-001/open-code-run-004`.
+- Added 12 unit tests in `tests/fix.test.js` for changed code, covering edge cases and FIRST criteria.
+- Added error messages including the catalog name in `catalogRepository.js` for better diagnostics.
+
+### Changed
+- Refined catalog name path validation from `path.relative` + `startsWith("..")` to regex `^[a-zA-Z0-9_-]+$` + `path.resolve` + `startsWith` boundary check.
+- Promoted `open-code-run-004` to `app/current`.
+
+### Fixed
+- N/A
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 17 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 14: Codex Chat Run gpt-5.2-run-002 Evidence
 
 ### Added
