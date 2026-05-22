@@ -1,5 +1,28 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 11 (Added by Antigravity)
+
+### Added
+- Added optional `## Reusable Agentic Execution Extensions` guidelines inside `skills/pipeline-harness-wrapper.md` to support subagent context isolation, self-correction reflection loops, and static analysis integration generically.
+- Added concrete **Model Selection** mappings to `adapters/google-antigravity.md` using Gemini 3.5 Pro and Gemini 3.5 Flash models.
+- Added a tool-based programmatic **Orchestration Procedure** in `adapters/google-antigravity.md` specifying subagent delegation (`define_subagent`, `invoke_subagent`), local test running (`run_command`), and reflection loops.
+- Added Anthropic Claude model selection mapping to `adapters/claude-code.md` (`claude-3-5-sonnet` and `claude-3-5-haiku`).
+- Added open-source model selection mapping to `adapters/open-code.md` (`llama-3.3-70b-instruct` / `Qwen-2.5-Coder-32B-Instruct` and `llama-3.1-8b-instruct` / `Qwen-2.5-Coder-7B-Instruct`).
+- Added design spec `homework-4/docs/superpowers/specs/2026-05-22-antigravity-adapter-optimization-design.md` and implementation plan `homework-4/docs/superpowers/plans/2026-05-22-antigravity-adapter-optimization-plan.md` under Superpowers docs.
+
+### Changed
+- Refactored pipeline harness by de-duplicating and removing vendor-specific scripts from the `/skills/` folder.
+- Decommissioned and safely deleted `skills/codex-chat-pipeline.md`, transferring its runner trigger, procedure steps, artifact contracts, and quality gates directly into `adapters/codex-chat.md`.
+- Updated `adapters/claude-code.md` to remove all Codex-specific dependencies and map its workspaces and artifact contracts to the universal harness.
+- Updated `adapters/generic-agent.md` to direct capable agents to utilize harness extensions and follow general model-tier guidance.
+
+### Fixed
+- Resolved cross-adapter dependencies and alignment gaps between Codex, Claude, Antigravity, Open Code, and Generic adapters.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed successfully.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 10
 
 ### Added

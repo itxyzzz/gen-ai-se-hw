@@ -94,6 +94,22 @@ verified, copy the fixed run app into `homework-4/app/current`, keep
 `run-metadata.json` marked `"promoted": true`, and record the action in
 `command-log.md`.
 
+## Reusable Agentic Execution Extensions
+
+These optional but recommended extensions apply when the active assistant or orchestrator tool has advanced agentic capabilities (e.g., subagent spawning, terminal command execution, and programmatic file writing). They allow tools to improve reproducibility and minimize manual steps.
+
+### 1. Subagent Context Isolation
+- Spawning dedicated subagents for each of the 6 stages is highly recommended to isolate context, maintain focus, and prevent model distraction.
+- When spawning subagents, pass only the relevant agent specification (`agents/*.agent.md`), inputs, baseline, and scenario context. Do not pollute the subagent context with other stages' progress.
+
+### 2. Autonomous Reflection & Self-Correction
+- During the `bug-fixer` and `unit-test-generator` stages, the orchestrator should automatically execute local unit tests in the active workspace after code edits.
+- If the test command fails, capture the stack trace and stdout/stderr output and automatically feed it back into the respective subagent as a repair task.
+- Limit this automated reflection loop to a maximum of 3 attempts before reporting a blocked run in `command-log.md` and `run-metadata.json`.
+
+### 3. Static Analysis & Telemetry
+- If the execution environment has security scanning, linting, or dependency auditing tools (e.g., `npm audit` or static analyzers), the `security-verifier` is encouraged to run them and append the raw tool output as a telemetry section in `security-report.md`.
+
 ## Completion Checklist
 
 - All six stages are listed in `run-metadata.json`.
@@ -104,3 +120,4 @@ verified, copy the fixed run app into `homework-4/app/current`, keep
   `node --test --test-isolation=none homework-4/app/current/tests/*.test.js`
 - Baseline app tests fail for the seeded defects with:
   `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js`
+

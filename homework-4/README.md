@@ -1,6 +1,7 @@
 # Homework 4: Pure Agentic Bug-Fixing Pipeline
 
-Author: `itanatarov`
+Author: `itanatarov`  
+**AI Tools Used**: Codex (Steps 0–10); Google Antigravity (Step 11 & universal adapter alignment)
 
 ## Overview
 
@@ -38,7 +39,6 @@ flowchart LR
 - Helper stages for the assignment run order: bug researcher and bug planner.
 - Required skills in `skills/`: research quality measurement and FIRST unit test
   criteria.
-- Primary runner skill: `skills/codex-chat-pipeline.md`.
 - Text harness skill: `skills/pipeline-harness-wrapper.md`.
 - Portable adapter instructions in `adapters/` for Codex Chat, Claude Code,
   Open Code, Google Antigravity, and a generic capable-agent fallback.

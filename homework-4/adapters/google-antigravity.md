@@ -1,34 +1,57 @@
 # Google Antigravity Adapter
 
+This adapter configures the Homework 4 agentic pipeline for advanced, tool-based autonomous execution under the **Google Antigravity** environment, utilizing background subagents and reflection loops.
+
 ## Launch Phrase
 
 ```text
 Run Homework 4 bug-001 through the full agentic pipeline using the Google Antigravity adapter.
 ```
 
-## Mapping
+## Model Selection
 
-- Use `skills/pipeline-harness-wrapper.md` as the workflow controller.
-- Use `agents/*.agent.md` as the ordered agent definitions.
-- Use `skills/*.md` as reusable evaluation rules.
-- Use the same scenario, run workspace, artifact names, and validation checklist
-  as the Codex Chat adapter.
+Concrete Gemini model policies:
 
-## Execution Rules
+| Model policy | Gemini Model | Reasoning / Effort |
+| --- | --- | --- |
+| `research-high` | Gemini 3.5 Pro | High reasoning for deep codebase context analysis |
+| `verification-high` | Gemini 3.5 Pro | High reasoning for strict research verification |
+| `planning-high` | Gemini 3.5 Pro | High reasoning for precise implementation plans |
+| `implementation-medium` | Gemini 3.5 Flash | Fast and efficient for mechanical code changes |
+| `security-high` | Gemini 3.5 Pro | High reasoning for finding complex security vulnerabilities |
+| `test-medium` | Gemini 3.5 Flash | Fast and reliable for standard unit-test generation |
 
-- Run the stages in order and do not skip helper stages.
-- Keep edits inside the selected run workspace until promotion.
-- Record model/tool limitations in `run-metadata.json`.
-- Preserve the same artifact contract so results can be compared across tools.
+## Mapping & Subagent Orchestration Procedure
+
+Google Antigravity must execute the stages sequentially using its native background subagent delegation tools to prevent context bloat:
+
+1. **Environment Initialization:**
+   - Create the run workspace folder: `homework-4/runs/bug-001/google-antigravity-gemini-3.5-run-001`.
+   - Copy `homework-4/app/baseline` to the run workspace. Do not modify `app/baseline`.
+   - Initialize `command-log.md` and `run-metadata.json` under the workspace.
+2. **Execute Stages sequentially using Subagents:**
+   For each of the six stages in harness order:
+   - **Stage 1 (Bug Researcher):** Define a specialized researcher subagent using `define_subagent` and invoke it with `agents/bug-researcher.agent.md`. Output: `research/codebase-research.md`.
+   - **Stage 2 (Research Verifier):** Define a verification subagent, load `skills/research-quality-measurement.md`, and verify research files. Output: `research/verified-research.md`.
+   - **Stage 3 (Bug Planner):** Define a planner subagent, analyze verified research, and write `implementation-plan.md`.
+   - **Stage 4 (Bug Fixer with Reflection):** 
+     - Define an implementation subagent and apply the edits inside the workspace.
+     - **Reflection Loop:** Run `node --test --test-isolation=none homework-4/runs/bug-001/<run-folder>/app/tests/*.test.js`. If tests fail, feed back the failing test and failure message to the implementation subagent for automatic self-correction. Repeat up to 3 times.
+     - Output: `fix-summary.md` and modified source files.
+   - **Stage 5 (Security Verifier):** Define a security subagent. Perform a read-only audit of changed code. Output: `security-report.md`. If critical/high issues are found, block the run.
+   - **Stage 6 (Unit Test Generator with Reflection):**
+     - Define a test subagent, load `skills/unit-tests-FIRST.md`, and generate unit tests for the changed code.
+     - Run `node --test` to confirm all tests pass. If tests fail, automatically repair (up to 3 times).
+     - Output: `test-report.md` and updated test files.
+3. **Promotion & Evidence Collection:**
+   - Generate `patch.diff` between the baseline app and the run folder's app.
+   - Copy the run folder's app to `homework-4/app/current`.
+   - Set `"promoted": true` in `run-metadata.json` and log the promotion.
 
 ## Validation Checklist
 
-- Adapter name in metadata is `google-antigravity`.
-- Required artifacts are complete.
-- Security report is read-only.
+- `run-metadata.json` specifies adapter name as `google-antigravity` and concrete Gemini models.
+- Spawning dedicated subagents via `define_subagent` and `invoke_subagent` is logged.
+- Security report is strictly read-only and does not modify code files.
 - Unit test report includes FIRST assessment.
-
-## Limitations
-
-This is a portability contract for Google Antigravity-style agentic tools, not a
-submitted executable integration.
+- Verified fixed app promoted to `app/current` passes all tests.
