@@ -1,60 +1,84 @@
-# Homework 4: Agentic Bug-Fixing Pipeline
+# Homework 4: Pure Agentic Bug-Fixing Pipeline
 
 Author: `itanatarov`
 
 ## Overview
 
-This homework implements a reproducible four-agent pipeline around a small Node.js quote calculator. The baseline app intentionally contains two logic bugs and one security issue. The pipeline copies that baseline into an isolated run workspace, verifies research, applies fixes, reviews security, generates unit tests, promotes a verified fixed app, and compares run artifacts.
+This homework implements a four-agent bug-fixing pipeline as a text-first
+agentic workflow. The primary execution interface is one Codex chat phrase:
+
+```text
+Run HW4 pipeline
+```
+
+That phrase loads the Markdown harness, adapter instructions, six agent specs,
+required skills, scenario files, and artifact contract. No JavaScript harness,
+SDK adapter, mock adapter, pipeline script, or demo runner is part of the scaled
+submission. The only executable JavaScript is the sample quote-calculator app
+and its tests.
 
 ```mermaid
 flowchart LR
-  R["Bug Researcher helper"] --> V["Bug Research Verifier"]
-  V --> P["Bug Planner helper"]
-  P --> F["Bug Fixer"]
+  P["One Codex phrase"] --> H["skills/pipeline-harness-wrapper.md"]
+  H --> A["adapters/codex-chat.md"]
+  H --> R["Bug Researcher"]
+  R --> V["Research Verifier"]
+  V --> PL["Bug Planner"]
+  PL --> F["Bug Fixer"]
   F --> S["Security Verifier"]
   F --> T["Unit Test Generator"]
-  S --> C["Promoted app/current"]
-  T --> C
+  S --> O["run artifacts + app/current"]
+  T --> O
 ```
 
 ## What Is Included
 
-- Required agents in `agents/`: research verifier, bug fixer, security verifier, and unit test generator.
+- Required agents in `agents/`: research verifier, bug fixer, security verifier,
+  and unit test generator.
 - Helper stages for the assignment run order: bug researcher and bug planner.
-- Required skills in `skills/`: research quality measurement and FIRST unit test criteria.
+- Required skills in `skills/`: research quality measurement and FIRST unit test
+  criteria.
+- Primary runner skill: `skills/codex-chat-pipeline.md`.
+- Text harness skill: `skills/pipeline-harness-wrapper.md`.
+- Portable adapter instructions in `adapters/` for Codex Chat, Claude Code,
+  Open Code, Google Antigravity, and a generic capable-agent fallback.
 - Baseline app in `app/baseline` with seeded defects preserved.
-- Fixed promoted app in `app/current`.
-- Run artifacts in `runs/bug-001/run-001`.
-- Benchmark outputs in `benchmark/`.
-- Demo helpers in `demo/`.
+- Fixed app in `app/current`.
+- Canonical completed run evidence in `runs/bug-001/codex-chat-gpt-5.4-run-001`.
+- Text comparison rubric and scored evidence in `benchmark/`.
 
-## Model And Adapter Choices
+## Model Policy Choices
 
-| Stage | Model policy | Model | Reasoning | Why |
-| --- | --- | --- | --- | --- |
-| Bug Researcher | `research-high` | `gpt-5.4` | high | Needs accurate source and symptom correlation. |
-| Research Verifier | `verification-high` | `gpt-5.4` | high | Bad verification can mislead every later stage. |
-| Bug Planner | `planning-high` | `gpt-5.4` | high | Converts evidence into controlled edits. |
-| Bug Fixer | `implementation-medium` | `gpt-5.3-codex` | medium | Bounded code edits from a concrete plan. |
-| Security Verifier | `security-high` | `gpt-5.4` | high | Security review has higher blast radius. |
-| Unit Test Generator | `test-medium` | `gpt-5.3-codex` | medium | Bounded test generation for changed code. |
+Portable agents declare model policies only. Concrete model names are selected
+by each adapter; Codex-specific choices live in `adapters/codex-chat.md`.
 
-The default `mock` adapter is deterministic so reviewers can run the homework without credentials. It executes every configured stage in order, loads the referenced skills, and records the stage model policy metadata in `run-metadata.json`. The `openai-sdk` adapter records a blocked run when `OPENAI_API_KEY` is unavailable. The `codex-chat` adapter prepares prompt packets for chat-assisted execution and validation.
+| Stage | Model policy | Reasoning | Why |
+| --- | --- | --- | --- |
+| Bug Researcher | `research-high` | high | Needs accurate source and symptom correlation. |
+| Research Verifier | `verification-high` | high | Bad verification can mislead every later stage. |
+| Bug Planner | `planning-high` | high | Converts evidence into controlled edits. |
+| Bug Fixer | `implementation-medium` | medium | Bounded code edits from a concrete plan. |
+| Security Verifier | `security-high` | high | Security review has higher blast radius. |
+| Unit Test Generator | `test-medium` | medium | Bounded test generation for changed code. |
 
 ## Quick Start
 
+1. In Codex chat, run the canonical phrase shown above.
+2. Review the resulting artifacts in `runs/bug-001/codex-chat-gpt-5.4-run-001`.
+3. Verify the fixed app:
+
 ```powershell
-cd homework-4
-npm run verify:baseline
-npm run pipeline:mock -- --scenario bug-001 --run run-001
-npm run promote -- --scenario bug-001 --run run-001
-npm test
-npm run compare -- --scenario bug-001
+node --test --test-isolation=none homework-4/app/current/tests/*.test.js
 ```
 
-## Benchmark Summary
+4. Verify the baseline still contains the seeded defects:
 
-`benchmark/bug-001-comparison.md` scores completed valid runs across correctness, security remediation, test quality, maintainability, and reproducibility. Blocked or prompt-preparation runs remain in `runs/` as evidence but are not included in the scored table. `run-001` is the promoted deterministic run.
+```powershell
+node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js
+```
+
+The baseline command is expected to fail. That failure is evidence that the
+input app still contains the intentional bugs and security issue.
 
 ## Documentation
 

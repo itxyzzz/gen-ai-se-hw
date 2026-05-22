@@ -1,5 +1,10 @@
 # Homework 4 Agentic Pipeline Implementation Plan
 
+> Superseded on 2026-05-22 by
+> `2026-05-22-pure-agentic-pipeline-scale-down.md`. This historical plan
+> describes the earlier JavaScript harness approach and is retained only as
+> handoff context.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development when implementing the later coding phases in a session that permits subagents, or superpowers:executing-plans for inline execution. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a portable Homework 4 agentic pipeline that preserves a buggy baseline app, produces fixed app outputs through adapter/model-specific runs, and compares previous runs as a mini-benchmark.

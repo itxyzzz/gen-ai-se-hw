@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-05-22
+
+### Changed
+- Added the newest-first changelog ordering rule to `AGENTS.md` and `HOMEWORK_STANDARDS.md`.
+- Mirrored the changelog ordering rule in the global Codex instructions at `C:/Users/tanatarov/.codex/AGENTS.md`.
+
 ## 2026-05-02
 
 ### Added

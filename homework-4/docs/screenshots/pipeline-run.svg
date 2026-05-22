@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360">
   <rect width="960" height="360" fill="#101820"/>
-  <text x="32" y="44" fill="#f7f7f7" font-family="Consolas, monospace" font-size="24">Pipeline Run Evidence</text>
-  <text x="32" y="92" fill="#8ee4af" font-family="Consolas, monospace" font-size="18">$ npm run pipeline:mock -- --scenario bug-001 --run run-001</text>
-  <text x="32" y="132" fill="#f7f7f7" font-family="Consolas, monospace" font-size="18">Mock pipeline completed: runs/bug-001/run-001</text>
-  <text x="32" y="180" fill="#8ee4af" font-family="Consolas, monospace" font-size="18">$ npm run promote -- --scenario bug-001 --run run-001</text>
-  <text x="32" y="220" fill="#f7f7f7" font-family="Consolas, monospace" font-size="18">Promoted bug-001/run-001 to app/current</text>
+  <text x="32" y="44" fill="#f7f7f7" font-family="Consolas, monospace" font-size="24">Codex Chat Pipeline Evidence</text>
+  <text x="32" y="92" fill="#8ee4af" font-family="Consolas, monospace" font-size="18">Run HW4 pipeline</text>
+  <text x="32" y="132" fill="#f7f7f7" font-family="Consolas, monospace" font-size="18">Harness loaded: skills/pipeline-harness-wrapper.md + adapters/codex-chat.md</text>
+  <text x="32" y="180" fill="#8ee4af" font-family="Consolas, monospace" font-size="18">Stages: research - verify - plan - fix - security - tests</text>
+  <text x="32" y="220" fill="#f7f7f7" font-family="Consolas, monospace" font-size="18">Fixed app evidence written to app/current</text>
   <text x="32" y="292" fill="#c5f4e0" font-family="Consolas, monospace" font-size="18">Artifacts: verified research, fix summary, security report, test report, metadata, patch</text>
 </svg>

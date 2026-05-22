@@ -1,9 +1,9 @@
 [
   {
-    "runId": "run-001",
+    "runId": "codex-chat-gpt-5.4-run-001",
     "scenarioId": "bug-001",
-    "adapter": "mock",
-    "model": "mock-deterministic-agent",
+    "adapter": "codex-chat",
+    "model": "gpt-5.4",
     "reasoningEffort": "medium",
     "status": "completed",
     "promoted": true,

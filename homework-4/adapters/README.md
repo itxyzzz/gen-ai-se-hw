@@ -1,17 +1,20 @@
-# Pipeline Adapters
+# Text Pipeline Adapters
 
-## Mock Adapter
+Adapters are Markdown mappings from the universal Homework 4 harness to a
+specific coding assistant. They are not executable scripts.
 
-`mock` is a deterministic local adapter used when live model credentials are unavailable. It applies the same artifact contract as a model-backed run and is the default for reproducible homework verification.
+## Primary Adapter
 
-## OpenAI SDK Adapter
+- `codex-chat.md`: the canonical submission path. One Codex chat phrase loads
+  the harness, agents, skills, scenario, and artifact contract.
 
-`openai-sdk` is the intended primary live single-command path. In this dependency-free homework folder it records a blocked run when `OPENAI_API_KEY` or the SDK package is unavailable, rather than pretending a model executed.
+## Portable Adapter Mappings
 
-## Codex Chat Adapter
+- `claude-code.md`: maps the same hierarchy to Claude Code.
+- `open-code.md`: maps the same hierarchy to Open Code.
+- `google-antigravity.md`: maps the same hierarchy to Google Antigravity.
+- `generic-agent.md`: fallback mapping for a capable agentic tool without a
+  dedicated adapter.
 
-`codex-chat` prepares prompt packets for this Codex Desktop workflow and validates externally produced artifacts against the same run contract.
-
-## Future Claude Code Adapter
-
-A future Claude Code adapter can map each universal `agents/*.agent.md` file to `.claude/agents` or headless command prompts, while preserving the same `runs/<scenario>/<run-id>/` artifact contract.
+Each adapter must preserve the same run workspace rules and artifact names so
+results can be reviewed with the same benchmark rubric.

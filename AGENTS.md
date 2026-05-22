@@ -58,6 +58,7 @@ For work inside `homework-*` folders, enforce these non-negotiables:
 6. In web/agent mode, start work from the intended homework branch (for example `homework-x-submission`).
 7. Codex step PRs should target that same homework branch; do not manually retarget bases unless required by tooling failure.
 8. Keep final-delivery flow consistent with `HOMEWORK_STANDARDS.md`: homework branch integrates to `main` only at final submission.
+9. Keep each homework `CHANGELOG.md` newest-first: add the latest step at the top, directly under the title and any standing notes.
 
 `HOMEWORK_STANDARDS.md` is the detailed source of truth for structure, documentation minima, timing, quality gates, diagrams/evidence, and review checklist.
 

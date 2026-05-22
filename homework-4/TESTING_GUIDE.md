@@ -4,54 +4,47 @@
 
 ```mermaid
 flowchart LR
-  B["Baseline expected failures"] --> H["Harness tests"]
-  H --> P["Pipeline run"]
-  P --> C["Current app tests"]
-  C --> M["Benchmark regeneration"]
+  B["Baseline expected failures"] --> R["Text pipeline artifacts"]
+  R --> C["Current app tests"]
+  R --> Q["Report quality review"]
 ```
 
-The baseline tests intentionally fail. `verify:baseline` is the passing gate for proving the seeded defects still exist. After promotion, `npm test` runs harness tests plus fixed current app tests.
+The pipeline itself is a text instruction hierarchy, so verification focuses on
+the sample app behavior and the required artifact contract.
 
 ## Command Matrix
 
+Run commands from the repository root.
+
 | Command | Expected Result |
 | --- | --- |
-| `npm run app:baseline:test` | Fails with the three seeded defects. |
-| `npm run verify:baseline` | Passes when seeded defects are reproduced. |
-| `npm run test:harness` | Passes harness and adapter contract tests. |
-| `npm run pipeline:mock -- --scenario bug-001 --run run-001` | Produces complete run artifacts. |
-| `npm run promote -- --scenario bug-001 --run run-001` | Copies fixed app to `app/current`. |
-| `npm run app:current:test` | Passes current app tests. |
-| `npm test` | Passes harness plus promoted app tests. |
-| `npm run compare -- --scenario bug-001` | Regenerates benchmark outputs. |
+| `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` | Passes for the fixed app. |
+| `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` | Fails for the seeded baseline defects. |
+| `node homework-4/app/current/src/cli.js --item WIDGET:2 --item GADGET:1 --discount SAVE10` | Prints a fixed quote. |
 
-## Coverage Summary
+## Artifact Review Checklist
 
-Harness tests cover:
+- `skills/pipeline-harness-wrapper.md` contains the canonical launch intent.
+- `adapters/codex-chat.md`, `adapters/claude-code.md`, `adapters/open-code.md`,
+  `adapters/google-antigravity.md`, and `adapters/generic-agent.md` exist.
+- All four required agents exist and name their inputs and outputs.
+- Research verifier references `skills/research-quality-measurement.md`.
+- Unit test generator references `skills/unit-tests-FIRST.md`.
+- `runs/bug-001/codex-chat-gpt-5.4-run-001` contains metadata, app, patch, verified research, fix
+  summary, security report, test report, and command log.
+- `run-metadata.json` identifies adapter `codex-chat`.
 
-- Config loading and agent spec validation.
-- Workspace copy and write-safety checks.
-- Mock adapter complete run generation.
-- Promotion metadata.
-- Benchmark comparison output.
+## Current App Coverage
 
 Current app tests cover:
 
-- Multiplication-based line totals.
-- Percentage-based `SAVE10`.
-- Catalog traversal rejection.
-- Generated regression coverage for combined total/discount behavior.
+- multiplication-based line totals;
+- percentage-based `SAVE10`;
+- catalog traversal rejection;
+- generated regression coverage for combined total/discount behavior.
 
-## Manual Checklist
+## Baseline Failure Evidence
 
-- Confirm `run-001/run-metadata.json` has `status: completed`.
-- Confirm `run-001/security-report.md` has no CRITICAL, HIGH, or MEDIUM findings.
-- Confirm `run-001/test-report.md` includes FIRST assessment.
-- Confirm `app/current` contains `tests/generated-regression.test.js`.
-- Confirm OpenAI SDK blocked metadata is present when no credentials are configured.
-
-## Node Test Isolation Note
-
-The Windows Codex sandbox blocks child processes spawned from inside Node. Test scripts use `--test-isolation=none` so the built-in test runner executes in-process.
-
-Harness tests write temporary artifacts to ignored `.test-runs`, `.test-current`, and `.test-benchmark` folders so `npm test` does not mutate submitted run, current-app, or benchmark artifacts.
+The baseline command is expected to return a nonzero exit code. That result
+proves the input app still contains the intentional defects that the pipeline is
+meant to fix.

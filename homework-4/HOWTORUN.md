@@ -2,80 +2,87 @@
 
 ## Prerequisites
 
-- Node.js 24 or newer.
-- PowerShell, Bash, or Command Prompt.
-- No npm install step is required because the homework uses Node built-ins only.
+- Node.js 24 or newer for the sample app tests.
+- Codex chat for the canonical one-phrase pipeline run.
+- No install step is required.
 
-## Baseline Verification
+## Canonical Codex Run
 
-The baseline app is supposed to fail its behavior tests:
+Paste this phrase into Codex chat from the repository root:
 
-```powershell
-npm run app:baseline:test
+```text
+Run HW4 pipeline
 ```
 
-Expected result: exit code 1 with failures for line total, `SAVE10`, and catalog traversal behavior.
+Expected behavior:
 
-Use the dedicated verifier for a passing seeded-defect check:
+- Codex reads `homework-4/skills/pipeline-harness-wrapper.md`.
+- Codex loads `homework-4/adapters/codex-chat.md`.
+- Codex runs all six stages in order.
+- Codex writes or refreshes the required artifacts under
+  `homework-4/runs/bug-001/codex-chat-gpt-5.4-run-001`.
+- Codex updates the fixed app evidence in `homework-4/app/current` only after
+  required reports are complete.
 
-```powershell
-npm run verify:baseline
+## Portable Launch Phrases
+
+These phrases use the same instruction hierarchy in other tools:
+
+```text
+Run HW4 pipeline with the Claude Code adapter.
 ```
 
-Expected result: exit code 0 and a message listing the reproduced seeded failures.
-
-## Run The Pipeline
-
-```powershell
-npm run pipeline:mock -- --scenario bug-001 --run run-001
+```text
+Run HW4 pipeline with the Open Code adapter.
 ```
 
-Expected result: a complete run folder under `runs/bug-001/run-001`.
-
-The deterministic run records all six configured stages, loaded skills, model policies, command logs, reports, and patch output.
-
-To attempt the live OpenAI SDK path:
-
-```powershell
-npm run pipeline:openai -- --scenario bug-001 --run openai-live-001 --model gpt-5.3-codex --reasoning high
+```text
+Run HW4 pipeline with the Google Antigravity adapter.
 ```
 
-If `OPENAI_API_KEY` or SDK support is unavailable, the run is marked `blocked` honestly in metadata.
-
-## Codex Chat Workflow
-
-```powershell
-npm run pipeline:codex-chat:prepare -- --scenario bug-001 --run codex-chat-001
+```text
+Run HW4 pipeline with the generic adapter.
 ```
 
-Prompt packets are written to `runs/bug-001/codex-chat-001/codex-chat-prompts`.
+Each adapter is documented in `homework-4/adapters/`.
 
-After externally completing the artifacts, validate them with:
+## Verify The Fixed App
 
-```powershell
-npm run pipeline:codex-chat:validate -- --scenario bug-001 --run codex-chat-001
-```
-
-## Promote And Test
+Run from the repository root:
 
 ```powershell
-npm run promote -- --scenario bug-001 --run run-001
-npm run app:current:test
-npm test
+node --test --test-isolation=none homework-4/app/current/tests/*.test.js
 ```
 
-Expected result: all current app and harness tests pass.
+Expected result: all current app tests pass.
 
-## Compare Runs
+## Verify The Buggy Baseline
+
+Run from the repository root:
 
 ```powershell
-npm run compare -- --scenario bug-001
+node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js
 ```
 
-Expected result: benchmark JSON, Markdown comparison, and rubric files are generated in `benchmark/`.
+Expected result: the command fails because the baseline intentionally preserves:
 
-## Demo Helpers
+- line total addition instead of multiplication;
+- flat `SAVE10` subtraction instead of a percentage discount;
+- unsafe catalog path traversal behavior.
 
-- Windows: `demo/run.bat`
-- Bash: `demo/run.sh`
-- Manual command notes: `demo/sample-requests.http`
+## Run The Fixed CLI
+
+```powershell
+cd homework-4/app/current
+node src/cli.js --item WIDGET:2 --item GADGET:1 --discount SAVE10
+```
+
+Expected result: the quote prints with multiplied line totals and a 10 percent
+discount.
+
+## Review Artifacts
+
+- Canonical run: `runs/bug-001/codex-chat-gpt-5.4-run-001`
+- Harness skill: `skills/pipeline-harness-wrapper.md`
+- Codex adapter: `adapters/codex-chat.md`
+- Comparison rubric: `benchmark/scoring-rubric.md`

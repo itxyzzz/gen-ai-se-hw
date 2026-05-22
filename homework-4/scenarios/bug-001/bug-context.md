@@ -20,4 +20,6 @@ The sample application calculates quotes from a small catalog. The baseline app 
 
 Run `npm run app:baseline:test` from `homework-4/`. The command should fail because the seeded defects are present.
 
-Run `npm run verify:baseline` from `homework-4/`. The command should pass only when those expected failures are reproduced.
+Run `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js`
+from the repository root. The command should fail while those expected baseline
+defects are still present.

@@ -1,5 +1,56 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 9
+
+### Added
+- Added `homework-4/AGENTS.md` so Homework 4 pipeline intent launches the text wrapper without requiring an exact phrase.
+- Added adapter/model naming to the canonical run folder: `codex-chat-gpt-5.4-run-001`.
+- Added `adapters/generic-agent.md` as a fallback for capable tools without a dedicated adapter.
+
+### Changed
+- Shortened the pipeline launch alias to `Run HW4 pipeline`.
+- Moved concrete model names out of portable agent specs and into `adapters/codex-chat.md`.
+- Updated portable agents to refer to the current run instead of a hard-coded run folder.
+- Updated the pure-agentic plan checklist to reflect completed implementation tasks.
+- Split `homework-4/AGENTS.md` into development, pipeline execution, and benchmarking sections.
+- Moved the harness wrapper from `docs/` to `skills/pipeline-harness-wrapper.md`.
+- Changed adapter selection to happen automatically from the active agentic tool in the happy path.
+
+### Fixed
+- Added persistent newest-first changelog guidance to global instructions, repo-level instructions, and homework standards.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 5 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+- Verified required canonical run artifacts exist under `runs/bug-001/codex-chat-gpt-5.4-run-001`.
+- Verified portable agent specs no longer contain concrete model names or hard-coded run folders.
+
+## Homework 4 - Step 8
+
+### Added
+- Added a superseding pure-agentic design spec and implementation plan.
+- Added `skills/pipeline-harness-wrapper.md` as the one-phrase Markdown harness skill.
+- Added text adapter mappings for Codex Chat, Claude Code, Open Code, Google Antigravity, and a generic capable-agent fallback.
+- Added app-local ESM markers so the sample app tests run without a root package or pipeline scripts.
+
+### Changed
+- Reframed Homework 4 around the launch phrase `Run HW4 pipeline`.
+- Expanded all agent specs with chat-harness instructions, required artifacts, and completion gates.
+- Rewrote README, HOWTORUN, API reference, architecture, testing guide, demo notes, benchmark text, and SVG evidence for the text-first workflow.
+- Updated the canonical run metadata to identify the `codex-chat` adapter and one-phrase launch command.
+
+### Fixed
+- Removed the over-scoped JavaScript harness, script adapters, root npm scripts, executable demo runners, stale blocked SDK runs, and prompt-packet preparation run.
+- Marked the earlier JavaScript harness design and plan as superseded historical context.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 5 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
+> Historical note: Steps 0-7 below describe the earlier JavaScript harness
+> implementation. They are retained for process traceability but superseded by
+> Step 8 for the submitted architecture.
+
 ## Homework 4 - Step 0
 
 ### Added

@@ -163,6 +163,7 @@ Homework changelog entries should use this shape:
 
 Authoring rules:
 - Update on every incremental step before commit or PR closure.
+- Keep entries newest-first: the latest homework step belongs at the top, directly under the title and any standing notes.
 - Describe behavior, contract, documentation, and verification impact.
 - Call out endpoint, validation, data model, workflow, and run-command changes explicitly.
 - Avoid internal trivia that does not help a reviewer understand the submission.

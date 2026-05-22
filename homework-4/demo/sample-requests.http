@@ -1,11 +1,11 @@
-# CLI smoke examples for REST Client-style documentation.
+# Text-pipeline smoke notes.
 #
-# Baseline defect check:
-# npm run verify:baseline
-#
-# Pipeline:
-# npm run pipeline:mock -- --scenario bug-001 --run run-001
+# Canonical Codex phrase:
+# Run HW4 pipeline
 #
 # Fixed app quote:
-# cd app/current
+# cd homework-4/app/current
 # node src/cli.js --item WIDGET:2 --item GADGET:1 --discount SAVE10
+#
+# Current app tests from repository root:
+# node --test --test-isolation=none homework-4/app/current/tests/*.test.js

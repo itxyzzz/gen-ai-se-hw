@@ -1,5 +1,11 @@
 # Homework 4 Agentic Pipeline Design
 
+> Superseded on 2026-05-22 by `2026-05-22-pure-agentic-pipeline-design.md`.
+> This earlier design kept a useful staged-agent architecture, but it over-scoped
+> the homework by treating JavaScript harnesses and SDK adapters as the primary
+> execution proof. The current submission is text-first: one chat phrase launches
+> the agent hierarchy, and portable adapters are Markdown instructions.
+
 ## Purpose
 
 Homework 4 asks for a four-agent pipeline that can verify bug research, apply fixes, review security, and generate unit tests. This design turns that assignment into a portable, reproducible agentic workflow rather than a set of one-off prompt files. The implementation will preserve the intentionally buggy application, keep every adapter and model run isolated, promote one verified fixed application for final submission, and compare previous runs as a small benchmark.
