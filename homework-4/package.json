@@ -1,0 +1,20 @@
+{
+  "name": "homework-4-agentic-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify:baseline": "node pipeline/verify-baseline.js",
+    "app:baseline:test": "node --test --test-isolation=none app/baseline/tests/*.test.js",
+    "app:current:test": "node --test --test-isolation=none app/current/tests/*.test.js",
+    "test:harness": "node --test --test-isolation=none pipeline/tests/*.test.js",
+    "test": "node --test --test-isolation=none pipeline/tests/*.test.js app/current/tests/*.test.js",
+    "pipeline": "node pipeline/run.js",
+    "pipeline:mock": "node pipeline/run.js --adapter mock",
+    "pipeline:openai": "node pipeline/run.js --adapter openai-sdk",
+    "pipeline:codex-chat:prepare": "node pipeline/run.js --adapter codex-chat --prepare",
+    "pipeline:codex-chat:validate": "node pipeline/run.js --adapter codex-chat --validate",
+    "promote": "node pipeline/promote.js",
+    "compare": "node pipeline/compare.js"
+  }
+}

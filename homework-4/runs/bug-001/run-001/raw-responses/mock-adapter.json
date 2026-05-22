@@ -1,0 +1,4 @@
+{
+  "adapter": "mock",
+  "note": "Deterministic local adapter; no remote model response."
+}

@@ -1,0 +1,11 @@
+# CLI smoke examples for REST Client-style documentation.
+#
+# Baseline defect check:
+# npm run verify:baseline
+#
+# Pipeline:
+# npm run pipeline:mock -- --scenario bug-001 --run run-001
+#
+# Fixed app quote:
+# cd app/current
+# node src/cli.js --item WIDGET:2 --item GADGET:1 --discount SAVE10
