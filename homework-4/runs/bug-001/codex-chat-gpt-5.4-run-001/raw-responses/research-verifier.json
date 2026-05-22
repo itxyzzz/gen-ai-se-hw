@@ -1,0 +1,13 @@
+{
+  "stageId": "research-verifier",
+  "role": "verification",
+  "modelPolicy": "verification-high",
+  "model": "gpt-5.4",
+  "reasoningEffort": "high",
+  "skillsLoaded": [
+    "skills/research-quality-measurement.md"
+  ],
+  "startedAt": "2026-05-21T20:42:47.338Z",
+  "endedAt": "2026-05-21T20:42:47.339Z",
+  "status": "completed"
+}

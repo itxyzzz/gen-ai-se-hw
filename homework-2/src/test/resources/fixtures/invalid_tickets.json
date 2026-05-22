@@ -1,0 +1,4 @@
+[
+  {"customer_id":"CUST-BAD-JSON-1","customer_email":"not-an-email","customer_name":"Bad JSON Customer","subject":"Bad JSON email","description":"This row has an invalid email address","category":"other","priority":"medium","status":"new","metadata":{"source":"api"}},
+  {"customer_id":"CUST-BAD-JSON-2","customer_email":"bad-json-2@example.com","customer_name":"Bad JSON Customer","subject":"","description":"short","category":"unknown","priority":"instant","status":"started","metadata":{"source":"fax","device_type":"watch"}}
+]

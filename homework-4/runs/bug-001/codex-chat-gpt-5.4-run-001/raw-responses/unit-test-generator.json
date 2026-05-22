@@ -1,0 +1,13 @@
+{
+  "stageId": "unit-test-generator",
+  "role": "test-generation",
+  "modelPolicy": "test-medium",
+  "model": "gpt-5.3-codex",
+  "reasoningEffort": "medium",
+  "skillsLoaded": [
+    "skills/unit-tests-FIRST.md"
+  ],
+  "startedAt": "2026-05-21T20:42:47.379Z",
+  "endedAt": "2026-05-21T20:42:47.386Z",
+  "status": "completed"
+}

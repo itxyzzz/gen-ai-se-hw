@@ -1,0 +1,24 @@
+<tickets>
+  <ticket>
+    <customer_id>CUST-BAD-XML-1</customer_id>
+    <customer_email>not-an-email</customer_email>
+    <customer_name>Bad XML Customer</customer_name>
+    <subject>Bad XML email</subject>
+    <description>This row has an invalid email address</description>
+    <category>other</category>
+    <priority>medium</priority>
+    <status>new</status>
+    <metadata><source>api</source></metadata>
+  </ticket>
+  <ticket>
+    <customer_id>CUST-BAD-XML-2</customer_id>
+    <customer_email>bad-xml-2@example.com</customer_email>
+    <customer_name>Bad XML Customer</customer_name>
+    <subject></subject>
+    <description>short</description>
+    <category>unknown</category>
+    <priority>instant</priority>
+    <status>started</status>
+    <metadata><source>fax</source><device_type>watch</device_type></metadata>
+  </ticket>
+</tickets>

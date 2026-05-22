@@ -1,0 +1,57 @@
+# Patch Summary
+
+## src/catalogRepository.js
+
+```diff
+-   const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++   if (!/^[a-zA-Z0-9_-]+$/.test(catalogName)) {
+-   const rawCatalog = await readFile(catalogPath, "utf8");
++     throw new Error("Invalid catalog name.");
+-   return JSON.parse(rawCatalog);
++   }
+- }
++ 
+- 
++   const catalogPath = path.resolve(catalogDirectory, `${catalogName}.json`);
+- export function findCatalogItem(catalog, sku) {
++   const relativePath = path.relative(catalogDirectory, catalogPath);
+-   const item = catalog.items.find((candidate) => candidate.sku === sku);
++   if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+-   if (!item) {
++     throw new Error("Invalid catalog name.");
+-     throw new Error(`Unknown catalog item: ${sku}`);
++   }
+-   }
++ 
+-   return item;
++   const rawCatalog = await readFile(catalogPath, "utf8");
+- }
++   return JSON.parse(rawCatalog);
+- 
++ }
++ 
++ export function findCatalogItem(catalog, sku) {
++   const item = catalog.items.find((candidate) => candidate.sku === sku);
++   if (!item) {
++     throw new Error(`Unknown catalog item: ${sku}`);
++   }
++   return item;
++ }
++ 
+```
+
+## src/quoteCalculator.js
+
+```diff
+-   return item.quantity + item.unitPrice;
++   return item.quantity * item.unitPrice;
+-     return subtotal - 10;
++     return roundCurrency(subtotal * 0.9);
+```
+
+## tests/generated-regression.test.js
+
+```diff
++ added tests/generated-regression.test.js
+```
+
