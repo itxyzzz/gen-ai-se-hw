@@ -1,0 +1,138 @@
+{
+  "runId": "run-002",
+  "adapter": "codex-chat",
+  "model": "gpt-5.4",
+  "runFolderName": "codex-chat-gpt-5.4-run-002",
+  "scenario": "bug-001",
+  "launchIntent": "Run HW pipeline",
+  "status": "complete",
+  "promoted": true,
+  "models": {
+    "bug-researcher": {
+      "modelPolicy": "research-high",
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "research-verifier": {
+      "modelPolicy": "verification-high",
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "bug-planner": {
+      "modelPolicy": "planning-high",
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "bug-fixer": {
+      "modelPolicy": "implementation-medium",
+      "model": "gpt-5.3-codex",
+      "reasoning": "medium"
+    },
+    "security-verifier": {
+      "modelPolicy": "security-high",
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "unit-test-generator": {
+      "modelPolicy": "test-medium",
+      "model": "gpt-5.3-codex",
+      "reasoning": "medium"
+    }
+  },
+  "stages": [
+    {
+      "id": "bug-researcher",
+      "status": "complete",
+      "skills": [],
+      "artifact": "research/codebase-research.md"
+    },
+    {
+      "id": "research-verifier",
+      "status": "complete",
+      "skills": [
+        "skills/research-quality-measurement.md"
+      ],
+      "artifact": "research/verified-research.md"
+    },
+    {
+      "id": "bug-planner",
+      "status": "complete",
+      "skills": [],
+      "artifact": "implementation-plan.md"
+    },
+    {
+      "id": "bug-fixer",
+      "status": "complete",
+      "skills": [],
+      "artifact": "fix-summary.md"
+    },
+    {
+      "id": "security-verifier",
+      "status": "complete",
+      "skills": [],
+      "artifact": "security-report.md"
+    },
+    {
+      "id": "unit-test-generator",
+      "status": "complete",
+      "skills": [
+        "skills/unit-tests-FIRST.md"
+      ],
+      "artifact": "test-report.md"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js",
+      "result": "failed-as-expected",
+      "tests": {
+        "pass": 0,
+        "fail": 3
+      }
+    },
+    {
+      "command": "node --test --test-isolation=none homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/*.test.js",
+      "result": "failed-during-planned-intermediate-step",
+      "tests": {
+        "pass": 2,
+        "fail": 1
+      }
+    },
+    {
+      "command": "node --test --test-isolation=none homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/*.test.js",
+      "result": "passed",
+      "tests": {
+        "pass": 3,
+        "fail": 0
+      }
+    },
+    {
+      "command": "node --test --test-isolation=none homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/*.test.js",
+      "result": "passed",
+      "tests": {
+        "pass": 7,
+        "fail": 0
+      }
+    },
+    {
+      "command": "Get-ChildItem -Force -LiteralPath 'homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app' | Copy-Item -Recurse -Force -Destination 'homework-4/app/current'",
+      "result": "promoted"
+    },
+    {
+      "command": "node --test --test-isolation=none homework-4/app/current/tests/*.test.js",
+      "result": "passed",
+      "tests": {
+        "pass": 7,
+        "fail": 0
+      }
+    },
+    {
+      "command": "node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js",
+      "result": "failed-as-expected",
+      "tests": {
+        "pass": 0,
+        "fail": 3
+      }
+    }
+  ]
+}

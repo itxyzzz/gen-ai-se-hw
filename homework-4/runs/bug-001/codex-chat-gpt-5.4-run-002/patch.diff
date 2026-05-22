@@ -1,0 +1,103 @@
+diff --git a/homework-4/app/baseline/src/catalogRepository.js b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/src/catalogRepository.js
+index e7d587c..50deb75 100644
+--- a/homework-4/app/baseline/src/catalogRepository.js
++++ b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/src/catalogRepository.js
+@@ -4,9 +4,10 @@ import { fileURLToPath } from "node:url";
+ 
+ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+ const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
++const catalogNamePattern = /^[A-Za-z0-9_-]+$/;
+ 
+ export async function loadCatalog(catalogName = "default") {
+-  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  const catalogPath = resolveCatalogPath(catalogName);
+   const rawCatalog = await readFile(catalogPath, "utf8");
+   return JSON.parse(rawCatalog);
+ }
+@@ -18,3 +19,18 @@ export function findCatalogItem(catalog, sku) {
+   }
+   return item;
+ }
++
++function resolveCatalogPath(catalogName) {
++  if (typeof catalogName !== "string" || !catalogNamePattern.test(catalogName)) {
++    throw new Error("Invalid catalog name.");
++  }
++
++  const catalogPath = path.resolve(catalogDirectory, `${catalogName}.json`);
++  const relativePath = path.relative(catalogDirectory, catalogPath);
++
++  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
++    throw new Error("Invalid catalog name.");
++  }
++
++  return catalogPath;
++}
+diff --git a/homework-4/app/baseline/src/quoteCalculator.js b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/src/quoteCalculator.js
+index c9e90e3..1a33a9a 100644
+--- a/homework-4/app/baseline/src/quoteCalculator.js
++++ b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/src/quoteCalculator.js
+@@ -1,7 +1,7 @@
+ export function calculateLineTotal(item) {
+   assertPositiveQuantity(item.quantity);
+   assertNonNegativePrice(item.unitPrice);
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+ }
+ 
+ export function applyDiscount(subtotal, discountCode) {
+@@ -10,7 +10,7 @@ export function applyDiscount(subtotal, discountCode) {
+   }
+ 
+   if (discountCode === "SAVE10") {
+-    return subtotal - 10;
++    return subtotal * 0.9;
+   }
+ 
+   throw new Error(`Unknown discount code: ${discountCode}`);
+diff --git a/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/generated-regression.test.js b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/generated-regression.test.js
+new file mode 100644
+index 0000000..e2516b1
+--- /dev/null
++++ b/homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/generated-regression.test.js
+@@ -0,0 +1,40 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { applyDiscount, calculateQuote } from "../src/quoteCalculator.js";
++import { findCatalogItem, loadCatalog } from "../src/catalogRepository.js";
++
++test("generated regression: quote totals use multiplication before discount", () => {
++  const quote = calculateQuote(
++    [
++      { sku: "WIDGET", quantity: 2, unitPrice: 12.5 },
++      { sku: "GADGET", quantity: 4, unitPrice: 3 }
++    ],
++    { discountCode: "SAVE10" }
++  );
++
++  assert.deepEqual(
++    quote.lines.map((line) => line.lineTotal),
++    [25, 12]
++  );
++  assert.equal(quote.subtotal, 37);
++  assert.equal(quote.total, 33.3);
++});
++
++test("generated regression: SAVE10 scales with subtotal", () => {
++  assert.equal(applyDiscount(250, "SAVE10"), 225);
++  assert.equal(applyDiscount(19.99, "SAVE10"), 17.991);
++});
++
++test("generated regression: default catalog still loads valid items", async () => {
++  const catalog = await loadCatalog("default");
++  const item = findCatalogItem(catalog, "WIDGET");
++
++  assert.equal(item.sku, "WIDGET");
++  assert.equal(typeof item.unitPrice, "number");
++});
++
++test("generated regression: catalog names must be simple identifiers", async () => {
++  await assert.rejects(() => loadCatalog("../catalogs/default"), /Invalid catalog name/);
++  await assert.rejects(() => loadCatalog("nested/default"), /Invalid catalog name/);
++  await assert.rejects(() => loadCatalog("default.json"), /Invalid catalog name/);
++});

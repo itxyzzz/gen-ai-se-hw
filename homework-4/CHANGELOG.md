@@ -1,5 +1,27 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 10
+
+### Added
+- Added a fresh Codex Chat pipeline run at
+  `runs/bug-001/codex-chat-gpt-5.4-run-002`.
+- Added run-specific research, verified research, implementation plan,
+  fix summary, security report, test report, patch diff, metadata, and command
+  log artifacts.
+
+### Changed
+- Promoted the verified `codex-chat-gpt-5.4-run-002` app into
+  `homework-4/app/current`.
+
+### Fixed
+- Re-applied the quote calculator line-total fix, `SAVE10` percentage discount
+  fix, and catalog traversal guard through the full text pipeline.
+
+### Tests
+- `node --test --test-isolation=none homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 9
 
 ### Added
