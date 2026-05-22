@@ -1,6 +1,21 @@
 # Homework 4 Changelog
 
-## Homework 4 - Step 13: Open Code Adapter Mixed-Environment Optimization
+## Homework 4 - Step 14: Codex Chat Run gpt-5.2-run-002 Evidence
+
+### Added
+- Added a fresh completed pipeline run evidence folder under `runs/bug-001/codex-chat-gpt-5.2-run-002`.
+
+### Changed
+- No changes to `app/current`; the new run produces the same fixed output as the canonical completed app.
+
+### Fixed
+- N/A
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 5 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
+## Homework 4 - Step 13 (Added by Open Code): Open Code Adapter Mixed-Environment Optimization
 
 ### Added
 - Added Open Code adapter optimization design spec at `docs/superpowers/specs/2026-05-22-opencode-adapter-optimization-design.md`.
