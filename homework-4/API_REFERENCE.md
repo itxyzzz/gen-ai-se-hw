@@ -14,10 +14,12 @@ Run HW4 pipeline
 | Adapter | Prompt |
 | --- | --- |
 | Codex Chat | `Run HW4 pipeline` |
-| Claude Code | `Run HW4 pipeline with the Claude Code adapter.` |
-| Open Code | `Run HW4 pipeline with the Open Code adapter.` |
-| Google Antigravity | `Run HW4 pipeline with the Google Antigravity adapter.` |
-| Generic agentic tool | `Run HW4 pipeline with the generic adapter.` |
+| Claude Code | `Run HW4 pipeline` |
+| Open Code | `Run HW4 pipeline` |
+| Google Antigravity | `Run HW4 pipeline` |
+| Generic agentic tool | `Run HW4 pipeline` |
+
+Adapter selection is determined by active tool context according to `homework-4/AGENTS.md`.
 
 ## Stage Contract
 

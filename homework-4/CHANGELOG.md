@@ -1,5 +1,26 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 12
+
+### Added
+- Added Open Code adapter optimization design spec at `docs/superpowers/specs/2026-05-22-opencode-adapter-optimization-design.md`.
+- Added Open Code adapter optimization implementation plan at `docs/superpowers/plans/2026-05-22-opencode-adapter-optimization-plan.md`.
+
+### Changed
+- Reworked `adapters/open-code.md` for mixed model environments with ordered candidates across Codex/OpenAI, Claude, and free/open providers.
+- Added deterministic fallback and per-stage metadata recording requirements to the Open Code adapter.
+- Clarified skill handling split in Open Code adapter: Superpowers skill-tool usage vs local `skills/*.md` stage requirements.
+- Normalized Open Code launch semantics to the short canonical phrase `Run HW4 pipeline` and documented prompt-command behavior.
+- Updated `HOWTORUN.md` and `API_REFERENCE.md` so adapter prompts use the same canonical launch phrase with context-based adapter selection.
+
+### Fixed
+- Removed the long Open Code launch prompt variant that was hard to remember and inconsistent with harness-first launch flow.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+- Verified launch phrase and Open Code wording consistency across Homework 4 markdown docs.
+
 ## Homework 4 - Step 11 (Added by Antigravity)
 
 ### Added
