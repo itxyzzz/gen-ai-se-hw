@@ -25,10 +25,9 @@ Read these files before stage execution:
 4. `homework-4/TASKS.md`
 5. `homework-4/skills/pipeline-harness-wrapper.md`
 6. the automatically selected adapter from `homework-4/adapters/`
-7. `homework-4/skills/codex-chat-pipeline.md` when using Codex Chat
-8. `homework-4/scenarios/bug-001/bug-context.md`
-9. All `homework-4/agents/*.agent.md`
-10. Required stage skills referenced by the agent frontmatter
+7. `homework-4/scenarios/bug-001/bug-context.md`
+8. All `homework-4/agents/*.agent.md`
+9. Required stage skills referenced by the agent frontmatter
 
 ## Stage Order
 

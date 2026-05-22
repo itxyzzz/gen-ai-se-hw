@@ -1,6 +1,6 @@
 # Homework 4 Changelog
 
-## Homework 4 - Step 12
+## Homework 4 - Step 13: Open Code Adapter Mixed-Environment Optimization
 
 ### Added
 - Added Open Code adapter optimization design spec at `docs/superpowers/specs/2026-05-22-opencode-adapter-optimization-design.md`.
@@ -21,11 +21,30 @@
 - `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
 - Verified launch phrase and Open Code wording consistency across Homework 4 markdown docs.
 
+## Homework 4 - Step 12: Submission Evidence Cleanup
+
+### Added
+- Documented the intentional portable model-policy decision in `README.md`.
+
+### Changed
+- Restored `app/current` to match the completed Codex Chat evidence run.
+- Updated Google Antigravity model guidance to use Gemini 3.1 Pro and Gemini 3.5 Flash as the currently available primary mappings, with future Pro/Flash models listed as alternatives.
+
+### Fixed
+- Removed the stale required-context reference to the deleted Codex Chat runner skill from `skills/pipeline-harness-wrapper.md`.
+- Removed abandoned non-submission run references and artifacts from the submission evidence trail.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 5 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+- Verified `homework-4/app/current` matches the completed Codex Chat evidence run.
+- Verified no abandoned run identifiers remain.
+
 ## Homework 4 - Step 11 (Added by Antigravity)
 
 ### Added
 - Added optional `## Reusable Agentic Execution Extensions` guidelines inside `skills/pipeline-harness-wrapper.md` to support subagent context isolation, self-correction reflection loops, and static analysis integration generically.
-- Added concrete **Model Selection** mappings to `adapters/google-antigravity.md` using Gemini 3.5 Pro and Gemini 3.5 Flash models.
+- Added concrete **Model Selection** mappings to `adapters/google-antigravity.md` using Gemini 3.1 Pro and Gemini 3.5 Flash primary models, with future Pro/Flash models allowed as alternatives.
 - Added a tool-based programmatic **Orchestration Procedure** in `adapters/google-antigravity.md` specifying subagent delegation (`define_subagent`, `invoke_subagent`), local test running (`run_command`), and reflection loops.
 - Added Anthropic Claude model selection mapping to `adapters/claude-code.md` (`claude-3-5-sonnet` and `claude-3-5-haiku`).
 - Added open-source model selection mapping to `adapters/open-code.md` (`llama-3.3-70b-instruct` / `Qwen-2.5-Coder-32B-Instruct` and `llama-3.1-8b-instruct` / `Qwen-2.5-Coder-7B-Instruct`).
@@ -42,28 +61,6 @@
 
 ### Tests
 - `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed successfully.
-- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
-
-## Homework 4 - Step 10
-
-### Added
-- Added a fresh Codex Chat pipeline run at
-  `runs/bug-001/codex-chat-gpt-5.4-run-002`.
-- Added run-specific research, verified research, implementation plan,
-  fix summary, security report, test report, patch diff, metadata, and command
-  log artifacts.
-
-### Changed
-- Promoted the verified `codex-chat-gpt-5.4-run-002` app into
-  `homework-4/app/current`.
-
-### Fixed
-- Re-applied the quote calculator line-total fix, `SAVE10` percentage discount
-  fix, and catalog traversal guard through the full text pipeline.
-
-### Tests
-- `node --test --test-isolation=none homework-4/runs/bug-001/codex-chat-gpt-5.4-run-002/app/tests/*.test.js` passed with 7 tests.
-- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
 - `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
 
 ## Homework 4 - Step 9

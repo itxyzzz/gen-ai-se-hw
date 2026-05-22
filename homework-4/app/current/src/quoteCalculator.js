@@ -10,7 +10,7 @@ export function applyDiscount(subtotal, discountCode) {
   }
 
   if (discountCode === "SAVE10") {
-    return subtotal * 0.9;
+    return roundCurrency(subtotal * 0.9);
   }
 
   throw new Error(`Unknown discount code: ${discountCode}`);

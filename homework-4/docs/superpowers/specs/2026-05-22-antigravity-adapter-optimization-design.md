@@ -47,7 +47,7 @@ flowchart TD
 
 ### 3.2 Google Antigravity Adapter (`adapters/google-antigravity.md`)
 * **Planned Changes:** 
-  - Add concrete model mapping table using DeepMind Gemini models (`Gemini 3.5 Pro` and `Gemini 3.5 Flash`).
+  - Add concrete model mapping table using currently available Gemini models (`Gemini 3.1 Pro` and `Gemini 3.5 Flash`), with future Pro/Flash models allowed as alternatives.
   - Add an advanced, tool-based **Orchestration Procedure** to run the pipeline sequentially using `define_subagent`, `invoke_subagent`, `run_command` (local test runner), and automated **Reflection Loops** with up to 3 repair iterations.
   - Streamline the validation checklist to remove duplicate references.
 

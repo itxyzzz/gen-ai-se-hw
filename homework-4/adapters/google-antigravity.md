@@ -10,23 +10,25 @@ Run Homework 4 bug-001 through the full agentic pipeline using the Google Antigr
 
 ## Model Selection
 
-Concrete Gemini model policies:
+Concrete Gemini model policies. The primary mappings use the models currently
+available for this homework environment; future stronger models may be used as
+drop-in alternatives when they are available in Google Antigravity.
 
-| Model policy | Gemini Model | Reasoning / Effort |
-| --- | --- | --- |
-| `research-high` | Gemini 3.5 Pro | High reasoning for deep codebase context analysis |
-| `verification-high` | Gemini 3.5 Pro | High reasoning for strict research verification |
-| `planning-high` | Gemini 3.5 Pro | High reasoning for precise implementation plans |
-| `implementation-medium` | Gemini 3.5 Flash | Fast and efficient for mechanical code changes |
-| `security-high` | Gemini 3.5 Pro | High reasoning for finding complex security vulnerabilities |
-| `test-medium` | Gemini 3.5 Flash | Fast and reliable for standard unit-test generation |
+| Model policy | Primary Gemini model | Alternative when available | Reasoning / Effort |
+| --- | --- | --- | --- |
+| `research-high` | Gemini 3.1 Pro | Gemini 3.5 Pro or newer Pro-tier model | High reasoning for deep codebase context analysis |
+| `verification-high` | Gemini 3.1 Pro | Gemini 3.5 Pro or newer Pro-tier model | High reasoning for strict research verification |
+| `planning-high` | Gemini 3.1 Pro | Gemini 3.5 Pro or newer Pro-tier model | High reasoning for precise implementation plans |
+| `implementation-medium` | Gemini 3.5 Flash | Newer Flash-tier coding model | Fast and efficient for mechanical code changes |
+| `security-high` | Gemini 3.1 Pro | Gemini 3.5 Pro or newer Pro-tier model | High reasoning for finding complex security vulnerabilities |
+| `test-medium` | Gemini 3.5 Flash | Newer Flash-tier coding model | Fast and reliable for standard unit-test generation |
 
 ## Mapping & Subagent Orchestration Procedure
 
 Google Antigravity must execute the stages sequentially using its native background subagent delegation tools to prevent context bloat:
 
 1. **Environment Initialization:**
-   - Create the run workspace folder: `homework-4/runs/bug-001/google-antigravity-gemini-3.5-run-001`.
+   - Create the run workspace folder: `homework-4/runs/bug-001/google-antigravity-gemini-3.1-pro-run-001`.
    - Copy `homework-4/app/baseline` to the run workspace. Do not modify `app/baseline`.
    - Initialize `command-log.md` and `run-metadata.json` under the workspace.
 2. **Execute Stages sequentially using Subagents:**

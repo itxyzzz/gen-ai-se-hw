@@ -1,7 +1,7 @@
 # Homework 4: Pure Agentic Bug-Fixing Pipeline
 
 Author: `itanatarov`  
-**AI Tools Used**: Codex (Steps 0–10); Google Antigravity (Step 11 & universal adapter alignment)
+**AI Tools Used**: Codex (Steps 0–9); Google Antigravity (Step 11 & universal adapter alignment)
 
 ## Overview
 
@@ -51,6 +51,12 @@ flowchart LR
 
 Portable agents declare model policies only. Concrete model names are selected
 by each adapter; Codex-specific choices live in `adapters/codex-chat.md`.
+This is an intentional portability decision: the `*.agent.md` frontmatter keeps
+stable `model_policy` and `reasoning_effort` values so the same agents can run
+under Codex Chat, Google Antigravity, Claude Code, Open Code, or a generic
+agentic tool. Concrete model selections are adapter-specific and are recorded in
+the adapter instructions and run metadata rather than duplicated in every agent
+file.
 
 | Stage | Model policy | Reasoning | Why |
 | --- | --- | --- | --- |

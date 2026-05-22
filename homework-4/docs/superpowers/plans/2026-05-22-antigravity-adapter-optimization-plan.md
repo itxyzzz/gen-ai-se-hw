@@ -20,7 +20,7 @@
 ## Task 3: Dedicated Adapters Alignment & Model Mapping
 
 - [x] Modify `homework-4/adapters/google-antigravity.md`:
-  - Add the concrete **Model Selection** table for Gemini 3.5 Pro and Gemini 3.5 Flash.
+  - Add the concrete **Model Selection** table for Gemini 3.1 Pro and Gemini 3.5 Flash primary models, with future Pro/Flash models allowed as alternatives.
   - Detail the tool-based **Orchestration Procedure** (subagents, reflection loops, local testing, and promotion rules).
   - Streamline validation checklists.
 - [x] Modify `homework-4/adapters/claude-code.md`:
