@@ -1,0 +1,136 @@
+diff --git a/homework-4/app/baseline/src/catalogRepository.js b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/src/catalogRepository.js
+index e7d587c..b13aaa0 100644
+--- a/homework-4/app/baseline/src/catalogRepository.js
++++ b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/src/catalogRepository.js
+@@ -6,7 +6,22 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+ const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
+ 
+ export async function loadCatalog(catalogName = "default") {
++  // Validate catalog name to prevent path traversal
++  const validNamePattern = /^[a-zA-Z0-9_-]+$/;
++  if (!validNamePattern.test(catalogName)) {
++    throw new Error("Invalid catalog name: must contain only alphanumeric characters, hyphens, and underscores");
++  }
++
+   const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++
++  // Resolve the path and ensure it's within the catalog directory
++  const resolvedPath = path.resolve(catalogPath);
++  const resolvedCatalogDir = path.resolve(catalogDirectory);
++
++  if (!resolvedPath.startsWith(resolvedCatalogDir + path.sep) && resolvedPath !== resolvedCatalogDir) {
++    throw new Error("Invalid catalog name: path traversal detected");
++  }
++
+   const rawCatalog = await readFile(catalogPath, "utf8");
+   return JSON.parse(rawCatalog);
+ }
+diff --git a/homework-4/app/baseline/src/quoteCalculator.js b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/src/quoteCalculator.js
+index c9e90e3..eb2602c 100644
+--- a/homework-4/app/baseline/src/quoteCalculator.js
++++ b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/src/quoteCalculator.js
+@@ -1,7 +1,7 @@
+ export function calculateLineTotal(item) {
+   assertPositiveQuantity(item.quantity);
+   assertNonNegativePrice(item.unitPrice);
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+ }
+ 
+ export function applyDiscount(subtotal, discountCode) {
+@@ -10,7 +10,7 @@ export function applyDiscount(subtotal, discountCode) {
+   }
+ 
+   if (discountCode === "SAVE10") {
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+   }
+ 
+   throw new Error(`Unknown discount code: ${discountCode}`);
+diff --git a/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/tests/generated-regression.test.js b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/tests/generated-regression.test.js
+new file mode 100644
+index 0000000..d5bd9f6
+--- /dev/null
++++ b/homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005/app/tests/generated-regression.test.js
+@@ -0,0 +1,81 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { calculateLineTotal, applyDiscount } from "../src/quoteCalculator.js";
++import { loadCatalog } from "../src/catalogRepository.js";
++
++test("calculateLineTotal calculates correct line total with various quantities and decimal prices", () => {
++  // Case 1: Integer quantity, integer price
++  assert.equal(calculateLineTotal({ quantity: 3, unitPrice: 25 }), 75);
++
++  // Case 2: Integer quantity, decimal price
++  assert.equal(calculateLineTotal({ quantity: 3, unitPrice: 1.5 }), 4.5);
++
++  // Case 3: Quantity of 1, decimal price
++  assert.equal(calculateLineTotal({ quantity: 1, unitPrice: 0.99 }), 0.99);
++
++  // Case 4: Larger quantity, decimal price
++  assert.equal(calculateLineTotal({ quantity: 10, unitPrice: 12.34 }), 123.4);
++});
++
++test("applyDiscount calculates SAVE10 with decimal subtotal rounding", () => {
++  // Case 1: Simple subtotal
++  assert.equal(applyDiscount(100, "SAVE10"), 90);
++
++  // Case 2: Subtotal that results in a decimal requiring rounding (.995 -> .00)
++  assert.equal(applyDiscount(75.55, "SAVE10"), 68);
++
++  // Case 3: Subtotal that results in a decimal requiring rounding (.135 -> .14)
++  assert.equal(applyDiscount(10.15, "SAVE10"), 9.14);
++});
++
++test("applyDiscount throws an error for invalid discount codes", () => {
++  assert.throws(
++    () => applyDiscount(100, "INVALID_CODE"),
++    /Unknown discount code: INVALID_CODE/
++  );
++  assert.throws(
++    () => applyDiscount(50, "SPAM"),
++    /Unknown discount code: SPAM/
++  );
++});
++
++test("loadCatalog throws an error if catalogName is not alphanumeric (with hyphens and underscores)", async () => {
++  const invalidNames = [
++    "invalid.json",
++    "sub/directory",
++    "invalid!",
++    "with spaces",
++    ""
++  ];
++
++  for (const name of invalidNames) {
++    await assert.rejects(
++      () => loadCatalog(name),
++      /Invalid catalog name: must contain only alphanumeric characters, hyphens, and underscores/
++    );
++  }
++});
++
++test("loadCatalog prevents path traversal escaping catalog directory", async () => {
++  // Test that attempting path traversal throws an error
++  await assert.rejects(
++    () => loadCatalog("../default"),
++    /Invalid catalog name/
++  );
++
++  await assert.rejects(
++    () => loadCatalog("../../etc/passwd"),
++    /Invalid catalog name/
++  );
++});
++
++test("loadCatalog successfully loads a valid catalog", async () => {
++  const catalog = await loadCatalog("default");
++  assert.equal(catalog.currency, "USD");
++  assert.ok(Array.isArray(catalog.items));
++  assert.equal(catalog.items.length, 2);
++  assert.equal(catalog.items[0].sku, "WIDGET");
++  assert.equal(catalog.items[0].unitPrice, 25);
++  assert.equal(catalog.items[1].sku, "GADGET");
++  assert.equal(catalog.items[1].unitPrice, 12.5);
++});

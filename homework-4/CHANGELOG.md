@@ -1,5 +1,23 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 16: Open Code Pipeline Run with Gemini 3.5 Flash
+
+### Added
+- Added a fresh completed pipeline run evidence folder under `runs/bug-001/open-code-gemini-3.5-flash-run-005`.
+- Added 6 robust FIRST-compliant regression tests in `tests/generated-regression.test.js` covering line multiplication, SAVE10 discount decimal rounding, invalid discount code rejection, catalog loading, and path traversal defense-in-depth bounds.
+
+### Changed
+- Promoted `open-code-gemini-3.5-flash-run-005` to `app/current`.
+
+### Fixed
+- Fixed arithmetic bug in `quoteCalculator.js` by changing line total calculation from addition to multiplication.
+- Fixed SAVE10 discount bug in `quoteCalculator.js` by applying a 10% discount multiplier wrapped in `roundCurrency`.
+- Closed path traversal vulnerability (CWE-22) in `catalogRepository.js` using alphanumeric name validation regex `/^[a-zA-Z0-9_-]+$/` and resolved path boundary containment checks.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed successfully with 9 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 15: Open Code Pipeline Run open-code-run-004
 
 ### Added
