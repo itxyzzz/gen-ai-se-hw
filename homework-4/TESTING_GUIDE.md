@@ -30,8 +30,9 @@ Run commands from the repository root.
 - All four required agents exist and name their inputs and outputs.
 - Research verifier references `skills/research-quality-measurement.md`.
 - Unit test generator references `skills/unit-tests-FIRST.md`.
-- `runs/bug-001/codex-chat-gpt-5.4-run-001` contains metadata, app, patch, verified research, fix
-  summary, security report, test report, and command log.
+- `benchmark/bug-001/runs/` contains normalized benchmark metadata, copied
+  source reports, and any benchmark-owned repaired artifacts for all six runs.
+- Source snapshots under `runs/bug-001/` remain immutable after comparison.
 - `run-metadata.json` identifies adapter `codex-chat`.
 
 ## Current App Coverage

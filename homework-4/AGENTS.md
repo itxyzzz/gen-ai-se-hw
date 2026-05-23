@@ -12,8 +12,14 @@ skills, adapters, evidence, or benchmark artifacts.
   and run metadata.
 - Keep portable agent specs current-run based. Do not hard-code a specific
   `runs/<scenario>/<run-folder>` path inside agent instructions.
+- New run folders must use the strict normalized pattern
+  `run-<NNN>-<tool>-<pattern>`, where `NNN` is a three-digit sequence chosen
+  by scanning existing normalized run ids for the scenario and adding one.
 - If run evidence is renamed, update the run contract, metadata, benchmark
   artifacts, screenshots, and docs in the same change.
+- Treat preserved run evidence under `runs/<scenario>/` as immutable once it is
+  part of benchmark comparison. Put repaired or normalized comparison artifacts
+  under `benchmark/<scenario>/`.
 
 ## Pipeline Execution
 
@@ -45,3 +51,5 @@ Use this section when the user asks to compare, score, benchmark, or review runs
 - Score only completed runs with the required artifact contract.
 - Use `benchmark/scoring-rubric.md` as the scoring source.
 - Do not infer missing test or security results; record gaps plainly.
+- Use `benchmark/<scenario>/runs/run-<NNN>-<tool>-<pattern>/` for normalized
+  benchmark metadata, copied reports, and benchmark-only repaired artifacts.

@@ -1,5 +1,24 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 17: Snapshot-Safe Benchmark Normalization
+
+### Added
+- Added a fresh durable normalization design spec and implementation plan for `bug-001`.
+- Added normalized benchmark evidence under `benchmark/bug-001/runs/run-<NNN>-<tool>-<pattern>/` for all six preserved source runs.
+- Added benchmark-owned `source-map.json`, `run-metadata.normalized.json`, and `artifact-index.md` files for each normalized run.
+- Added a benchmark-owned synthesized `patch.diff` for the Nemotron run because its source snapshot preserved split patch files only.
+
+### Changed
+- Updated active pipeline instructions so future runs use the strict `run-<NNN>-<tool>-<pattern>` folder pattern.
+- Updated benchmark outputs to compare all six normalized runs using commit-sequence ordering.
+- Updated active documentation to distinguish immutable source run snapshots from normalized benchmark artifacts.
+
+### Fixed
+- Resolved inconsistent benchmark naming without modifying preserved source run folders or historical plan/spec snapshots.
+
+### Tests
+- Verified by snapshot-safety checks: source run folders must remain unchanged, and historical Superpowers specs/plans must only gain the new normalization spec and plan.
+
 ## Homework 4 - Step 16: Open Code Pipeline Run with Gemini 3.5 Flash
 
 ### Added

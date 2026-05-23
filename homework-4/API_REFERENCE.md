@@ -36,12 +36,12 @@ Adapter selection is determined by active tool context according to `homework-4/
 
 | Field | Description |
 | --- | --- |
-| `runId` | Run folder name under the scenario. |
+| `runId` | Normalized run folder name under the scenario: `run-<NNN>-<tool>-<pattern>`. |
 | `scenarioId` | Scenario such as `bug-001`. |
 | `adapter` | Text adapter used for the run, such as `codex-chat`. |
 | `provider` | Tool/provider label. |
 | `model` | Model or chat environment label. |
-| `runFolderName` | Filesystem-safe folder name including adapter and primary model. |
+| `runFolderName` | Same value as `runId`; filesystem-safe folder name including tool and primary model or pattern. |
 | `reasoningEffort` | Requested or selected reasoning depth. |
 | `status` | `completed` or a clearly documented blocked state. |
 | `pipelineCommand` | The one-phrase launch prompt. |
@@ -59,6 +59,12 @@ Adapter selection is determined by active tool context according to `homework-4/
 - `security-report.md`
 - `test-report.md`
 - `command-log.md`
+
+## Normalized Benchmark Artifacts
+
+Completed evidence snapshots under `runs/<scenario>/` are preserved. Benchmark
+normalization and repaired comparison metadata live under
+`benchmark/<scenario>/runs/run-<NNN>-<tool>-<pattern>/`.
 
 ## Application CLI
 

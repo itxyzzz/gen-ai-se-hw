@@ -8,8 +8,9 @@ flowchart TB
   Harness --> Adapter["adapters/codex-chat.md"]
   Harness --> Agents["agents/*.agent.md"]
   Harness --> Skills["skills/*.md"]
-  Agents --> Run["runs/bug-001/codex-chat-gpt-5.4-run-001"]
+  Agents --> Run["runs/bug-001/run-<NNN>-<tool>-<pattern>"]
   Run --> Current["app/current"]
+  Run --> Benchmark["benchmark/bug-001/runs/run-<NNN>-<tool>-<pattern>"]
   Adapter --> Portable["Claude Code / Open Code / Google Antigravity mappings"]
 ```
 
@@ -35,10 +36,12 @@ sequenceDiagram
 
 ## Run Isolation
 
-`app/baseline` is the immutable seeded input. The canonical run lives at
-`runs/bug-001/codex-chat-gpt-5.4-run-001`. Source edits happen in that run app first. After the
-required reports and checks are complete, the fixed app is represented in
-`app/current`.
+`app/baseline` is the immutable seeded input. New runs use
+`runs/bug-001/run-<NNN>-<tool>-<pattern>`. Source edits happen in that run app
+first. After the required reports and checks are complete, the fixed app is
+represented in `app/current`. Once evidence is benchmarked, source run folders
+are treated as immutable snapshots and normalized comparison files live under
+`benchmark/bug-001/runs/`.
 
 ## Adapter Behavior
 

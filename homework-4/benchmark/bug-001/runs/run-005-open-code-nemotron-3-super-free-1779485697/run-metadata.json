@@ -1,0 +1,1 @@
+{"runId": "1779485697", "adapter": "open-code", "model": "nemotron-3-super-free", "reasoning": "medium", "fallback": true, "fallbackReason": "Specified models in adapter not available, using strongest available model that matches policy tier", "runFolderName": "runs/bug-001/open-code-nemotron-3-super-free-1779485697"}

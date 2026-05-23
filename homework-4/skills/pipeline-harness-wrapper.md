@@ -47,10 +47,12 @@ assignment's stated run order.
 ## Workspace Rules
 
 - Baseline input: `homework-4/app/baseline`
-- Current run workspace: `homework-4/runs/bug-001/<adapter>-<primary-model>-<run-id>`
-- Submitted Codex evidence run: `homework-4/runs/bug-001/codex-chat-gpt-5.4-run-001`
-- New run folder naming: `<adapter>-<primary-model>-<run-id>`, lower-case and
-  filesystem safe.
+- Current run workspace: `homework-4/runs/bug-001/run-<NNN>-<tool>-<pattern>`
+- Normalized submitted Codex benchmark id:
+  `homework-4/benchmark/bug-001/runs/run-001-codex-chat-gpt-5.4`
+- New run folder naming: exactly `run-<NNN>-<tool>-<pattern>`, lower-case and
+  filesystem safe. `NNN` is three digits; choose it by scanning existing
+  normalized run ids for the scenario and adding one.
 - Fixed app evidence: `homework-4/app/current`
 - Do not edit `app/baseline`; it intentionally remains buggy.
 - Code edits happen only inside the selected run workspace, then may be copied
@@ -72,8 +74,9 @@ Every completed run must contain:
 - `command-log.md`
 
 `run-metadata.json` must include `runId`, `adapter`, `model`, and
-`runFolderName`. The folder name must include the adapter and primary model so
-the run is recognizable at a glance.
+`runFolderName`. Both `runId` and `runFolderName` must equal the normalized
+folder name, and the folder name must include the tool and primary model or
+pattern so the run is recognizable at a glance.
 
 ## Stop Conditions
 

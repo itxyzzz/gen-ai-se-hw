@@ -28,7 +28,8 @@ drop-in alternatives when they are available in Google Antigravity.
 Google Antigravity must execute the stages sequentially using its native background subagent delegation tools to prevent context bloat:
 
 1. **Environment Initialization:**
-   - Create the run workspace folder: `homework-4/runs/bug-001/google-antigravity-gemini-3.1-pro-run-001`.
+   - Create the run workspace folder with the normalized pattern, for example
+     `homework-4/runs/bug-001/run-001-google-antigravity-gemini-3.1-pro`.
    - Copy `homework-4/app/baseline` to the run workspace. Do not modify `app/baseline`.
    - Initialize `command-log.md` and `run-metadata.json` under the workspace.
 2. **Execute Stages sequentially using Subagents:**

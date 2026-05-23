@@ -1,0 +1,35 @@
+{
+  "runId": "run-005-open-code-nemotron-3-super-free-1779485697",
+  "runFolderName": "run-005-open-code-nemotron-3-super-free-1779485697",
+  "sourceRunFolderName": "open-code-nemotron-3-super-free-1779485697",
+  "scenarioId": "bug-001",
+  "adapter": "open-code",
+  "provider": "open-code",
+  "model": "nemotron-3-super-free",
+  "reasoningEffort": "medium",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "normalizedBy": "benchmark snapshot-safe normalization layer",
+  "currentPromoted": false,
+  "sourceMetadataPromoted": null,
+  "score": 89,
+  "scoreBreakdown": {
+    "correctness": 40,
+    "securityRemediation": 25,
+    "testQuality": 12,
+    "maintainabilityMinimality": 8,
+    "reproducibilityAutonomy": 4
+  },
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 15,
+    "totalTests": 18,
+    "testsPassing": true,
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": null
+  },
+  "notes": "Most extensive test count, but source snapshot lacks unified patch.diff, has sparse metadata, and appears partly manual/simulated.",
+  "uncertainties": "Manual intervention count and promotion status cannot be reliably determined from source metadata."
+}

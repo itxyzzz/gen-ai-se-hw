@@ -45,7 +45,9 @@ flowchart LR
   Open Code, Google Antigravity, and a generic capable-agent fallback.
 - Baseline app in `app/baseline` with seeded defects preserved.
 - Fixed app in `app/current`.
-- Canonical completed run evidence in `runs/bug-001/codex-chat-gpt-5.4-run-001`.
+- Immutable source run evidence in `runs/bug-001/`.
+- Normalized comparison evidence in `benchmark/bug-001/runs/run-001-codex-chat-gpt-5.4`
+  through `benchmark/bug-001/runs/run-006-open-code-gemini-3.5-flash`.
 - Text comparison rubric and scored evidence in `benchmark/`.
 
 ## Model Policy Choices
@@ -71,7 +73,8 @@ file.
 ## Quick Start
 
 1. In Codex chat, run the canonical phrase shown above.
-2. Review the resulting artifacts in `runs/bug-001/codex-chat-gpt-5.4-run-001`.
+2. Review normalized comparison artifacts in `benchmark/bug-001/` and source
+   snapshots in `runs/bug-001/`.
 3. Verify the fixed app:
 
 ```powershell

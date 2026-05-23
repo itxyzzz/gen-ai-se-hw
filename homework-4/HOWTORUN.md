@@ -19,8 +19,8 @@ Expected behavior:
 - Codex reads `homework-4/skills/pipeline-harness-wrapper.md`.
 - Codex loads `homework-4/adapters/codex-chat.md`.
 - Codex runs all six stages in order.
-- Codex writes or refreshes the required artifacts under
-  `homework-4/runs/bug-001/codex-chat-gpt-5.4-run-001`.
+- Codex writes or refreshes the required artifacts under a normalized run folder
+  such as `homework-4/runs/bug-001/run-007-codex-chat-gpt-5.5`.
 - Codex updates the fixed app evidence in `homework-4/app/current` only after
   required reports are complete.
 
@@ -96,7 +96,8 @@ discount.
 
 ## Review Artifacts
 
-- Canonical run: `runs/bug-001/codex-chat-gpt-5.4-run-001`
+- Normalized benchmark view: `benchmark/bug-001/`
+- Immutable source snapshots: `runs/bug-001/`
 - Harness skill: `skills/pipeline-harness-wrapper.md`
 - Codex adapter: `adapters/codex-chat.md`
 - Comparison rubric: `benchmark/scoring-rubric.md`

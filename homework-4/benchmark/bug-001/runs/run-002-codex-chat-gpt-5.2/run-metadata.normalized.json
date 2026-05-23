@@ -1,0 +1,35 @@
+{
+  "runId": "run-002-codex-chat-gpt-5.2",
+  "runFolderName": "run-002-codex-chat-gpt-5.2",
+  "sourceRunFolderName": "codex-chat-gpt-5.2-run-002",
+  "scenarioId": "bug-001",
+  "adapter": "codex-chat",
+  "provider": "openai-codex-chat",
+  "model": "gpt-5.2",
+  "reasoningEffort": "medium",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "normalizedBy": "benchmark snapshot-safe normalization layer",
+  "currentPromoted": false,
+  "sourceMetadataPromoted": true,
+  "score": 100,
+  "scoreBreakdown": {
+    "correctness": 40,
+    "securityRemediation": 25,
+    "testQuality": 15,
+    "maintainabilityMinimality": 10,
+    "reproducibilityAutonomy": 10
+  },
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 2,
+    "totalTests": 5,
+    "testsPassing": true,
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": 0
+  },
+  "notes": "Second Codex evidence run preserves the same fixed behavior and artifact contract with normalized benchmark naming; raw-responses is empty in the immutable source snapshot.",
+  "uncertainties": "Raw stage response auditability is weaker, but it is not part of the stated rubric."
+}
