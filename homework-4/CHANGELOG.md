@@ -5,13 +5,15 @@
 ### Added
 - Added final README reflections on Codex, Google Antigravity, Open Code, adapter portability, benchmark observations, and model cost/behavior differences.
 - Added a Homework 4 draft PR description under `docs/process-artifacts/`.
+- Added final PNG screenshots for Codex design, scaledown, Antigravity planning/agent work, Open Code adapter/pipeline runs, and Codex benchmark preparation.
 
 ### Changed
 - Clarified the top-level AI tool summary in `README.md`.
 - Removed a duplicated portable launch phrase section from `HOWTORUN.md`.
+- Replaced the earlier auto-generated SVG evidence references in the PR draft with the final screenshot sequence.
 
 ### Fixed
-- N/A
+- Removed the previous auto-generated SVG screenshot placeholders from `docs/screenshots/`.
 
 ### Tests
 - Final verification commands were rerun during submission preparation and recorded in the closing review notes.

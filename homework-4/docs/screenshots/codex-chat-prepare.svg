@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="300" viewBox="0 0 960 300">
-  <rect width="960" height="300" fill="#111827"/>
-  <text x="32" y="44" fill="#f9fafb" font-family="Consolas, monospace" font-size="24">Codex Chat Adapter</text>
-  <text x="32" y="92" fill="#93c5fd" font-family="Consolas, monospace" font-size="18">Codex runtime selects adapters/codex-chat.md</text>
-  <text x="32" y="140" fill="#f9fafb" font-family="Consolas, monospace" font-size="18">Context: harness wrapper, agents, skills, scenario, run artifacts</text>
-  <text x="32" y="188" fill="#93c5fd" font-family="Consolas, monospace" font-size="18">No JS adapter or prompt-packet generator is required</text>
-  <text x="32" y="236" fill="#d1d5db" font-family="Consolas, monospace" font-size="18">Validation: artifact contract + current app tests</text>
-</svg>

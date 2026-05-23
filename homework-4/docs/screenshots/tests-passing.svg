@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360">
-  <rect width="960" height="360" fill="#0b132b"/>
-  <text x="32" y="44" fill="#ffffff" font-family="Consolas, monospace" font-size="24">Test Evidence</text>
-  <text x="32" y="92" fill="#6fffe9" font-family="Consolas, monospace" font-size="18">$ npm test</text>
-  <text x="32" y="132" fill="#ffffff" font-family="Consolas, monospace" font-size="18">tests 11</text>
-  <text x="32" y="172" fill="#ffffff" font-family="Consolas, monospace" font-size="18">pass 11</text>
-  <text x="32" y="212" fill="#ffffff" font-family="Consolas, monospace" font-size="18">fail 0</text>
-  <text x="32" y="292" fill="#6fffe9" font-family="Consolas, monospace" font-size="18">Current app and harness verification passed.</text>
-</svg>

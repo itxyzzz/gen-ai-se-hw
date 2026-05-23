@@ -110,17 +110,25 @@ option observed was `$skill-name` references in Codex CLI.
 
 ## Screenshots
 
-Pipeline, preparation, test, security, and benchmark evidence:
+AI planning, adapter refinement, pipeline execution, and benchmark evidence:
 
-<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/codex-chat-prepare.svg" alt="Codex preparing the Homework 4 chat pipeline" width="300">
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2023_58_06-Codex-initial-design.png" alt="Codex initial Homework 4 pipeline design discussion" width="300">
 
-<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/pipeline-run.svg" alt="Homework 4 pipeline run evidence" width="300">
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2023_59_28-Codex-scaledown.png" alt="Codex scaling the implementation down to a text-only agentic pipeline" width="300">
 
-<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/security-report.svg" alt="Security verifier report evidence" width="300">
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_46_19-Antigravity-planning.png" alt="Google Antigravity planning adapter and harness improvements" width="300">
 
-<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/tests-passing.svg" alt="Unit tests passing evidence" width="300">
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_51_35-Antigravity-agents.png" alt="Google Antigravity agent separation and orchestration details" width="300">
 
-<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/benchmark-comparison.svg" alt="Normalized benchmark comparison evidence" width="300">
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_37_11-OpenCode-adapter.png" alt="Open Code adapter refinement for mixed model environments" width="300">
+
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_34_17-OpenCode-pipeline1.png" alt="Open Code pipeline run evidence part 1" width="300">
+
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_33_05-OpenCode-pipeline2.png" alt="Open Code pipeline run evidence part 2" width="300">
+
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-23%2000_31_21-OpenCode-pipeline3.png" alt="Open Code pipeline run evidence part 3" width="300">
+
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-4-submission/homework-4/docs/screenshots/2026-05-24%2000_00_29-Codex-benchmark.png" alt="Codex benchmark and comparison preparation" width="300">
 
 Additional screenshot artifacts are available in `homework-4/docs/screenshots/`.
 
