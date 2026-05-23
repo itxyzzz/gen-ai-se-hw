@@ -1,6 +1,6 @@
 # Homework 4: Pure Agentic Bug-Fixing Pipeline
 
-Author: `itanatarov`
+Author: `Igor Tanatarov`
 
 **AI Tools Used**: Codex (primary implementation and final prep); Google Antigravity (adapter and harness refinement); Open Code (adapter validation and benchmark runs)
 
