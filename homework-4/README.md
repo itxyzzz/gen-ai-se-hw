@@ -1,8 +1,10 @@
 # Homework 4: Pure Agentic Bug-Fixing Pipeline
 
-Author: `itanatarov`  
-**AI Tools Used**: Codex (Steps 0–9); Google Antigravity (Step 11 & universal adapter alignment)  
-*Note: Additional validation runs performed using Open Code adapter with Nemotron 3 Super (free) model.*
+Author: `itanatarov`
+
+**AI Tools Used**: Codex (primary implementation and final prep); Google Antigravity (adapter and harness refinement); Open Code (adapter validation and benchmark runs)
+
+*Note: Additional validation runs were performed with several Open Code models, including Nemotron 3 Super (free), Claude Sonnet 4.5, Big Pickle, and Gemini 3.5 Flash.*
 
 ## Overview
 
@@ -69,6 +71,46 @@ file.
 | Bug Fixer | `implementation-medium` | medium | Bounded code edits from a concrete plan. |
 | Security Verifier | `security-high` | high | Security review has higher blast radius. |
 | Unit Test Generator | `test-medium` | medium | Bounded test generation for changed code. |
+
+## AI Tools And Workflow Reflections
+
+Most of the work was done in the Codex app with Codex. The initial
+implementation included a Node.js script so the pipeline could be run literally
+through a slash-command-style entry point, but that was scaled down to keep the
+submission as a text-only agentic pipeline.
+
+That confusion reopened the question of how different agentic tools interpret
+"commands" and skill invocation. I intentionally extended the homework by
+making the pipeline flexible enough to port across several tools I have been
+looking at: Codex, Google Antigravity, and Open Code. They use different model
+sets; Open Code in particular can run free models, OpenAI subscription models,
+and a broad range of OpenRouter models.
+
+I used Google Antigravity to make further improvements to the pipeline:
+cleaner separation of agents, skills, the universal harness, and tool-specific
+adapters. I then had Antigravity and Open Code improve their respective
+adapters. Antigravity performed well in my opinion; it pointed out that its
+specific orchestration capabilities were underused by the generic instructions,
+so I let it add more concrete details to its adapter. The Open Code adapter
+probably still needs more work because it supports such a wide variety of model
+providers and model behaviors.
+
+Running the pipeline via Antigravity with Gemini 3.5 Flash did not finish
+because it hit free-account limits. Running the pipeline via Open Code showed
+how differently the models reason and orchestrate. The end result was successful
+for all completed runs, although this small scenario is probably too simple to
+separate them strongly. Gemini was aggressive about spawning sub-agents, while
+Nemotron 3 Super (free) complained that it was too restricted in the environment
+and did not spawn any.
+
+One notable hiccup was with Nemotron: after running the pipeline, it got caught
+up in the process and started trying to finish and improve the whole homework,
+which it had not been asked to do. I stopped that and reverted those unrelated
+changes. Per-token paid models cost consistently about `$2` per pipeline run.
+
+All tools used understand skill invocation either by name or by recognized
+intent, but none has Claude Code-style `/skill-name` commands. The closest
+option to that is skill reference via `$skill-name` in Codex CLI.
 
 ## Quick Start
 

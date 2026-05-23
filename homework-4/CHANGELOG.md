@@ -1,5 +1,21 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 18: Final PR Preparation
+
+### Added
+- Added final README reflections on Codex, Google Antigravity, Open Code, adapter portability, benchmark observations, and model cost/behavior differences.
+- Added a Homework 4 draft PR description under `docs/process-artifacts/`.
+
+### Changed
+- Clarified the top-level AI tool summary in `README.md`.
+- Removed a duplicated portable launch phrase section from `HOWTORUN.md`.
+
+### Fixed
+- N/A
+
+### Tests
+- Final verification commands were rerun during submission preparation and recorded in the closing review notes.
+
 ## Homework 4 - Step 17: Snapshot-Safe Benchmark Normalization
 
 ### Added

@@ -42,24 +42,6 @@ Adapter selection is automatic from active tool context (`homework-4/AGENTS.md`)
 
 Each adapter preserves the same stage order and artifact contract.
 
-## Portable Launch Phrases
-
-Use the same short launch phrase across tools:
-
-```text
-Run HW4 pipeline
-```
-
-Adapter selection is automatic from active tool context (`homework-4/AGENTS.md`):
-
-- Codex -> `adapters/codex-chat.md`
-- Claude Code -> `adapters/claude-code.md`
-- Open Code -> `adapters/open-code.md`
-- Google Antigravity -> `adapters/google-antigravity.md`
-- Other capable tools -> `adapters/generic-agent.md`
-
-Each adapter preserves the same stage order and artifact contract.
-
 ## Verify The Fixed App
 
 Run from the repository root:
