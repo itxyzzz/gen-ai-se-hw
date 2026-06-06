@@ -1,5 +1,24 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 26: Open Code Run 011 (gpt-5.4-mini)
+
+### Added
+- Added completed Open Code pipeline evidence under `runs/bug-001/run-011-open-code-gpt-5.4-mini/`.
+- Added `runtimeSubagentAudit` metadata showing the research, verification, planning, security, and test-report stages were delegated to task subagents.
+- Added run-specific `implementation-plan.md`, `fix-summary.md`, `security-report.md`, `test-report.md`, `command-log.md`, and `patch.diff` artifacts for the actual pipeline run.
+
+### Changed
+- Promoted `run-011-open-code-gpt-5.4-mini` to `app/current` by keeping the current app aligned with the verified run output.
+
+### Fixed
+- Fixed line totals by multiplying quantity and unit price.
+- Fixed `SAVE10` to apply a ten percent discount with currency rounding.
+- Fixed catalog loading to reject non-allow-listed names and to enforce resolved-path containment under `data/catalogs`.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 25: Open Code Run 010 (minimax-m3-free)
 
 ### Added

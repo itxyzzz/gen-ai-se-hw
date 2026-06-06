@@ -1,0 +1,251 @@
+{
+  "runId": "run-011-open-code-gpt-5.4-mini",
+  "runFolderName": "run-011-open-code-gpt-5.4-mini",
+  "adapter": "open-code",
+  "model": "gpt-5.4-mini",
+  "scenario": "bug-001",
+  "tool": "Open Code",
+  "launchPhrase": "Please run HW4 pipeline",
+  "startedAt": "2026-06-06T22:54:25+02:00",
+  "completedAt": "2026-06-06T23:06:28+02:00",
+  "status": "completed",
+  "promoted": true,
+  "models": {
+    "research-high": {
+      "modelPolicy": "research-high",
+      "model": "gpt-5.4-mini",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "verification-high": {
+      "modelPolicy": "verification-high",
+      "model": "gpt-5.4-mini",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "planning-high": {
+      "modelPolicy": "planning-high",
+      "model": "gpt-5.4-mini",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "implementation-medium": {
+      "modelPolicy": "implementation-medium",
+      "model": "gpt-5.4-mini",
+      "reasoning": "medium",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "security-high": {
+      "modelPolicy": "security-high",
+      "model": "gpt-5.4-mini",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "test-medium": {
+      "modelPolicy": "test-medium",
+      "model": "gpt-5.4-mini",
+      "reasoning": "medium",
+      "fallback": false,
+      "fallbackReason": null
+    }
+  },
+  "artifacts": [
+    "run-metadata.json",
+    "app/",
+    "patch.diff",
+    "research/codebase-research.md",
+    "research/verified-research.md",
+    "implementation-plan.md",
+    "fix-summary.md",
+    "security-report.md",
+    "test-report.md",
+    "command-log.md"
+  ],
+  "stages": [
+    {
+      "stageId": "bug-researcher",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-researcher.agent.md",
+      "modelPolicy": "research-high",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "high",
+      "output": "research/codebase-research.md"
+    },
+    {
+      "stageId": "research-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/research-verifier.agent.md",
+      "modelPolicy": "verification-high",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "high",
+      "skills": [
+        "homework-4/skills/research-quality-measurement.md"
+      ],
+      "output": "research/verified-research.md"
+    },
+    {
+      "stageId": "bug-planner",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-planner.agent.md",
+      "modelPolicy": "planning-high",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "high",
+      "output": "implementation-plan.md"
+    },
+    {
+      "stageId": "bug-fixer",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-fixer.agent.md",
+      "modelPolicy": "implementation-medium",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "medium",
+      "output": "fix-summary.md"
+    },
+    {
+      "stageId": "security-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/security-verifier.agent.md",
+      "modelPolicy": "security-high",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "high",
+      "output": "security-report.md"
+    },
+    {
+      "stageId": "unit-test-generator",
+      "status": "completed",
+      "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+      "modelPolicy": "test-medium",
+      "model": "gpt-5.4-mini",
+      "reasoningEffort": "medium",
+      "skills": [
+        "homework-4/skills/unit-tests-FIRST.md"
+      ],
+      "output": "test-report.md"
+    }
+  ],
+  "validation": {
+    "runWorkspaceTests": {
+      "command": "node --test --test-isolation=none tests/*.test.js",
+      "workingDirectory": "homework-4/runs/bug-001/run-011-open-code-gpt-5.4-mini/app",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "promotedCurrentTests": {
+      "command": "node --test --test-isolation=none homework-4/app/current/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "baselineTests": {
+      "command": "node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "failed-as-expected",
+      "pass": 0,
+      "fail": 3
+    }
+  },
+  "runtimeSubagentAudit": {
+    "schemaVersion": "1.0.0",
+    "collectionMode": "adapter-recorded",
+    "collector": "open-code-task-tool-and-manual-editor",
+    "subagentsExpected": true,
+    "subagentsUsed": true,
+    "operatorAuthorization": {
+      "status": "pipeline-mandated",
+      "notes": "The operator launched the HW4 pipeline with the canonical launch phrase 'Please run HW4 pipeline'. The launch intent mandates sub-agent stage execution; research, verification, planning, security, and test-report stages were delegated to task subagents, and the bug-fix edits were applied directly from the verified plan in the run workspace."
+    },
+    "unavailableReason": null,
+    "events": [
+      {
+        "stageId": "bug-researcher",
+        "agentFile": "homework-4/agents/bug-researcher.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "research-high",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "high",
+        "contextStrategy": "Loaded the scenario context and baseline app in an isolated task subagent; produced the research artifact for the current run.",
+        "status": "completed",
+        "evidenceSource": "research/codebase-research.md"
+      },
+      {
+        "stageId": "research-verifier",
+        "agentFile": "homework-4/agents/research-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "verification-high",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "high",
+        "contextStrategy": "Loaded the research-quality skill and verified the research claims against the baseline files in an isolated task subagent.",
+        "status": "completed",
+        "evidenceSource": "research/verified-research.md"
+      },
+      {
+        "stageId": "bug-planner",
+        "agentFile": "homework-4/agents/bug-planner.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "planning-high",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "high",
+        "contextStrategy": "Loaded verified research and the scenario implementation plan in an isolated task subagent; produced the run-specific implementation plan.",
+        "status": "completed",
+        "evidenceSource": "implementation-plan.md"
+      },
+      {
+        "stageId": "bug-fixer",
+        "agentFile": "homework-4/agents/bug-fixer.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "manual-edit",
+        "expectedModelPolicy": "implementation-medium",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "medium",
+        "contextStrategy": "Applied the verified source edits directly in the run workspace and validated them with the plan test commands.",
+        "status": "completed",
+        "evidenceSource": "fix-summary.md"
+      },
+      {
+        "stageId": "security-verifier",
+        "agentFile": "homework-4/agents/security-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "security-high",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "high",
+        "contextStrategy": "Loaded the fix summary and changed files in an isolated task subagent; performed the security review of the changed code only.",
+        "status": "completed",
+        "evidenceSource": "security-report.md"
+      },
+      {
+        "stageId": "unit-test-generator",
+        "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "test-medium",
+        "requestedModel": "gpt-5.4-mini",
+        "observedModel": "gpt-5.4-mini",
+        "reasoningEffort": "medium",
+        "contextStrategy": "Loaded the FIRST skill, fix summary, and changed files in an isolated task subagent; documented the changed-behavior coverage and test results.",
+        "status": "completed",
+        "evidenceSource": "test-report.md"
+      }
+    ]
+  }
+}
