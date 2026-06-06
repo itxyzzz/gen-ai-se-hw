@@ -6,13 +6,15 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
 
 export async function loadCatalog(catalogName = "default") {
-  if (typeof catalogName !== "string" || !/^[a-zA-Z0-9_-]+$/.test(catalogName)) {
+  if (!/^[A-Za-z0-9_-]+$/u.test(catalogName)) {
     throw new Error("Invalid catalog name.");
   }
 
-  const catalogPath = path.resolve(catalogDirectory, `${catalogName}.json`);
-  const relativePath = path.relative(catalogDirectory, catalogPath);
-  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
+  const resolvedCatalogPath = path.resolve(catalogDirectory, catalogPath);
+  const relativeCatalogPath = path.relative(catalogDirectory, resolvedCatalogPath);
+
+  if (relativeCatalogPath.startsWith("..") || path.isAbsolute(relativeCatalogPath)) {
     throw new Error("Invalid catalog name.");
   }
 

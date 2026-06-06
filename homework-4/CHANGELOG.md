@@ -1,5 +1,24 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 24: Codex Chat Run 008
+
+### Added
+- Added completed Codex Chat pipeline evidence under `runs/bug-001/run-008-codex-chat-gpt-5.4/`.
+- Added `runtimeSubagentAudit` metadata showing all six stages ran through Codex sub-agents.
+- Added generated catalog validation tests for valid catalog loading and unsupported catalog-name characters.
+
+### Changed
+- Promoted `run-008-codex-chat-gpt-5.4` to `app/current`.
+
+### Fixed
+- Fixed line totals by multiplying quantity and unit price.
+- Fixed `SAVE10` to apply a ten percent discount with currency rounding.
+- Fixed catalog loading to reject unsafe names before reading catalog files.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 5 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 23: Mandatory Sub-Agent Pipeline Contract
 
 ### Added
