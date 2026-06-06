@@ -59,6 +59,20 @@ Provider aliases can differ by platform. Use the closest equivalent available mo
 - Commands and tests: `bash`
 - Optional stage isolation: `task` subagents when available
 
+## Runtime Sub-Agent Audit
+
+Populate `runtimeSubagentAudit` in `run-metadata.json`. Use
+`collectionMode: "plugin-event"` when Open Code plugin events such as
+`tool.execute.before` and `tool.execute.after` capture task-subagent execution.
+When plugin capture is not configured but the adapter records task usage in the
+orchestration flow or command log, use `collectionMode: "adapter-recorded"`.
+
+Each audit event should identify the stage, agent file, task/subagent launch
+mechanism, selected model, fallback details when relevant, status, and evidence
+source. If Open Code cannot expose reliable runtime task evidence, use
+`collectionMode: "manual-unavailable"` with the reason and the planned
+policy-relative model information.
+
 ## Execution Rules
 
 - Execute the six stages in harness order.
@@ -74,6 +88,7 @@ Provider aliases can differ by platform. Use the closest equivalent available mo
 - Adapter name in metadata is `open-code`.
 - All required artifacts are present and non-empty.
 - `run-metadata.json` includes per-stage model selection and fallback details when fallback is used.
+- `run-metadata.json` contains `runtimeSubagentAudit`.
 - Tests were run or a blocker is recorded in `command-log.md`.
 - Security verifier remains report-only and does not edit code.
 - The benchmark rubric can be applied manually to the completed artifacts.

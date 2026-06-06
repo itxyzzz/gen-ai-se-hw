@@ -10,6 +10,7 @@ Use this adapter only when the active tool has no dedicated adapter and can stil
 - Keep source edits inside the current run's `app/` directory before promotion. Keep `app/baseline` immutable.
 - Record missing model controls or command limitations in `run-metadata.json`.
 - Capable tools are directed to inspect and implement the `## Reusable Agentic Execution Extensions` (subagents, reflection loops, and local static tools) defined in `skills/pipeline-harness-wrapper.md` if their active environment supports them.
+- Populate `runtimeSubagentAudit` in `run-metadata.json` using the best runtime evidence the tool exposes. Use `adapter-recorded` when only orchestrator notes are available, or `manual-unavailable` with a reason when reliable runtime evidence cannot be exposed.
 
 ## Model Guidance
 

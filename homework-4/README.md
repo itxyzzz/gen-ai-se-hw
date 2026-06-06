@@ -63,6 +63,12 @@ agentic tool. Concrete model selections are adapter-specific and are recorded in
 the adapter instructions and run metadata rather than duplicated in every agent
 file.
 
+Future pipeline runs also record runtime sub-agent evidence in
+`run-metadata.json` under `runtimeSubagentAudit`. That keeps the enforcement
+portable by schema: Claude Code, Google Antigravity, Open Code, Codex, and
+generic tools can use different hooks or adapter records while preserving the
+same compact audit shape.
+
 | Stage | Model policy | Reasoning | Why |
 | --- | --- | --- | --- |
 | Bug Researcher | `research-high` | high | Needs accurate source and symptom correlation. |

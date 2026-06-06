@@ -51,10 +51,26 @@ Google Antigravity must execute the stages sequentially using its native backgro
    - Copy the run folder's app to `homework-4/app/current`.
    - Set `"promoted": true` in `run-metadata.json` and log the promotion.
 
+## Runtime Sub-Agent Audit
+
+Populate `runtimeSubagentAudit` in `run-metadata.json` with
+`collectionMode: "native-hook"` when Google Antigravity hook events are
+available. Capture sub-agent invocations with `PostToolUse` matched to
+`invoke_subagent`; include `define_subagent` evidence where it identifies the
+stage role, model, or subagent profile. Use a `Stop` hook as the final
+completeness gate when available.
+
+Map runtime evidence into compact audit events. Include stage id, agent file,
+launch mechanism, expected model policy, requested or observed Gemini model,
+reasoning effort, status, and evidence source when exposed. If native events are
+not available for a run, use `collectionMode: "adapter-recorded"` or
+`manual-unavailable` with a clear reason.
+
 ## Validation Checklist
 
 - `run-metadata.json` specifies adapter name as `google-antigravity` and concrete Gemini models.
 - Spawning dedicated subagents via `define_subagent` and `invoke_subagent` is logged.
+- `run-metadata.json` contains `runtimeSubagentAudit`.
 - Security report is strictly read-only and does not modify code files.
 - Unit test report includes FIRST assessment.
 - Verified fixed app promoted to `app/current` passes all tests.

@@ -73,10 +73,42 @@ Every completed run must contain:
 - `test-report.md`
 - `command-log.md`
 
-`run-metadata.json` must include `runId`, `adapter`, `model`, and
-`runFolderName`. Both `runId` and `runFolderName` must equal the normalized
-folder name, and the folder name must include the tool and primary model or
-pattern so the run is recognizable at a glance.
+`run-metadata.json` must include `runId`, `adapter`, `model`,
+`runFolderName`, and `runtimeSubagentAudit`. Both `runId` and
+`runFolderName` must equal the normalized folder name, and the folder name must
+include the tool and primary model or pattern so the run is recognizable at a
+glance.
+
+## Runtime Sub-Agent Audit
+
+Every future completed or blocked run must include a compact
+`runtimeSubagentAudit` object in `run-metadata.json`. This object is the
+portable enforcement layer for de-facto sub-agent use; hooks, plugins, and
+tool events are adapter-specific ways to populate it.
+
+Required fields:
+
+- `schemaVersion`: use `1.0.0`.
+- `collectionMode`: one of `native-hook`, `plugin-event`,
+  `adapter-recorded`, or `manual-unavailable`.
+- `collector`: short label for the hook, plugin, adapter, or manual collection
+  path.
+- `subagentsExpected`: whether this adapter expected sub-agent delegation for
+  the run.
+- `subagentsUsed`: whether runtime evidence shows at least one sub-agent was
+  used.
+- `unavailableReason`: required when `collectionMode` is
+  `manual-unavailable`; otherwise `null` or omitted.
+- `events`: one compact entry per observed or intentionally not-delegated
+  stage.
+
+Each event should record `stageId`, `agentFile`, `subagentUsed`,
+`launchMechanism`, `expectedModelPolicy`, `requestedModel`, `observedModel`,
+`reasoningEffort`, `contextStrategy`, `status`, and `evidenceSource` when the
+active tool exposes those values. Missing runtime details may be `null`,
+omitted, or explained briefly in `notes`. Do not copy raw hook payloads, long
+transcripts, or long report text into metadata unless they are needed to explain
+a blocker.
 
 ## Stop Conditions
 
@@ -84,6 +116,8 @@ Stop and record the blocker in `command-log.md` and `run-metadata.json` when:
 
 - a required input file is missing;
 - a stage cannot produce its required artifact;
+- `runtimeSubagentAudit` is missing, unless the run records
+  `collectionMode: "manual-unavailable"` with a clear unavailable reason;
 - the Bug Fixer changes files outside the run workspace;
 - tests fail after the final Unit Test Generator stage;
 - the Security Verifier finds unresolved CRITICAL, HIGH, or MEDIUM issues in
@@ -115,6 +149,8 @@ These optional but recommended extensions apply when the active assistant or orc
 ## Completion Checklist
 
 - All six stages are listed in `run-metadata.json`.
+- `runtimeSubagentAudit` records actual sub-agent use, or a clear unavailable
+  reason when runtime evidence cannot be exposed by the tool.
 - Required skills are named in the stages that used them.
 - Required artifacts exist and are non-empty.
 - `app/current` matches the selected fixed run.

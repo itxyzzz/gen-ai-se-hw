@@ -36,9 +36,24 @@ Concrete Anthropic Claude model policies:
 - Preserve all report names exactly so the same benchmark rubric can compare runs from different tools.
 - If the environment permits automated command running, execute unit tests after code changes and perform self-correction if tests fail (up to 3 attempts), aligned with the harness's optional extensions.
 
+## Runtime Sub-Agent Audit
+
+Populate `runtimeSubagentAudit` in `run-metadata.json` with
+`collectionMode: "native-hook"` when Claude Code hooks are configured. Capture
+sub-agent launches with `PostToolUse` matched to the `Agent` tool, use
+`SubagentStart` and `SubagentStop` for lifecycle or transcript evidence when
+available, and use a `Stop` hook as the final completeness gate when available.
+
+Map hook evidence into compact audit events. Include stage id, agent file,
+subagent type, requested or observed model, reasoning effort, status, transcript
+path, token usage, and notes when exposed. If hooks are unavailable, use
+`collectionMode: "adapter-recorded"` for explicit orchestrator records, or
+`manual-unavailable` with a reason.
+
 ## Validation Checklist
 
 - Confirm all six stages ran in order.
 - Confirm required artifacts exist and are complete.
 - Confirm test commands and outcomes are recorded in `command-log.md`.
 - Confirm `run-metadata.json` identifies adapter `claude-code` and concrete Claude models.
+- Confirm `run-metadata.json` contains `runtimeSubagentAudit`.

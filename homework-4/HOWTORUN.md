@@ -23,6 +23,8 @@ Expected behavior:
   such as `homework-4/runs/bug-001/run-007-codex-chat-gpt-5.5`.
 - Codex updates the fixed app evidence in `homework-4/app/current` only after
   required reports are complete.
+- The run metadata includes `runtimeSubagentAudit`, recording whether
+  sub-agents actually ran and which collection mode supplied the evidence.
 
 ## Portable Launch Phrases
 
@@ -83,3 +85,8 @@ discount.
 - Harness skill: `skills/pipeline-harness-wrapper.md`
 - Codex adapter: `adapters/codex-chat.md`
 - Comparison rubric: `benchmark/scoring-rubric.md`
+
+After a new run, inspect `run-metadata.json` and confirm
+`runtimeSubagentAudit.collectionMode`, `subagentsUsed`, and the per-stage
+events. If the collection mode is `manual-unavailable`, the metadata must state
+why runtime sub-agent evidence could not be exposed.

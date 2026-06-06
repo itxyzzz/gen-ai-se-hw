@@ -44,6 +44,18 @@ modifying files.
    - Generate `patch.diff` between the baseline app and the current run app.
    - Record promotion in `command-log.md` and mark `"promoted": true` in `run-metadata.json`.
 
+## Runtime Sub-Agent Audit
+
+Populate `runtimeSubagentAudit` in `run-metadata.json`. Use native Codex hooks
+only when the active Codex surface exposes reliable hook coverage and sub-agent
+metadata. Otherwise record stage delegation decisions at the adapter or
+orchestrator boundary with `collectionMode: "adapter-recorded"`.
+
+If no reliable runtime sub-agent evidence is exposed, use
+`collectionMode: "manual-unavailable"` with a clear unavailable reason and the
+planned model policy evidence. Keep the audit compact; do not copy raw
+transcripts or long stage outputs into metadata.
+
 ## Validation Checklist
 
 - `research-verifier` uses `skills/research-quality-measurement.md`.
@@ -51,6 +63,7 @@ modifying files.
 - `security-verifier` writes only `security-report.md`.
 - `run-metadata.json` uses adapter `codex-chat`, selected concrete models, and a
   folder name containing the adapter and primary model.
+- `run-metadata.json` contains `runtimeSubagentAudit`.
 - Current app tests pass after promotion.
 
 ## Limitations

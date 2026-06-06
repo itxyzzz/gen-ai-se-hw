@@ -53,6 +53,16 @@ are treated as immutable snapshots and normalized comparison files live under
 Adapters preserve the same artifact contract. They do not include executable
 wrapper code.
 
+## Runtime Audit Portability
+
+Sub-agent hooks are tool-specific, so they are not the portable layer. Claude
+Code can capture `Agent` tool events, Google Antigravity can capture
+`invoke_subagent` events, Open Code can use plugin events, and Codex may need
+adapter-recorded evidence depending on the active surface. The portable
+enforcement layer is `runtimeSubagentAudit` inside `run-metadata.json`; every
+future run records actual sub-agent use there, or records why reliable runtime
+evidence is unavailable.
+
 ## Safety Rules
 
 - Do not edit previous homework folders.

@@ -1,5 +1,17 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 20: Runtime Sub-Agent Audit Contract
+
+### Added
+- Added a portable `runtimeSubagentAudit` contract for future pipeline runs.
+
+### Changed
+- Updated the pipeline harness, adapters, and homework documentation so de-facto sub-agent use is recorded in `run-metadata.json`.
+
+### Tests
+- Verified documentation coverage for `runtimeSubagentAudit` across the harness, adapters, and homework docs.
+- Verified preserved source and benchmark evidence folders were not edited.
+
 ## Homework 4 - Step 19: Runtime Sub-Agent Audit Planning
 
 ### Added

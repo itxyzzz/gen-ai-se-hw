@@ -47,6 +47,21 @@ Adapter selection is determined by active tool context according to `homework-4/
 | `pipelineCommand` | The one-phrase launch prompt. |
 | `metrics` | Bug, security, test, and verification measurements. |
 | `promoted` | Whether this run was copied to `app/current`. |
+| `runtimeSubagentAudit` | Portable evidence of de-facto sub-agent use and runtime model visibility for the run. |
+
+`runtimeSubagentAudit.collectionMode` must be one of:
+
+| Value | Meaning |
+| --- | --- |
+| `native-hook` | Native hook or lifecycle event captured runtime sub-agent execution. |
+| `plugin-event` | Plugin event captured runtime sub-agent execution. |
+| `adapter-recorded` | Adapter or orchestrator recorded runtime choices because native events were unavailable, incomplete, or non-portable. |
+| `manual-unavailable` | The tool cannot expose reliable runtime sub-agent evidence; `unavailableReason` must explain why. |
+
+Audit events should stay compact. They record stage id, agent file, whether a
+sub-agent was used, launch mechanism, model policy, requested or observed
+model, reasoning effort, status, and evidence source when the active tool
+exposes those details.
 
 ## Required Run Artifacts
 

@@ -34,6 +34,13 @@ Run commands from the repository root.
   source reports, and any benchmark-owned repaired artifacts for all six runs.
 - Source snapshots under `runs/bug-001/` remain immutable after comparison.
 - `run-metadata.json` identifies adapter `codex-chat`.
+- Future `run-metadata.json` files include `runtimeSubagentAudit`.
+- `runtimeSubagentAudit.collectionMode` is `native-hook`, `plugin-event`,
+  `adapter-recorded`, or `manual-unavailable`.
+- Each future stage has observed runtime evidence or a clear unavailable or
+  not-used note.
+- Existing source and benchmark snapshots are not rewritten for the runtime
+  audit contract.
 
 ## Current App Coverage
 
