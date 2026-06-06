@@ -1,0 +1,201 @@
+{
+  "runId": "run-007-codex-chat-gpt-5.4",
+  "runFolderName": "run-007-codex-chat-gpt-5.4",
+  "adapter": "codex-chat",
+  "model": "gpt-5.4",
+  "models": {
+    "research-high": {
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "verification-high": {
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "planning-high": {
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "implementation-medium": {
+      "model": "gpt-5.3-codex",
+      "reasoning": "medium"
+    },
+    "security-high": {
+      "model": "gpt-5.4",
+      "reasoning": "high"
+    },
+    "test-medium": {
+      "model": "gpt-5.3-codex",
+      "reasoning": "medium"
+    }
+  },
+  "scenario": "bug-001",
+  "status": "completed",
+  "promoted": true,
+  "artifacts": [
+    "run-metadata.json",
+    "app/",
+    "patch.diff",
+    "research/verified-research.md",
+    "implementation-plan.md",
+    "fix-summary.md",
+    "security-report.md",
+    "test-report.md",
+    "command-log.md"
+  ],
+  "stages": [
+    {
+      "stageId": "bug-researcher",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-researcher.agent.md",
+      "output": "research/codebase-research.md"
+    },
+    {
+      "stageId": "research-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/research-verifier.agent.md",
+      "skills": [
+        "homework-4/skills/research-quality-measurement.md"
+      ],
+      "output": "research/verified-research.md"
+    },
+    {
+      "stageId": "bug-planner",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-planner.agent.md",
+      "output": "implementation-plan.md"
+    },
+    {
+      "stageId": "bug-fixer",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-fixer.agent.md",
+      "output": "fix-summary.md"
+    },
+    {
+      "stageId": "security-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/security-verifier.agent.md",
+      "output": "security-report.md"
+    },
+    {
+      "stageId": "unit-test-generator",
+      "status": "completed",
+      "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+      "skills": [
+        "homework-4/skills/unit-tests-FIRST.md"
+      ],
+      "output": "test-report.md"
+    }
+  ],
+  "validation": {
+    "runWorkspaceTests": {
+      "command": "node --test --test-isolation=none tests/*.test.js",
+      "workingDirectory": "homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "promotedCurrentTests": {
+      "command": "node --test --test-isolation=none homework-4/app/current/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "baselineTests": {
+      "command": "node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "failed-as-expected",
+      "pass": 0,
+      "fail": 3
+    }
+  },
+  "runtimeSubagentAudit": {
+    "schemaVersion": "1.0.0",
+    "collectionMode": "manual-unavailable",
+    "collector": "codex-chat-adapter-record",
+    "subagentsExpected": false,
+    "subagentsUsed": false,
+    "unavailableReason": "The current Codex multi-agent tool contract only permits spawning when the user explicitly asks for sub-agents or delegation. The launch phrase authorized the Homework 4 pipeline stages, but not native runtime sub-agent spawning, so stages were executed directly by the orchestrator.",
+    "events": [
+      {
+        "stageId": "bug-researcher",
+        "agentFile": "homework-4/agents/bug-researcher.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "research-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": null,
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded scenario and baseline app context in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "research/codebase-research.md"
+      },
+      {
+        "stageId": "research-verifier",
+        "agentFile": "homework-4/agents/research-verifier.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "verification-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": null,
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded research quality skill and verified source references in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "research/verified-research.md"
+      },
+      {
+        "stageId": "bug-planner",
+        "agentFile": "homework-4/agents/bug-planner.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "planning-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": null,
+        "reasoningEffort": "high",
+        "contextStrategy": "converted verified research and scenario plan in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "implementation-plan.md"
+      },
+      {
+        "stageId": "bug-fixer",
+        "agentFile": "homework-4/agents/bug-fixer.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "implementation-medium",
+        "requestedModel": "gpt-5.3-codex",
+        "observedModel": null,
+        "reasoningEffort": "medium",
+        "contextStrategy": "applied bounded run-workspace edits in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "fix-summary.md"
+      },
+      {
+        "stageId": "security-verifier",
+        "agentFile": "homework-4/agents/security-verifier.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "security-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": null,
+        "reasoningEffort": "high",
+        "contextStrategy": "reviewed changed files and fix summary in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "security-report.md"
+      },
+      {
+        "stageId": "unit-test-generator",
+        "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+        "subagentUsed": false,
+        "launchMechanism": "direct-orchestrator-stage",
+        "expectedModelPolicy": "test-medium",
+        "requestedModel": "gpt-5.3-codex",
+        "observedModel": null,
+        "reasoningEffort": "medium",
+        "contextStrategy": "loaded FIRST skill and generated changed-behavior tests in parent Codex session",
+        "status": "completed",
+        "evidenceSource": "test-report.md"
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+diff --git a/homework-4/app/baseline/src/catalogRepository.js b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/src/catalogRepository.js
+index e7d587c..8fcee83 100644
+--- a/homework-4/app/baseline/src/catalogRepository.js
++++ b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/src/catalogRepository.js
+@@ -6,7 +6,16 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+ const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
+ 
+ export async function loadCatalog(catalogName = "default") {
+-  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  if (typeof catalogName !== "string" || !/^[a-zA-Z0-9_-]+$/.test(catalogName)) {
++    throw new Error("Invalid catalog name.");
++  }
++
++  const catalogPath = path.resolve(catalogDirectory, `${catalogName}.json`);
++  const relativePath = path.relative(catalogDirectory, catalogPath);
++  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
++    throw new Error("Invalid catalog name.");
++  }
++
+   const rawCatalog = await readFile(catalogPath, "utf8");
+   return JSON.parse(rawCatalog);
+ }
+diff --git a/homework-4/app/baseline/src/quoteCalculator.js b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/src/quoteCalculator.js
+index c9e90e3..eb2602c 100644
+--- a/homework-4/app/baseline/src/quoteCalculator.js
++++ b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/src/quoteCalculator.js
+@@ -1,7 +1,7 @@
+ export function calculateLineTotal(item) {
+   assertPositiveQuantity(item.quantity);
+   assertNonNegativePrice(item.unitPrice);
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+ }
+ 
+ export function applyDiscount(subtotal, discountCode) {
+@@ -10,7 +10,7 @@ export function applyDiscount(subtotal, discountCode) {
+   }
+ 
+   if (discountCode === "SAVE10") {
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+   }
+ 
+   throw new Error(`Unknown discount code: ${discountCode}`);
+diff --git a/homework-4/app/baseline/tests/quoteCalculator.test.js b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/tests/quoteCalculator.test.js
+index 710a1e3..3d0cb7c 100644
+--- a/homework-4/app/baseline/tests/quoteCalculator.test.js
++++ b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/tests/quoteCalculator.test.js
+@@ -11,7 +11,24 @@ test("calculates line totals by multiplying quantity and unit price", () => {
+   assert.equal(quote.subtotal, 75);
+ });
+ 
++test("sums multiplied line totals across quote items", () => {
++  const quote = calculateQuote([
++    { sku: "WIDGET", quantity: 2, unitPrice: 12.5 },
++    { sku: "SERVICE", quantity: 4, unitPrice: 7.25 }
++  ]);
++
++  assert.deepEqual(
++    quote.lines.map((line) => line.lineTotal),
++    [25, 29]
++  );
++  assert.equal(quote.subtotal, 54);
++});
++
+ test("applies SAVE10 as ten percent discount", () => {
+   assert.equal(applyDiscount(100, "SAVE10"), 90);
+   assert.equal(applyDiscount(75, "SAVE10"), 67.5);
+ });
++
++test("rounds SAVE10 percentage discounts to currency precision", () => {
++  assert.equal(applyDiscount(19.99, "SAVE10"), 17.99);
++});
+diff --git a/homework-4/app/baseline/tests/security.test.js b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/tests/security.test.js
+index 4da69ed..b868295 100644
+--- a/homework-4/app/baseline/tests/security.test.js
++++ b/homework-4/runs/bug-001/run-007-codex-chat-gpt-5.4/app/tests/security.test.js
+@@ -8,3 +8,16 @@ test("rejects catalog names that escape the catalog directory", async () => {
+     /Invalid catalog name/
+   );
+ });
++
++test("rejects absolute catalog paths", async () => {
++  await assert.rejects(
++    () => loadCatalog("/tmp/default"),
++    /Invalid catalog name/
++  );
++});
++
++test("loads allowlisted catalog names", async () => {
++  const catalog = await loadCatalog("default");
++
++  assert.equal(catalog.items.length, 2);
++});

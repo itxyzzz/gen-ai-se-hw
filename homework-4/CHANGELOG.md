@@ -11,6 +11,25 @@
 ### Tests
 - Planning freeze checks verify the approved artifacts are non-placeholder and staged with the required changelog entry.
 
+## Homework 4 - Step 21: Codex Chat Run 007
+
+### Added
+- Added completed Codex Chat pipeline evidence under `runs/bug-001/run-007-codex-chat-gpt-5.4/`.
+- Added generated regression coverage for multi-line quote totals, SAVE10 rounding, absolute catalog path rejection, and valid catalog loading.
+- Added `runtimeSubagentAudit` metadata for the run, including the current Codex sub-agent spawning limitation.
+
+### Changed
+- Promoted `run-007-codex-chat-gpt-5.4` to `app/current`.
+
+### Fixed
+- Fixed line totals by multiplying quantity and unit price.
+- Fixed `SAVE10` to apply a ten percent discount with currency rounding.
+- Fixed catalog loading to reject unsafe names and enforce resolved path containment.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 20: Runtime Sub-Agent Audit Contract
 
 ### Added
