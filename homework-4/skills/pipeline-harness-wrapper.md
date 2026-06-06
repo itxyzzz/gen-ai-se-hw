@@ -15,6 +15,10 @@ required skills, scenario inputs, and then run the complete stage chain without
 asking for manual per-agent invocation. Ask the user for adapter selection only
 when no dedicated adapter exists and no generic mapping can be applied safely.
 
+This launch intent also mandates sub-agent stage execution. Do not require
+extra prompt keywords or an additional default confirmation before spawning
+sub-agents.
+
 ## Required Context To Load
 
 Read these files before stage execution:
@@ -43,6 +47,28 @@ Run exactly:
 The four assignment-required agents are `research-verifier`, `bug-fixer`,
 `security-verifier`, and `unit-test-generator`. The helper stages preserve the
 assignment's stated run order.
+
+## Required Sub-Agent Execution
+
+The pipeline must run with sub-agents. Before `bug-researcher`, the orchestrator
+must evaluate whether the active tool can spawn sub-agents:
+
+1. **Tooling available:** spawn one sub-agent per stage without asking for
+   additional confirmation. The launch intent already requires this behavior.
+2. **Tooling available but blocked by tool-level authorization:** stop and ask
+   the operator to authorize sub-agent spawning. Do not ask for fallback first,
+   and do not run stages directly while waiting.
+3. **Tooling unavailable:** ask whether the operator explicitly approves direct
+   execution fallback or wants the run blocked.
+
+Not being authorized is not an excuse to skip sub-agents. If the active tool can
+spawn sub-agents but requires explicit operator authorization, the orchestrator
+must ask for that authorization and then continue with sub-agents if approved.
+
+Direct execution in the parent session is allowed only when sub-agent tooling is
+unavailable, or the authorization path still cannot spawn sub-agents, and the
+operator explicitly approves fallback for that run. Otherwise record a blocked
+run if a run folder already exists, or stop before creating run artifacts.
 
 ## Workspace Rules
 
@@ -97,6 +123,9 @@ Required fields:
   the run.
 - `subagentsUsed`: whether runtime evidence shows at least one sub-agent was
   used.
+- `operatorAuthorization`: compact record of whether spawning proceeded from
+  the pipeline mandate, after a tool-required authorization request, or with an
+  explicitly approved direct fallback.
 - `unavailableReason`: required when `collectionMode` is
   `manual-unavailable`; otherwise `null` or omitted.
 - `events`: one compact entry per observed or intentionally not-delegated
@@ -115,6 +144,10 @@ a blocker.
 Stop and record the blocker in `command-log.md` and `run-metadata.json` when:
 
 - a required input file is missing;
+- sub-agent tooling is available but spawning is not authorized after the
+  required authorization request;
+- sub-agent tooling is unavailable and direct fallback is not explicitly
+  approved;
 - a stage cannot produce its required artifact;
 - `runtimeSubagentAudit` is missing, unless the run records
   `collectionMode: "manual-unavailable"` with a clear unavailable reason;
@@ -132,10 +165,14 @@ verified, copy the fixed run app into `homework-4/app/current`, keep
 
 ## Reusable Agentic Execution Extensions
 
-These optional but recommended extensions apply when the active assistant or orchestrator tool has advanced agentic capabilities (e.g., subagent spawning, terminal command execution, and programmatic file writing). They allow tools to improve reproducibility and minimize manual steps.
+These extensions apply when the active assistant or orchestrator tool has
+advanced agentic capabilities (e.g., subagent spawning, terminal command
+execution, and programmatic file writing). They allow tools to improve
+reproducibility and minimize manual steps.
 
 ### 1. Subagent Context Isolation
-- Spawning dedicated subagents for each of the 6 stages is highly recommended to isolate context, maintain focus, and prevent model distraction.
+- Spawning dedicated subagents for each of the 6 stages is required when
+  sub-agent tooling is available.
 - When spawning subagents, pass only the relevant agent specification (`agents/*.agent.md`), inputs, baseline, and scenario context. Do not pollute the subagent context with other stages' progress.
 
 ### 2. Autonomous Reflection & Self-Correction
@@ -149,8 +186,10 @@ These optional but recommended extensions apply when the active assistant or orc
 ## Completion Checklist
 
 - All six stages are listed in `run-metadata.json`.
-- `runtimeSubagentAudit` records actual sub-agent use, or a clear unavailable
-  reason when runtime evidence cannot be exposed by the tool.
+- `runtimeSubagentAudit` records actual sub-agent use. If no sub-agents were
+  used, metadata records unavailable tooling or an explicit fallback approval.
+- `runtimeSubagentAudit.operatorAuthorization` records `pipeline-mandated`,
+  `authorized-after-tool-gate`, `fallback-approved`, or `declined`.
 - Required skills are named in the stages that used them.
 - Required artifacts exist and are non-empty.
 - `app/current` matches the selected fixed run.

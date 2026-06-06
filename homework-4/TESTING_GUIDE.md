@@ -37,8 +37,19 @@ Run commands from the repository root.
 - Future `run-metadata.json` files include `runtimeSubagentAudit`.
 - `runtimeSubagentAudit.collectionMode` is `native-hook`, `plugin-event`,
   `adapter-recorded`, or `manual-unavailable`.
+- `runtimeSubagentAudit.subagentsExpected` is `true` for HW4 pipeline runs.
+- `runtimeSubagentAudit.subagentsUsed` is `true` unless direct fallback was
+  explicitly approved or sub-agent tooling was unavailable.
+- `runtimeSubagentAudit.operatorAuthorization.status` is
+  `pipeline-mandated` for the normal happy path,
+  `authorized-after-tool-gate` when a restrictive tool required explicit spawn
+  authorization, `fallback-approved` for explicit direct fallback, or
+  `declined` for blocked runs.
 - Each future stage has observed runtime evidence or a clear unavailable or
   not-used note.
+- Metadata never treats missing authorization as unavailable tooling. A tool
+  that can spawn only after confirmation must ask for authorization to spawn
+  sub-agents.
 - Existing source and benchmark snapshots are not rewritten for the runtime
   audit contract.
 

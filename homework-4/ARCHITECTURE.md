@@ -60,8 +60,21 @@ Code can capture `Agent` tool events, Google Antigravity can capture
 `invoke_subagent` events, Open Code can use plugin events, and Codex may need
 adapter-recorded evidence depending on the active surface. The portable
 enforcement layer is `runtimeSubagentAudit` inside `run-metadata.json`; every
-future run records actual sub-agent use there, or records why reliable runtime
-evidence is unavailable.
+future run records actual sub-agent use there, or records why sub-agent tooling
+was unavailable or still unusable after a required authorization path.
+
+Sub-agent execution is the default pipeline contract. Capability,
+authorization, and fallback are separate decisions:
+
+- Capability asks whether the active tool can spawn sub-agents at all.
+- Authorization asks whether a restrictive tool needs explicit operator
+  approval before it will spawn sub-agents.
+- Fallback approval asks whether the operator permits direct execution when
+  sub-agent tooling is unavailable or remains unusable after authorization.
+
+Missing authorization is not treated as missing capability. The orchestrator
+must ask for authorization to spawn sub-agents before considering direct
+fallback.
 
 ## Safety Rules
 
@@ -69,7 +82,8 @@ evidence is unavailable.
 - Do not edit `app/baseline` after seeded defects are established.
 - Code edits before promotion stay inside the selected run app.
 - `security-verifier` writes a report only and does not edit code.
-- Missing tool features are recorded honestly in run metadata or command logs.
+- Missing tool features and explicit fallback approvals are recorded honestly
+  in run metadata or command logs.
 
 ## Known Limitations
 

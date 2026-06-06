@@ -1,5 +1,19 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 23: Mandatory Sub-Agent Pipeline Contract
+
+### Added
+- Added an operator-directed amendment clarifying that `Run HW4 pipeline` mandates sub-agent stage execution without an extra default confirmation.
+- Added `runtimeSubagentAudit.operatorAuthorization` wording for pipeline-mandated spawning and tool-required authorization recovery.
+
+### Changed
+- Updated the harness, adapters, and Homework 4 docs so missing authorization is not treated as a fallback excuse; the agent must ask for authorization to spawn sub-agents.
+- Limited direct fallback to unavailable sub-agent tooling or a failed authorization path with explicit operator fallback approval.
+
+### Tests
+- Verified mandatory sub-agent, authorization recovery, and fallback approval wording across the harness, adapters, and homework docs.
+- Verified preserved run and benchmark evidence were not modified.
+
 ## Homework 4 - Step 22: Sub-Agent Authorization Gate Planning
 
 ### Added

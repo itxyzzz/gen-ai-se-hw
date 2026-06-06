@@ -10,7 +10,18 @@ Use this adapter only when the active tool has no dedicated adapter and can stil
 - Keep source edits inside the current run's `app/` directory before promotion. Keep `app/baseline` immutable.
 - Record missing model controls or command limitations in `run-metadata.json`.
 - Capable tools are directed to inspect and implement the `## Reusable Agentic Execution Extensions` (subagents, reflection loops, and local static tools) defined in `skills/pipeline-harness-wrapper.md` if their active environment supports them.
+- If the tool exposes sub-agent spawning, use it for the six stage prompts. The
+  HW4 launch contract already requires sub-agent execution and does not require
+  an extra default confirmation.
+- If the tool refuses to spawn sub-agents until the operator explicitly
+  authorizes it, ask for authorization to spawn sub-agents. Do not treat missing
+  authorization as unavailable tooling.
+- Direct execution is allowed only when sub-agent tooling is unavailable, or
+  still unusable after the authorization path, and the operator explicitly
+  approves fallback.
 - Populate `runtimeSubagentAudit` in `run-metadata.json` using the best runtime evidence the tool exposes. Use `adapter-recorded` when only orchestrator notes are available, or `manual-unavailable` with a reason when reliable runtime evidence cannot be exposed.
+- Record `operatorAuthorization.status` as `pipeline-mandated`,
+  `authorized-after-tool-gate`, `fallback-approved`, or `declined`.
 
 ## Model Guidance
 

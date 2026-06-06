@@ -9,6 +9,10 @@ contract plus file artifacts.
 Run HW4 pipeline
 ```
 
+This prompt is the full pipeline launch contract. It requires sub-agent stage
+execution when the active tool can spawn sub-agents; no additional prompt
+keywords or default confirmation are required for the happy path.
+
 ## Adapter Prompts
 
 | Adapter | Prompt |
@@ -62,6 +66,29 @@ Audit events should stay compact. They record stage id, agent file, whether a
 sub-agent was used, launch mechanism, model policy, requested or observed
 model, reasoning effort, status, and evidence source when the active tool
 exposes those details.
+
+`runtimeSubagentAudit.operatorAuthorization` records why the run did or did not
+use sub-agents:
+
+| Field | Description |
+| --- | --- |
+| `required` | `true` for HW4 pipeline runs. |
+| `status` | Authorization/fallback state for sub-agent spawning. |
+| `source` | Short description of the launch phrase, tool-required authorization request, or fallback approval. |
+| `fallbackApproved` | `true` only when the operator explicitly approved direct execution fallback. |
+
+Allowed `operatorAuthorization.status` values:
+
+| Value | Meaning |
+| --- | --- |
+| `pipeline-mandated` | `Run HW4 pipeline` launched the normal contract and sub-agents were spawned without extra confirmation. |
+| `authorized-after-tool-gate` | The active tool refused to spawn without explicit operator authorization, the orchestrator asked for authorization, and the operator approved spawning. |
+| `fallback-approved` | Direct execution was used only after sub-agent tooling was unavailable or still unusable after the authorization path, and the operator explicitly approved fallback. |
+| `declined` | The operator declined required spawn authorization or declined direct fallback, so the run blocked if a run folder already existed. |
+
+Not being authorized is not equivalent to unavailable tooling. If the tool can
+spawn sub-agents but requires explicit authorization, the orchestrator must ask
+for authorization to spawn them before any direct fallback is considered.
 
 ## Required Run Artifacts
 

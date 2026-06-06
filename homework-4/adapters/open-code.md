@@ -57,7 +57,7 @@ Provider aliases can differ by platform. Use the closest equivalent available mo
 - File reads: `read`
 - File edits: `apply_patch` for focused edits
 - Commands and tests: `bash`
-- Optional stage isolation: `task` subagents when available
+- Stage isolation: use `task` subagents when available
 
 ## Runtime Sub-Agent Audit
 
@@ -73,15 +73,27 @@ source. If Open Code cannot expose reliable runtime task evidence, use
 `collectionMode: "manual-unavailable"` with the reason and the planned
 policy-relative model information.
 
+Record `operatorAuthorization.status` as `pipeline-mandated` when task
+subagents are spawned from the normal launch contract,
+`authorized-after-tool-gate` when Open Code requires explicit operator
+authorization before task spawning, `fallback-approved` only for explicit direct
+fallback approval, or `declined`.
+
 ## Execution Rules
 
 - Execute the six stages in harness order.
+- Use task subagents for stage work when the tooling is available. If task
+  spawning requires explicit operator authorization, ask for authorization to
+  spawn tasks; do not treat missing authorization as unavailable tooling.
 - Keep `app/baseline` immutable.
 - Apply code changes only inside the selected run workspace `app/` directory before promotion.
 - Write Markdown and JSON artifacts directly without helper scripts.
 - For `bug-fixer` and `unit-test-generator`, run tests after meaningful edits when command execution is available.
 - Reflection loop limit is 3 attempts; capture each failure and retry in `command-log.md`.
 - If blocked, record the blocker in both `command-log.md` and `run-metadata.json`.
+- Direct execution is allowed only when task-subagent tooling is unavailable, or
+  still unusable after the authorization path, and the operator explicitly
+  approves fallback.
 
 ## Validation Checklist
 
@@ -89,6 +101,8 @@ policy-relative model information.
 - All required artifacts are present and non-empty.
 - `run-metadata.json` includes per-stage model selection and fallback details when fallback is used.
 - `run-metadata.json` contains `runtimeSubagentAudit`.
+- `runtimeSubagentAudit` shows task subagents were used unless fallback was
+  explicitly approved or tooling was unavailable.
 - Tests were run or a blocker is recorded in `command-log.md`.
 - Security verifier remains report-only and does not edit code.
 - The benchmark rubric can be applied manually to the completed artifacts.

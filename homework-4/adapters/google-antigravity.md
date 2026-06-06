@@ -51,6 +51,14 @@ Google Antigravity must execute the stages sequentially using its native backgro
    - Copy the run folder's app to `homework-4/app/current`.
    - Set `"promoted": true` in `run-metadata.json` and log the promotion.
 
+The launch contract already requires sub-agents. Do not ask for an extra
+default confirmation before `define_subagent` or `invoke_subagent`. If the
+active Antigravity surface refuses to invoke subagents until the operator gives
+explicit authorization, stop and ask for authorization to spawn subagents. Do
+not fall back to direct execution unless subagent tooling is unavailable, or
+still unusable after the authorization path, and the operator explicitly
+approves fallback for that run.
+
 ## Runtime Sub-Agent Audit
 
 Populate `runtimeSubagentAudit` in `run-metadata.json` with
@@ -66,11 +74,16 @@ reasoning effort, status, and evidence source when exposed. If native events are
 not available for a run, use `collectionMode: "adapter-recorded"` or
 `manual-unavailable` with a clear reason.
 
+Record `operatorAuthorization.status` as `pipeline-mandated`,
+`authorized-after-tool-gate`, `fallback-approved`, or `declined`.
+
 ## Validation Checklist
 
 - `run-metadata.json` specifies adapter name as `google-antigravity` and concrete Gemini models.
 - Spawning dedicated subagents via `define_subagent` and `invoke_subagent` is logged.
 - `run-metadata.json` contains `runtimeSubagentAudit`.
+- Direct execution fallback is absent unless explicitly approved after
+  unavailable or unusable subagent tooling.
 - Security report is strictly read-only and does not modify code files.
 - Unit test report includes FIRST assessment.
 - Verified fixed app promoted to `app/current` passes all tests.

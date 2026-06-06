@@ -69,6 +69,12 @@ portable by schema: Claude Code, Google Antigravity, Open Code, Codex, and
 generic tools can use different hooks or adapter records while preserving the
 same compact audit shape.
 
+The pipeline is designed to run with one sub-agent per stage. `Run HW4
+pipeline` is enough to require that behavior; agents should ask for extra
+authorization only if their tool refuses to spawn sub-agents without it. Direct
+fallback is allowed only when sub-agent tooling is unavailable or remains
+unusable after authorization, and only with explicit operator approval.
+
 | Stage | Model policy | Reasoning | Why |
 | --- | --- | --- | --- |
 | Bug Researcher | `research-high` | high | Needs accurate source and symptom correlation. |
