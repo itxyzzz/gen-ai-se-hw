@@ -1,5 +1,16 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 19: Runtime Sub-Agent Audit Planning
+
+### Added
+- Added approved lightweight planning artifacts under `docs/work-items/2026-06-06-hw4-runtime-subagent-audit/` for a portable runtime sub-agent audit contract.
+
+### Changed
+- Scoped the runtime audit design to future `run-metadata.json` evidence and homework-local documentation updates.
+
+### Tests
+- Planning freeze checks verify the approved artifacts are non-placeholder and staged with the required changelog entries.
+
 ## Homework 4 - Step 18: Final PR Preparation
 
 ### Added

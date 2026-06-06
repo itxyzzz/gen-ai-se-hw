@@ -2,6 +2,11 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-06
+
+### Changed
+- Added a repo-local homework documentation placement override to `AGENTS.md` so homework-scoped harness artifacts live under `homework-N/docs/work-items/`.
+
 ## 2026-05-22
 
 ### Changed
