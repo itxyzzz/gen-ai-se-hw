@@ -1,5 +1,24 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 25: Open Code Run 010 (minimax-m3-free)
+
+### Added
+- Added completed Open Code pipeline evidence under `runs/bug-001/run-010-open-code-minimax-m3-free/`.
+- Added `runtimeSubagentAudit` with `collectionMode: adapter-recorded` showing all six stages ran as separate task subagents spawned via the Open Code `task` tool (`subagent_type: general`, `operatorAuthorization.status: pipeline-mandated`).
+- Added generated unit tests for multi-line subtotal aggregation, SAVE10 percentage rounding, the full catalog allow-list rejection set, and a happy-path valid catalog load.
+
+### Changed
+- Promoted `run-010-open-code-minimax-m3-free` to `app/current`.
+
+### Fixed
+- Fixed line totals by multiplying quantity and unit price.
+- Fixed `SAVE10` to apply a ten percent discount with currency rounding.
+- Fixed catalog loading to reject non-allow-listed names and to enforce resolved-path containment under `data/catalogs`.
+
+### Tests
+- `node --test --test-isolation=none homework-4/app/current/tests/*.test.js` passed with 7 tests.
+- `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js` failed as expected with the three seeded baseline defects.
+
 ## Homework 4 - Step 24: Codex Chat Run 008
 
 ### Added
