@@ -1,0 +1,78 @@
+diff --git a/homework-4/app/baseline/src/catalogRepository.js b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/src/catalogRepository.js
+index e7d587c..84d8442 100644
+--- a/homework-4/app/baseline/src/catalogRepository.js
++++ b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/src/catalogRepository.js
+@@ -6,7 +6,18 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+ const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
+ 
+ export async function loadCatalog(catalogName = "default") {
++  if (!/^[A-Za-z0-9_-]+$/u.test(catalogName)) {
++    throw new Error("Invalid catalog name.");
++  }
++
+   const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  const resolvedCatalogPath = path.resolve(catalogDirectory, catalogPath);
++  const relativeCatalogPath = path.relative(catalogDirectory, resolvedCatalogPath);
++
++  if (relativeCatalogPath.startsWith("..") || path.isAbsolute(relativeCatalogPath)) {
++    throw new Error("Invalid catalog name.");
++  }
++
+   const rawCatalog = await readFile(catalogPath, "utf8");
+   return JSON.parse(rawCatalog);
+ }
+diff --git a/homework-4/app/baseline/src/quoteCalculator.js b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/src/quoteCalculator.js
+index c9e90e3..eb2602c 100644
+--- a/homework-4/app/baseline/src/quoteCalculator.js
++++ b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/src/quoteCalculator.js
+@@ -1,7 +1,7 @@
+ export function calculateLineTotal(item) {
+   assertPositiveQuantity(item.quantity);
+   assertNonNegativePrice(item.unitPrice);
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+ }
+ 
+ export function applyDiscount(subtotal, discountCode) {
+@@ -10,7 +10,7 @@ export function applyDiscount(subtotal, discountCode) {
+   }
+ 
+   if (discountCode === "SAVE10") {
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+   }
+ 
+   throw new Error(`Unknown discount code: ${discountCode}`);
+diff --git a/homework-4/app/baseline/tests/security.test.js b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/tests/security.test.js
+index 4da69ed..d0ebfa1 100644
+--- a/homework-4/app/baseline/tests/security.test.js
++++ b/homework-4/runs/bug-001/run-008-codex-chat-gpt-5.4/app/tests/security.test.js
+@@ -2,9 +2,28 @@ import assert from "node:assert/strict";
+ import test from "node:test";
+ import { loadCatalog } from "../src/catalogRepository.js";
+ 
++test("loads a valid catalog name from the catalogs directory", async () => {
++  const catalog = await loadCatalog("default");
++
++  assert.equal(catalog.currency, "USD");
++  assert.equal(Array.isArray(catalog.items), true);
++  assert.equal(catalog.items.length, 2);
++});
++
+ test("rejects catalog names that escape the catalog directory", async () => {
+   await assert.rejects(
+     () => loadCatalog("../catalogs/default"),
+     /Invalid catalog name/
+   );
+ });
++
++test("rejects catalog names with unsupported characters", async () => {
++  const invalidNames = ["", "default.json", "catalog name", "catalog..name", "../default", "catalog/../../etc"];
++
++  for (const catalogName of invalidNames) {
++    await assert.rejects(
++      () => loadCatalog(catalogName),
++      /Invalid catalog name/
++    );
++  }
++});

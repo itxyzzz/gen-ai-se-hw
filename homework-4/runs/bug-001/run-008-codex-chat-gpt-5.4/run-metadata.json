@@ -1,0 +1,109 @@
+{
+  "runId": "run-008-codex-chat-gpt-5.4",
+  "runFolderName": "run-008-codex-chat-gpt-5.4",
+  "adapter": "codex-chat",
+  "model": "gpt-5.4 primary; gpt-5.3-codex-spark for implementation-medium and test-medium stages",
+  "scenario": "bug-001",
+  "tool": "Codex Chat",
+  "startedAt": "2026-06-06T18:00:00+02:00",
+  "completedAt": "2026-06-06T18:07:55+02:00",
+  "promoted": true,
+  "runtimeSubagentAudit": {
+    "schemaVersion": "1.0.0",
+    "collectionMode": "adapter-recorded",
+    "collector": "codex-chat-orchestrator",
+    "subagentsExpected": true,
+    "subagentsUsed": true,
+    "operatorAuthorization": {
+      "status": "pipeline-mandated",
+      "notes": "The operator launched the HW4 pipeline with the repository-defined phrase. The Codex surface exposed multi-agent spawning, so each stage was delegated without a separate fallback prompt."
+    },
+    "unavailableReason": null,
+    "events": [
+      {
+        "stageId": "bug-researcher",
+        "agentFile": "agents/bug-researcher.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9d9a-b0c6-7100-a625-e1b209e6119d",
+        "expectedModelPolicy": "research-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": "gpt-5.4",
+        "reasoningEffort": "high",
+        "contextStrategy": "stage-specific prompt with scenario and baseline context",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; research/codebase-research.md"
+      },
+      {
+        "stageId": "research-verifier",
+        "agentFile": "agents/research-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9d9e-9177-7203-9b72-005bb438ca3b",
+        "expectedModelPolicy": "verification-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": "gpt-5.4",
+        "reasoningEffort": "high",
+        "contextStrategy": "stage-specific prompt with research artifact and research-quality skill",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; research/verified-research.md"
+      },
+      {
+        "stageId": "bug-planner",
+        "agentFile": "agents/bug-planner.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9da3-2b7c-7d02-ae41-31842f52fefd",
+        "expectedModelPolicy": "planning-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": "gpt-5.4",
+        "reasoningEffort": "high",
+        "contextStrategy": "stage-specific prompt with verified research and scenario implementation plan",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; implementation-plan.md"
+      },
+      {
+        "stageId": "bug-fixer",
+        "agentFile": "agents/bug-fixer.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9da7-49cf-7550-8c82-d9c7cb1ce4b0",
+        "expectedModelPolicy": "implementation-medium",
+        "requestedModel": "gpt-5.3-codex-spark",
+        "observedModel": "gpt-5.3-codex-spark",
+        "reasoningEffort": "medium",
+        "contextStrategy": "stage-specific prompt with run-local implementation plan and constrained source write scope",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; fix-summary.md"
+      },
+      {
+        "stageId": "security-verifier",
+        "agentFile": "agents/security-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9da9-7b8c-7d71-8142-0df681d2005c",
+        "expectedModelPolicy": "security-high",
+        "requestedModel": "gpt-5.4",
+        "observedModel": "gpt-5.4",
+        "reasoningEffort": "high",
+        "contextStrategy": "stage-specific prompt with fix summary and changed files only",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; security-report.md"
+      },
+      {
+        "stageId": "unit-test-generator",
+        "agentFile": "agents/unit-test-generator.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "multi_agent_v1.spawn_agent",
+        "agentId": "019e9dac-de93-7120-8476-441e6ddb2172",
+        "expectedModelPolicy": "test-medium",
+        "requestedModel": "gpt-5.3-codex-spark",
+        "observedModel": "gpt-5.3-codex-spark",
+        "reasoningEffort": "medium",
+        "contextStrategy": "stage-specific prompt with fix summary, changed files, and FIRST skill",
+        "status": "completed",
+        "evidenceSource": "subagent completion notification; test-report.md"
+      }
+    ]
+  }
+}
