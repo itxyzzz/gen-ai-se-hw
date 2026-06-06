@@ -1,5 +1,16 @@
 # Homework 4 Changelog
 
+## Homework 4 - Step 22: Sub-Agent Authorization Gate Planning
+
+### Added
+- Added approved planning artifacts under `docs/work-items/2026-06-06-hw4-subagent-authorization-gate/` for the HW4 sub-agent authorization and fallback confirmation contract.
+
+### Changed
+- Scoped the planned pipeline contract so missing sub-agent authorization prompts for operator confirmation instead of silently falling back to direct execution.
+
+### Tests
+- Planning freeze checks verify the approved artifacts are non-placeholder and staged with the required changelog entry.
+
 ## Homework 4 - Step 20: Runtime Sub-Agent Audit Contract
 
 ### Added
