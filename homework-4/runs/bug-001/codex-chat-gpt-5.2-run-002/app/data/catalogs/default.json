@@ -1,0 +1,15 @@
+{
+  "currency": "USD",
+  "items": [
+    {
+      "sku": "WIDGET",
+      "name": "Widget",
+      "unitPrice": 25
+    },
+    {
+      "sku": "GADGET",
+      "name": "Gadget",
+      "unitPrice": 12.5
+    }
+  ]
+}

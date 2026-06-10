@@ -1,0 +1,69 @@
+{
+  "runId": "open-code-run-004",
+  "adapter": "open-code",
+  "model": "big-pickle",
+  "runFolderName": "open-code-run-004",
+  "promoted": true,
+  "stages": [
+    {
+      "id": "bug-researcher",
+      "modelPolicy": "research-high",
+      "model": "big-pickle",
+      "reasoning": "high",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "research/codebase-research.md"
+    },
+    {
+      "id": "research-verifier",
+      "modelPolicy": "verification-high",
+      "model": "big-pickle",
+      "reasoning": "high",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "research/verified-research.md",
+      "skills": ["skills/research-quality-measurement.md"]
+    },
+    {
+      "id": "bug-planner",
+      "modelPolicy": "planning-high",
+      "model": "big-pickle",
+      "reasoning": "high",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "implementation-plan.md"
+    },
+    {
+      "id": "bug-fixer",
+      "modelPolicy": "implementation-medium",
+      "model": "big-pickle",
+      "reasoning": "medium",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "fix-summary.md",
+      "testResult": "3/3 pass"
+    },
+    {
+      "id": "security-verifier",
+      "modelPolicy": "security-high",
+      "model": "big-pickle",
+      "reasoning": "high",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "security-report.md",
+      "gate": "PASS - no unresolved CRITICAL/HIGH/MEDIUM"
+    },
+    {
+      "id": "unit-test-generator",
+      "modelPolicy": "test-medium",
+      "model": "big-pickle",
+      "reasoning": "medium",
+      "fallback": false,
+      "status": "completed",
+      "artifact": "test-report.md",
+      "skills": ["skills/unit-tests-FIRST.md"],
+      "testResult": "15/15 pass"
+    }
+  ],
+  "blocker": null
+}

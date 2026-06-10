@@ -1,0 +1,200 @@
+# Homework 4 Pipeline Harness Skill
+
+## Launch Intent
+
+The shortest memorable launch phrase is:
+
+```text
+Run HW4 pipeline
+```
+
+Exact wording is not required. When the user intent is to run, launch, execute,
+continue, or validate the Homework 4 agentic pipeline, the active assistant must
+load this skill, choose the adapter for its own tool, load all agent specs,
+required skills, scenario inputs, and then run the complete stage chain without
+asking for manual per-agent invocation. Ask the user for adapter selection only
+when no dedicated adapter exists and no generic mapping can be applied safely.
+
+This launch intent also mandates sub-agent stage execution. Do not require
+extra prompt keywords or an additional default confirmation before spawning
+sub-agents.
+
+## Required Context To Load
+
+Read these files before stage execution:
+
+1. `AGENTS.md`
+2. `HOMEWORK_STANDARDS.md`
+3. `homework-4/AGENTS.md`
+4. `homework-4/TASKS.md`
+5. `homework-4/skills/pipeline-harness-wrapper.md`
+6. the automatically selected adapter from `homework-4/adapters/`
+7. `homework-4/scenarios/bug-001/bug-context.md`
+8. All `homework-4/agents/*.agent.md`
+9. Required stage skills referenced by the agent frontmatter
+
+## Stage Order
+
+Run exactly:
+
+1. `bug-researcher`
+2. `research-verifier`
+3. `bug-planner`
+4. `bug-fixer`
+5. `security-verifier`
+6. `unit-test-generator`
+
+The four assignment-required agents are `research-verifier`, `bug-fixer`,
+`security-verifier`, and `unit-test-generator`. The helper stages preserve the
+assignment's stated run order.
+
+## Required Sub-Agent Execution
+
+The pipeline must run with sub-agents. Before `bug-researcher`, the orchestrator
+must evaluate whether the active tool can spawn sub-agents:
+
+1. **Tooling available:** spawn one sub-agent per stage without asking for
+   additional confirmation. The launch intent already requires this behavior.
+2. **Tooling available but blocked by tool-level authorization:** stop and ask
+   the operator to authorize sub-agent spawning. Do not ask for fallback first,
+   and do not run stages directly while waiting.
+3. **Tooling unavailable:** ask whether the operator explicitly approves direct
+   execution fallback or wants the run blocked.
+
+Not being authorized is not an excuse to skip sub-agents. If the active tool can
+spawn sub-agents but requires explicit operator authorization, the orchestrator
+must ask for that authorization and then continue with sub-agents if approved.
+
+Direct execution in the parent session is allowed only when sub-agent tooling is
+unavailable, or the authorization path still cannot spawn sub-agents, and the
+operator explicitly approves fallback for that run. Otherwise record a blocked
+run if a run folder already exists, or stop before creating run artifacts.
+
+## Workspace Rules
+
+- Baseline input: `homework-4/app/baseline`
+- Current run workspace: `homework-4/runs/bug-001/run-<NNN>-<tool>-<pattern>`
+- Normalized submitted Codex benchmark id:
+  `homework-4/benchmark/bug-001/runs/run-001-codex-chat-gpt-5.4`
+- New run folder naming: exactly `run-<NNN>-<tool>-<pattern>`, lower-case and
+  filesystem safe. `NNN` is three digits; choose it by scanning existing
+  normalized run ids for the scenario and adding one.
+- Fixed app evidence: `homework-4/app/current`
+- Do not edit `app/baseline`; it intentionally remains buggy.
+- Code edits happen only inside the selected run workspace, then may be copied
+  into `app/current` after the required reports are complete.
+- Report-only stages must not edit code.
+
+## Required Artifacts
+
+Every completed run must contain:
+
+- `run-metadata.json`
+- `app/`
+- `patch.diff`
+- `research/verified-research.md`
+- `implementation-plan.md`
+- `fix-summary.md`
+- `security-report.md`
+- `test-report.md`
+- `command-log.md`
+
+`run-metadata.json` must include `runId`, `adapter`, `model`,
+`runFolderName`, and `runtimeSubagentAudit`. Both `runId` and
+`runFolderName` must equal the normalized folder name, and the folder name must
+include the tool and primary model or pattern so the run is recognizable at a
+glance.
+
+## Runtime Sub-Agent Audit
+
+Every future completed or blocked run must include a compact
+`runtimeSubagentAudit` object in `run-metadata.json`. This object is the
+portable enforcement layer for de-facto sub-agent use; hooks, plugins, and
+tool events are adapter-specific ways to populate it.
+
+Required fields:
+
+- `schemaVersion`: use `1.0.0`.
+- `collectionMode`: one of `native-hook`, `plugin-event`,
+  `adapter-recorded`, or `manual-unavailable`.
+- `collector`: short label for the hook, plugin, adapter, or manual collection
+  path.
+- `subagentsExpected`: whether this adapter expected sub-agent delegation for
+  the run.
+- `subagentsUsed`: whether runtime evidence shows at least one sub-agent was
+  used.
+- `operatorAuthorization`: compact record of whether spawning proceeded from
+  the pipeline mandate, after a tool-required authorization request, or with an
+  explicitly approved direct fallback.
+- `unavailableReason`: required when `collectionMode` is
+  `manual-unavailable`; otherwise `null` or omitted.
+- `events`: one compact entry per observed or intentionally not-delegated
+  stage.
+
+Each event should record `stageId`, `agentFile`, `subagentUsed`,
+`launchMechanism`, `expectedModelPolicy`, `requestedModel`, `observedModel`,
+`reasoningEffort`, `contextStrategy`, `status`, and `evidenceSource` when the
+active tool exposes those values. Missing runtime details may be `null`,
+omitted, or explained briefly in `notes`. Do not copy raw hook payloads, long
+transcripts, or long report text into metadata unless they are needed to explain
+a blocker.
+
+## Stop Conditions
+
+Stop and record the blocker in `command-log.md` and `run-metadata.json` when:
+
+- a required input file is missing;
+- sub-agent tooling is available but spawning is not authorized after the
+  required authorization request;
+- sub-agent tooling is unavailable and direct fallback is not explicitly
+  approved;
+- a stage cannot produce its required artifact;
+- `runtimeSubagentAudit` is missing, unless the run records
+  `collectionMode: "manual-unavailable"` with a clear unavailable reason;
+- the Bug Fixer changes files outside the run workspace;
+- tests fail after the final Unit Test Generator stage;
+- the Security Verifier finds unresolved CRITICAL, HIGH, or MEDIUM issues in
+  changed code.
+
+## Promotion Rule
+
+Promotion is a text-pipeline action, not a script. After the run is complete and
+verified, copy the fixed run app into `homework-4/app/current`, keep
+`run-metadata.json` marked `"promoted": true`, and record the action in
+`command-log.md`.
+
+## Reusable Agentic Execution Extensions
+
+These extensions apply when the active assistant or orchestrator tool has
+advanced agentic capabilities (e.g., subagent spawning, terminal command
+execution, and programmatic file writing). They allow tools to improve
+reproducibility and minimize manual steps.
+
+### 1. Subagent Context Isolation
+- Spawning dedicated subagents for each of the 6 stages is required when
+  sub-agent tooling is available.
+- When spawning subagents, pass only the relevant agent specification (`agents/*.agent.md`), inputs, baseline, and scenario context. Do not pollute the subagent context with other stages' progress.
+
+### 2. Autonomous Reflection & Self-Correction
+- During the `bug-fixer` and `unit-test-generator` stages, the orchestrator should automatically execute local unit tests in the active workspace after code edits.
+- If the test command fails, capture the stack trace and stdout/stderr output and automatically feed it back into the respective subagent as a repair task.
+- Limit this automated reflection loop to a maximum of 3 attempts before reporting a blocked run in `command-log.md` and `run-metadata.json`.
+
+### 3. Static Analysis & Telemetry
+- If the execution environment has security scanning, linting, or dependency auditing tools (e.g., `npm audit` or static analyzers), the `security-verifier` is encouraged to run them and append the raw tool output as a telemetry section in `security-report.md`.
+
+## Completion Checklist
+
+- All six stages are listed in `run-metadata.json`.
+- `runtimeSubagentAudit` records actual sub-agent use. If no sub-agents were
+  used, metadata records unavailable tooling or an explicit fallback approval.
+- `runtimeSubagentAudit.operatorAuthorization` records `pipeline-mandated`,
+  `authorized-after-tool-gate`, `fallback-approved`, or `declined`.
+- Required skills are named in the stages that used them.
+- Required artifacts exist and are non-empty.
+- `app/current` matches the selected fixed run.
+- Current app tests pass with:
+  `node --test --test-isolation=none homework-4/app/current/tests/*.test.js`
+- Baseline app tests fail for the seeded defects with:
+  `node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js`
+

@@ -1,0 +1,10 @@
+{
+  "scenarioId": "bug-001",
+  "normalizedRunId": "run-006-open-code-gemini-3.5-flash",
+  "originalSnapshotFolder": "open-code-gemini-3.5-flash-run-005",
+  "sourceSnapshotPath": "homework-4/runs/bug-001/open-code-gemini-3.5-flash-run-005",
+  "benchmarkEvidencePath": "homework-4/benchmark/bug-001/runs/run-006-open-code-gemini-3.5-flash",
+  "sequenceBasis": "git log --reverse -- homework-4/runs/bug-001, reconciled with homework-4/CHANGELOG.md",
+  "commitSequence": 6,
+  "snapshotPolicy": "Source run contents are immutable; normalized metadata and repaired artifacts are benchmark-owned copies."
+}

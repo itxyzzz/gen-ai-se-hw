@@ -1,0 +1,35 @@
+{
+  "runId": "run-003-open-code-claude-sonnet-4.5",
+  "runFolderName": "run-003-open-code-claude-sonnet-4.5",
+  "sourceRunFolderName": "open-code-claude-sonnet-4.5-run-003",
+  "scenarioId": "bug-001",
+  "adapter": "open-code",
+  "provider": "anthropic",
+  "model": "claude-sonnet-4.5",
+  "reasoningEffort": "medium",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "normalizedBy": "benchmark snapshot-safe normalization layer",
+  "currentPromoted": false,
+  "sourceMetadataPromoted": false,
+  "score": 98,
+  "scoreBreakdown": {
+    "correctness": 40,
+    "securityRemediation": 25,
+    "testQuality": 14,
+    "maintainabilityMinimality": 9,
+    "reproducibilityAutonomy": 10
+  },
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 8,
+    "totalTests": 11,
+    "testsPassing": true,
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": 0
+  },
+  "notes": "Strong Open Code/Claude run with complete artifacts and broader tests; valid-catalog test quality is slightly weaker than the best runs.",
+  "uncertainties": "Test pass status is artifact-reported rather than rerun."
+}

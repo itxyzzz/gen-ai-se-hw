@@ -1,0 +1,10 @@
+{
+  "scenarioId": "bug-001",
+  "normalizedRunId": "run-005-open-code-nemotron-3-super-free-1779485697",
+  "originalSnapshotFolder": "open-code-nemotron-3-super-free-1779485697",
+  "sourceSnapshotPath": "homework-4/runs/bug-001/open-code-nemotron-3-super-free-1779485697",
+  "benchmarkEvidencePath": "homework-4/benchmark/bug-001/runs/run-005-open-code-nemotron-3-super-free-1779485697",
+  "sequenceBasis": "git log --reverse -- homework-4/runs/bug-001, reconciled with homework-4/CHANGELOG.md",
+  "commitSequence": 5,
+  "snapshotPolicy": "Source run contents are immutable; normalized metadata and repaired artifacts are benchmark-owned copies."
+}

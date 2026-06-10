@@ -1,0 +1,252 @@
+{
+  "runId": "run-010-open-code-minimax-m3-free",
+  "runFolderName": "run-010-open-code-minimax-m3-free",
+  "adapter": "open-code",
+  "model": "minimax-m3-free",
+  "scenario": "bug-001",
+  "tool": "Open Code",
+  "launchPhrase": "Please run homework 4 pipeline",
+  "startedAt": "2026-06-06T22:03:00+02:00",
+  "completedAt": "2026-06-06T22:15:00+02:00",
+  "status": "completed",
+  "promoted": true,
+  "models": {
+    "research-high": {
+      "modelPolicy": "research-high",
+      "model": "minimax-m3-free",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "verification-high": {
+      "modelPolicy": "verification-high",
+      "model": "minimax-m3-free",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "planning-high": {
+      "modelPolicy": "planning-high",
+      "model": "minimax-m3-free",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "implementation-medium": {
+      "modelPolicy": "implementation-medium",
+      "model": "minimax-m3-free",
+      "reasoning": "medium",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "security-high": {
+      "modelPolicy": "security-high",
+      "model": "minimax-m3-free",
+      "reasoning": "high",
+      "fallback": false,
+      "fallbackReason": null
+    },
+    "test-medium": {
+      "modelPolicy": "test-medium",
+      "model": "minimax-m3-free",
+      "reasoning": "medium",
+      "fallback": false,
+      "fallbackReason": null
+    }
+  },
+  "artifacts": [
+    "run-metadata.json",
+    "app/",
+    "patch.diff",
+    "research/codebase-research.md",
+    "research/verified-research.md",
+    "implementation-plan.md",
+    "fix-summary.md",
+    "security-report.md",
+    "test-report.md",
+    "command-log.md"
+  ],
+  "stages": [
+    {
+      "stageId": "bug-researcher",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-researcher.agent.md",
+      "modelPolicy": "research-high",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "high",
+      "output": "research/codebase-research.md"
+    },
+    {
+      "stageId": "research-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/research-verifier.agent.md",
+      "modelPolicy": "verification-high",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "high",
+      "skills": [
+        "homework-4/skills/research-quality-measurement.md"
+      ],
+      "output": "research/verified-research.md"
+    },
+    {
+      "stageId": "bug-planner",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-planner.agent.md",
+      "modelPolicy": "planning-high",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "high",
+      "output": "implementation-plan.md"
+    },
+    {
+      "stageId": "bug-fixer",
+      "status": "completed",
+      "agentFile": "homework-4/agents/bug-fixer.agent.md",
+      "modelPolicy": "implementation-medium",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "medium",
+      "output": "fix-summary.md"
+    },
+    {
+      "stageId": "security-verifier",
+      "status": "completed",
+      "agentFile": "homework-4/agents/security-verifier.agent.md",
+      "modelPolicy": "security-high",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "high",
+      "output": "security-report.md"
+    },
+    {
+      "stageId": "unit-test-generator",
+      "status": "completed",
+      "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+      "modelPolicy": "test-medium",
+      "model": "minimax-m3-free",
+      "reasoningEffort": "medium",
+      "skills": [
+        "homework-4/skills/unit-tests-FIRST.md"
+      ],
+      "output": "test-report.md"
+    }
+  ],
+  "validation": {
+    "runWorkspaceTests": {
+      "command": "node --test --test-isolation=none tests/*.test.js",
+      "workingDirectory": "homework-4/runs/bug-001/run-010-open-code-minimax-m3-free/app",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "promotedCurrentTests": {
+      "command": "node --test --test-isolation=none homework-4/app/current/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "passed",
+      "pass": 7,
+      "fail": 0
+    },
+    "baselineTests": {
+      "command": "node --test --test-isolation=none homework-4/app/baseline/tests/*.test.js",
+      "workingDirectory": ".",
+      "status": "failed-as-expected",
+      "pass": 0,
+      "fail": 3
+    }
+  },
+  "runtimeSubagentAudit": {
+    "schemaVersion": "1.0.0",
+    "collectionMode": "adapter-recorded",
+    "collector": "open-code-task-tool",
+    "subagentsExpected": true,
+    "subagentsUsed": true,
+    "operatorAuthorization": {
+      "status": "pipeline-mandated",
+      "notes": "The operator launched the HW4 pipeline with the canonical launch phrase 'Please run homework 4 pipeline'. The launch intent mandates sub-agent stage execution, so each of the six stages ran as a separate task subagent spawned via Open Code's task tool (subagent_type: general)."
+    },
+    "unavailableReason": null,
+    "events": [
+      {
+        "stageId": "bug-researcher",
+        "agentFile": "homework-4/agents/bug-researcher.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "research-high",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded scenario context, agent spec, and baseline app in isolated subagent context; wrote research artifact to run workspace",
+        "status": "completed",
+        "evidenceSource": "research/codebase-research.md"
+      },
+      {
+        "stageId": "research-verifier",
+        "agentFile": "homework-4/agents/research-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "verification-high",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded research quality skill, agent spec, and prior-stage research in isolated subagent context; verified references and wrote verified-research.md",
+        "status": "completed",
+        "evidenceSource": "research/verified-research.md"
+      },
+      {
+        "stageId": "bug-planner",
+        "agentFile": "homework-4/agents/bug-planner.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "planning-high",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded verified research and scenario plan in isolated subagent context; produced run-specific implementation plan",
+        "status": "completed",
+        "evidenceSource": "implementation-plan.md"
+      },
+      {
+        "stageId": "bug-fixer",
+        "agentFile": "homework-4/agents/bug-fixer.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "implementation-medium",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "medium",
+        "contextStrategy": "loaded implementation plan in isolated subagent context; applied bounded edits inside the run workspace app and ran the test command",
+        "status": "completed",
+        "evidenceSource": "fix-summary.md"
+      },
+      {
+        "stageId": "security-verifier",
+        "agentFile": "homework-4/agents/security-verifier.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "security-high",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "high",
+        "contextStrategy": "loaded fix summary and changed files in isolated subagent context; performed static security review of changed code only",
+        "status": "completed",
+        "evidenceSource": "security-report.md"
+      },
+      {
+        "stageId": "unit-test-generator",
+        "agentFile": "homework-4/agents/unit-test-generator.agent.md",
+        "subagentUsed": true,
+        "launchMechanism": "open-code-task-tool",
+        "subagentType": "general",
+        "expectedModelPolicy": "test-medium",
+        "requestedModel": "minimax-m3-free",
+        "observedModel": "minimax-m3-free",
+        "reasoningEffort": "medium",
+        "contextStrategy": "loaded FIRST skill, fix summary, and changed files in isolated subagent context; appended new tests under the run workspace app/tests directory and ran the test command",
+        "status": "completed",
+        "evidenceSource": "test-report.md"
+      }
+    ]
+  }
+}

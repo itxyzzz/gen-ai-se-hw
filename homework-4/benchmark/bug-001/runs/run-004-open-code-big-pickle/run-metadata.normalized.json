@@ -1,0 +1,35 @@
+{
+  "runId": "run-004-open-code-big-pickle",
+  "runFolderName": "run-004-open-code-big-pickle",
+  "sourceRunFolderName": "open-code-run-004",
+  "scenarioId": "bug-001",
+  "adapter": "open-code",
+  "provider": "open-code",
+  "model": "big-pickle",
+  "reasoningEffort": "medium",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "normalizedBy": "benchmark snapshot-safe normalization layer",
+  "currentPromoted": false,
+  "sourceMetadataPromoted": true,
+  "score": 98,
+  "scoreBreakdown": {
+    "correctness": 40,
+    "securityRemediation": 25,
+    "testQuality": 15,
+    "maintainabilityMinimality": 9,
+    "reproducibilityAutonomy": 9
+  },
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 12,
+    "totalTests": 15,
+    "testsPassing": true,
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": 0
+  },
+  "notes": "Broadest single generated test file; normalized metadata repairs a sparse source metadata shape.",
+  "uncertainties": "Several metrics are inferred from reports/logs because source metadata lacks explicit metric fields."
+}

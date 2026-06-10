@@ -1,0 +1,35 @@
+{
+  "runId": "run-006-open-code-gemini-3.5-flash",
+  "runFolderName": "run-006-open-code-gemini-3.5-flash",
+  "sourceRunFolderName": "open-code-gemini-3.5-flash-run-005",
+  "scenarioId": "bug-001",
+  "adapter": "open-code",
+  "provider": "google",
+  "model": "gemini-3.5-flash",
+  "reasoningEffort": "medium",
+  "status": "completed",
+  "pipelineCommand": "Run HW4 pipeline",
+  "normalizedBy": "benchmark snapshot-safe normalization layer",
+  "currentPromoted": true,
+  "sourceMetadataPromoted": true,
+  "score": 99,
+  "scoreBreakdown": {
+    "correctness": 40,
+    "securityRemediation": 25,
+    "testQuality": 15,
+    "maintainabilityMinimality": 9,
+    "reproducibilityAutonomy": 10
+  },
+  "metrics": {
+    "bugsFixed": 3,
+    "securityIssuesFixed": 1,
+    "testsAdded": 6,
+    "totalTests": 9,
+    "testsPassing": true,
+    "finalTestExitCode": 0,
+    "securityFindingsHighOrWorse": 0,
+    "manualInterventionCount": 0
+  },
+  "notes": "Latest commit-sequence run and current app evidence, with focused generated regression tests and complete standard metadata.",
+  "uncertainties": "Test/security results are artifact-reported rather than rerun in snapshot review."
+}

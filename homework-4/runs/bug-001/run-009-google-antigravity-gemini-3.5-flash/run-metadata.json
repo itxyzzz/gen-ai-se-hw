@@ -1,0 +1,24 @@
+{
+  "runId": "run-009-google-antigravity-gemini-3.5-flash",
+  "runFolderName": "run-009-google-antigravity-gemini-3.5-flash",
+  "adapter": "google-antigravity",
+  "model": "Gemini 3.5 Flash",
+  "scenario": "bug-001",
+  "tool": "Google Antigravity",
+  "startedAt": "2026-06-06T21:49:00+02:00",
+  "completedAt": null,
+  "promoted": false,
+  "runtimeSubagentAudit": {
+    "schemaVersion": "1.0.0",
+    "collectionMode": "adapter-recorded",
+    "collector": "antigravity-orchestrator",
+    "subagentsExpected": true,
+    "subagentsUsed": true,
+    "operatorAuthorization": {
+      "status": "pipeline-mandated",
+      "notes": "The operator launched the HW4 pipeline with the repository-defined launch phrase using Google Antigravity adapter."
+    },
+    "unavailableReason": null,
+    "events": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "stageId": "security-verifier",
+  "role": "security-review",
+  "modelPolicy": "security-high",
+  "model": "gpt-5.4",
+  "reasoningEffort": "high",
+  "skillsLoaded": [],
+  "startedAt": "2026-05-21T20:42:47.375Z",
+  "endedAt": "2026-05-21T20:42:47.377Z",
+  "status": "completed"
+}

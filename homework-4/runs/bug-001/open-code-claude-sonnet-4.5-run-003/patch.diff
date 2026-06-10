@@ -1,0 +1,47 @@
+diff -ur ../../../app/baseline/src/catalogRepository.js ./app/src/catalogRepository.js
+--- ../../../app/baseline/src/catalogRepository.js	2026-05-22 17:44:04.823103147 +0200
++++ ./app/src/catalogRepository.js	2026-05-22 22:47:12.391191178 +0200
+@@ -6,7 +6,22 @@
+ const catalogDirectory = path.resolve(moduleDirectory, "../data/catalogs");
+ 
+ export async function loadCatalog(catalogName = "default") {
++  // Validate catalog name to prevent path traversal
++  const validNamePattern = /^[a-zA-Z0-9_-]+$/;
++  if (!validNamePattern.test(catalogName)) {
++    throw new Error("Invalid catalog name: must contain only alphanumeric characters, hyphens, and underscores");
++  }
++
+   const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  
++  // Resolve the path and ensure it's within the catalog directory
++  const resolvedPath = path.resolve(catalogPath);
++  const resolvedCatalogDir = path.resolve(catalogDirectory);
++  
++  if (!resolvedPath.startsWith(resolvedCatalogDir + path.sep) && resolvedPath !== resolvedCatalogDir) {
++    throw new Error("Invalid catalog name: path traversal detected");
++  }
++
+   const rawCatalog = await readFile(catalogPath, "utf8");
+   return JSON.parse(rawCatalog);
+ }
+diff -ur ../../../app/baseline/src/quoteCalculator.js ./app/src/quoteCalculator.js
+--- ../../../app/baseline/src/quoteCalculator.js	2026-05-22 17:44:04.823103147 +0200
++++ ./app/src/quoteCalculator.js	2026-05-22 22:47:02.027253025 +0200
+@@ -1,7 +1,7 @@
+ export function calculateLineTotal(item) {
+   assertPositiveQuantity(item.quantity);
+   assertNonNegativePrice(item.unitPrice);
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+ }
+ 
+ export function applyDiscount(subtotal, discountCode) {
+@@ -10,7 +10,7 @@
+   }
+ 
+   if (discountCode === "SAVE10") {
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+   }
+ 
+   throw new Error(`Unknown discount code: ${discountCode}`);

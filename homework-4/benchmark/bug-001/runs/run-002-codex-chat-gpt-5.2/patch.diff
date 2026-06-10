@@ -1,0 +1,32 @@
+# Patch Summary
+
+## src/catalogRepository.js
+
+```diff
+-  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  if (!/^[a-zA-Z0-9_-]+$/.test(catalogName)) {
++    throw new Error("Invalid catalog name.");
++  }
++
++  const catalogPath = path.resolve(catalogDirectory, `${catalogName}.json`);
++  const relativePath = path.relative(catalogDirectory, catalogPath);
++  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
++    throw new Error("Invalid catalog name.");
++  }
+```
+
+## src/quoteCalculator.js
+
+```diff
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+```
+
+## tests/generated-regression.test.js
+
+```diff
++ added app/tests/generated-regression.test.js
+```

@@ -1,0 +1,10 @@
+{
+  "scenarioId": "bug-001",
+  "normalizedRunId": "run-001-codex-chat-gpt-5.4",
+  "originalSnapshotFolder": "codex-chat-gpt-5.4-run-001",
+  "sourceSnapshotPath": "homework-4/runs/bug-001/codex-chat-gpt-5.4-run-001",
+  "benchmarkEvidencePath": "homework-4/benchmark/bug-001/runs/run-001-codex-chat-gpt-5.4",
+  "sequenceBasis": "git log --reverse -- homework-4/runs/bug-001, reconciled with homework-4/CHANGELOG.md",
+  "commitSequence": 1,
+  "snapshotPolicy": "Source run contents are immutable; normalized metadata and repaired artifacts are benchmark-owned copies."
+}

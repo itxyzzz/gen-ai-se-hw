@@ -58,6 +58,8 @@ For work inside `homework-*` folders, enforce these non-negotiables:
 6. In web/agent mode, start work from the intended homework branch (for example `homework-x-submission`).
 7. Codex step PRs should target that same homework branch; do not manually retarget bases unless required by tooling failure.
 8. Keep final-delivery flow consistent with `HOMEWORK_STANDARDS.md`: homework branch integrates to `main` only at final submission.
+9. Keep each homework `CHANGELOG.md` newest-first: add the latest step at the top, directly under the title and any standing notes. Step headings must stay in descending number order (`Step 10`, `Step 9`, ..., `Step 0`) and include a concise name phrase after the number, for example `## Homework 4 - Step 10: Codex Chat Run 002`.
+10. For homework-scoped durable planning, specs, plans, variance logs, and handoff artifacts, place the harness work item package under that homework folder at `homework-N/docs/work-items/<work-id>/`. This repo-local rule overrides the globally installed `dev-doc-harness` default of repository-level `docs/work-items/<work-id>/` for homework work.
 
 `HOMEWORK_STANDARDS.md` is the detailed source of truth for structure, documentation minima, timing, quality gates, diagrams/evidence, and review checklist.
 

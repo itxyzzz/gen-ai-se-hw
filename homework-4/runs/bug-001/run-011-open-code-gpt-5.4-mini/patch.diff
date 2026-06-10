@@ -1,0 +1,95 @@
+diff --git a/app/src/quoteCalculator.js b/app/src/quoteCalculator.js
+--- a/app/src/quoteCalculator.js
++++ b/app/src/quoteCalculator.js
+@@
+-  return item.quantity + item.unitPrice;
++  return item.quantity * item.unitPrice;
+@@
+-    return subtotal - 10;
++    return roundCurrency(subtotal * 0.9);
+
+diff --git a/app/src/catalogRepository.js b/app/src/catalogRepository.js
+--- a/app/src/catalogRepository.js
++++ b/app/src/catalogRepository.js
+@@
+-export async function loadCatalog(catalogName = "default") {
+-  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
+-  const rawCatalog = await readFile(catalogPath, "utf8");
+-  return JSON.parse(rawCatalog);
+-}
++export async function loadCatalog(catalogName = "default") {
++  if (typeof catalogName !== "string" || !/^[a-zA-Z0-9_-]+$/.test(catalogName)) {
++    throw new Error(`Invalid catalog name: ${catalogName}`);
++  }
++  const catalogPath = path.join(catalogDirectory, `${catalogName}.json`);
++  const resolvedPath = path.resolve(catalogPath);
++  if (!resolvedPath.startsWith(catalogDirectory + path.sep)) {
++    throw new Error(`Invalid catalog name: ${catalogName}`);
++  }
++  const rawCatalog = await readFile(catalogPath, "utf8");
++  return JSON.parse(rawCatalog);
++}
+
+diff --git a/app/tests/quoteCalculator.test.js b/app/tests/quoteCalculator.test.js
+--- a/app/tests/quoteCalculator.test.js
++++ b/app/tests/quoteCalculator.test.js
+@@
+ test("applies SAVE10 as ten percent discount", () => {
+   assert.equal(applyDiscount(100, "SAVE10"), 90);
+   assert.equal(applyDiscount(75, "SAVE10"), 67.5);
+ });
++
++test("sums line totals across multiple items into the subtotal", () => {
++  const quote = calculateQuote([
++    { sku: "WIDGET", quantity: 2, unitPrice: 25 },
++    { sku: "GADGET", quantity: 4, unitPrice: 12.5 }
++  ]);
++
++  assert.equal(quote.lines.length, 2);
++  assert.equal(quote.lines[0].lineTotal, 50);
++  assert.equal(quote.lines[1].lineTotal, 50);
++  assert.equal(quote.subtotal, 100);
++  assert.equal(quote.total, 100);
++});
++
++test("rounds SAVE10 discount to two decimal places", () => {
++  assert.equal(applyDiscount(19.99, "SAVE10"), 17.99);
++});
+
+diff --git a/app/tests/security.test.js b/app/tests/security.test.js
+--- a/app/tests/security.test.js
++++ b/app/tests/security.test.js
+@@
+ test("rejects catalog names that escape the catalog directory", async () => {
+   await assert.rejects(
+     () => loadCatalog("../catalogs/default"),
+     /Invalid catalog name/
+   );
+ });
++
++test("rejects catalog names that fail the allow-list", async () => {
++  const unsafeNames = ["", "default.json", "foo bar", "/etc/passwd"];
++  for (const unsafeName of unsafeNames) {
++    await assert.rejects(
++      () => loadCatalog(unsafeName),
++      /Invalid catalog name/,
++      `Expected loadCatalog(${JSON.stringify(unsafeName)}) to be rejected`
++    );
++  }
++});
++
++test("loads a valid catalog by a safe allow-list name", async () => {
++  const catalog = await loadCatalog("default");
++  assert.equal(catalog.currency, "USD");
++  assert.ok(Array.isArray(catalog.items));
++  assert.ok(catalog.items.some((item) => item.sku === "WIDGET"));
++});
+
+diff --git a/run-metadata.json b/run-metadata.json
+--- a/run-metadata.json
++++ b/run-metadata.json
+@@
+  "runId": "run-011-open-code-gpt-5.4-mini",
+  "runFolderName": "run-011-open-code-gpt-5.4-mini",
+  "adapter": "open-code",
+  "model": "gpt-5.4-mini",

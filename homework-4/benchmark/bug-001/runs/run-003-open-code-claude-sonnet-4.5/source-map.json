@@ -1,0 +1,10 @@
+{
+  "scenarioId": "bug-001",
+  "normalizedRunId": "run-003-open-code-claude-sonnet-4.5",
+  "originalSnapshotFolder": "open-code-claude-sonnet-4.5-run-003",
+  "sourceSnapshotPath": "homework-4/runs/bug-001/open-code-claude-sonnet-4.5-run-003",
+  "benchmarkEvidencePath": "homework-4/benchmark/bug-001/runs/run-003-open-code-claude-sonnet-4.5",
+  "sequenceBasis": "git log --reverse -- homework-4/runs/bug-001, reconciled with homework-4/CHANGELOG.md",
+  "commitSequence": 3,
+  "snapshotPolicy": "Source run contents are immutable; normalized metadata and repaired artifacts are benchmark-owned copies."
+}

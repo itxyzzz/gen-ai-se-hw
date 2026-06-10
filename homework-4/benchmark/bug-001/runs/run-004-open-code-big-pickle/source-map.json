@@ -1,0 +1,10 @@
+{
+  "scenarioId": "bug-001",
+  "normalizedRunId": "run-004-open-code-big-pickle",
+  "originalSnapshotFolder": "open-code-run-004",
+  "sourceSnapshotPath": "homework-4/runs/bug-001/open-code-run-004",
+  "benchmarkEvidencePath": "homework-4/benchmark/bug-001/runs/run-004-open-code-big-pickle",
+  "sequenceBasis": "git log --reverse -- homework-4/runs/bug-001, reconciled with homework-4/CHANGELOG.md",
+  "commitSequence": 4,
+  "snapshotPolicy": "Source run contents are immutable; normalized metadata and repaired artifacts are benchmark-owned copies."
+}
