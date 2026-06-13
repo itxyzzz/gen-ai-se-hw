@@ -40,5 +40,10 @@ def read_lorem_ipsum(word_count: str | int = 30) -> str:
     return read_lorem_ipsum_words(word_count)
 
 
+@mcp.tool(name="read")
+def read(word_count: str | int = 30) -> str:
+    return read_lorem_ipsum_words(word_count)
+
+
 if __name__ == "__main__":
     mcp.run()

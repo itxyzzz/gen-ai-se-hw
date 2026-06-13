@@ -1,5 +1,23 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 4: Final evidence and README review
+
+### Added
+
+- Added the newly supplied MCP screenshot evidence for GitHub, Filesystem, Notion, MCP server listing, and combined custom/Notion interactions.
+- Added the assignment-facing custom FastMCP `read` tool while preserving the prior `read_lorem_ipsum` compatibility tool.
+- Added all four required MCP server registrations to `homework-5/mcp.json`.
+
+### Changed
+
+- Updated the README with author, task-by-task requirement coverage, screenshot index, configuration notes, custom Resource/Tool details, verification commands, and the remaining Task 3 exact-query evidence note.
+- Updated HOWTORUN to document the `read` tool as the assignment-facing custom MCP tool.
+- Recorded implementation variance for the `read` tool alias and all-server MCP JSON configuration.
+
+### Tests
+
+- Verified the custom server tests, MCP JSON syntax, custom `read` helper smoke check, README required terms, and FastMCP dependency declaration.
+
 ## Homework 5 - Step 3: Final evidence README plan freeze
 
 ### Added

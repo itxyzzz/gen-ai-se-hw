@@ -1,5 +1,19 @@
 {
   "mcpServers": {
+    "github": {
+      "url": "https://api.githubcopilot.com/mcp/",
+      "bearer_token_env_var": "GITHUB_PERSONAL_ACCESS_TOKEN_FOR_MCP"
+    },
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "C:\\Work\\Codex\\mcp-servers\\filesystem\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+        "C:\\Work\\Codex\\folder-mcp"
+      ]
+    },
+    "notion": {
+      "url": "https://mcp.notion.com/mcp"
+    },
     "custom-lorem-reader": {
       "command": "python",
       "args": [

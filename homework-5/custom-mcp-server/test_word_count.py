@@ -1,5 +1,6 @@
 import pytest
 
+import server
 from server import normalize_word_count, read_lorem_ipsum_words
 
 
@@ -15,6 +16,12 @@ def test_read_lorem_ipsum_words_defaults_to_30_words() -> None:
 def test_read_lorem_ipsum_words_accepts_custom_word_count() -> None:
     result = read_lorem_ipsum_words(12)
     assert _word_count(result) == 12
+
+
+def test_assignment_read_tool_accepts_custom_word_count() -> None:
+    assert hasattr(server, "read")
+    result = server.read(5)
+    assert _word_count(result) == 5
 
 
 def test_read_lorem_ipsum_words_accepts_string_query_value() -> None:
