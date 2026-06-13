@@ -1,5 +1,19 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 3: Final evidence README plan freeze
+
+### Added
+
+- Added the approved planning package for the final Homework 5 screenshot, compliance review, and README update pass.
+
+### Changed
+
+- Recorded the planned requirement checks for newly added MCP screenshots, all-server configuration documentation, and the assignment-facing custom `read` tool name.
+
+### Tests
+
+- Verified the final evidence README planning artifacts contain no placeholder markers before the plan-only freeze commit.
+
 ## Homework 5 - Step 2: Homework-scoped Codex MCP config
 
 ### Added
