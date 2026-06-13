@@ -1,5 +1,21 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 5: Direct Notion evidence refresh
+
+### Added
+
+- Added updated direct Notion MCP screenshot evidence for the Homework 5 five-issue request and response.
+- Added the Notion MCP action-list screenshot as supporting evidence.
+
+### Changed
+
+- Updated README and HOWTORUN screenshot references to use the refreshed Task 3 evidence and renamed Task 4 screenshot.
+- Removed the previous README note that Task 3 was only partially evidenced.
+
+### Tests
+
+- Verified the refreshed screenshots manually and checked README references for the updated Task 3 and Task 4 evidence filenames.
+
 ## Homework 5 - Step 4: Final evidence and README review
 
 ### Added

@@ -134,7 +134,8 @@ Expected results: tests pass, the smoke check prints `30` and `7`, the JSON conf
 - `docs/screenshots/task-1-using-github-mcp-1.png` - GitHub MCP interaction evidence.
 - `docs/screenshots/task-1-using-github-mcp-2.png` - Additional GitHub MCP interaction evidence.
 - `docs/screenshots/task-2-using-filesystem-mcp.png` - Filesystem MCP interaction evidence.
-- `docs/screenshots/task-3-using-notion-mcp.png` - Notion MCP availability evidence.
-- `docs/screenshots/task-4-using-custom-mcp-and-notion.png` - Custom Resource and Notion page creation evidence.
+- `docs/screenshots/task-3-using-notion-mcp.png` - Direct Notion MCP evidence for the Homework 5 five-issue request and response.
+- `docs/screenshots/listing-mcp-server-actions.png` - Notion MCP action and resource listing evidence.
+- `docs/screenshots/task-4-using-custom-mcp-(and-notion).png` - Custom Resource and Notion page creation evidence.
 - `docs/screenshots/custom-mcp-codex-read-lorem-ipsum-result.png` - Added by Codex, captured from a real local MCP client call to `read_lorem_ipsum`.
 - `docs/screenshots/custom-mcp-codex-validation-result.png` - Added by Codex, captured from real local validation and startup output.

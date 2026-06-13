@@ -31,8 +31,8 @@ flowchart LR
 |---|---|---|---|
 | Task 1 | Configure GitHub MCP and perform a GitHub interaction | `docs/screenshots/task-1-using-github-mcp-1.png`, `docs/screenshots/task-1-using-github-mcp-2.png` | Done |
 | Task 2 | Configure Filesystem MCP and perform a file interaction | `docs/screenshots/task-2-using-filesystem-mcp.png` | Done |
-| Task 3 | Configure Jira or Notion MCP and request the last 5 bug tickets/pages | `docs/screenshots/task-3-using-notion-mcp.png` shows Notion MCP availability; `docs/screenshots/task-4-using-custom-mcp-and-notion.png` shows Notion page creation | Partially evidenced: the repo does not currently include a screenshot of the exact "last 5 bugs" request/response |
-| Task 4 | Build a custom FastMCP server with Resource, `read` Tool, dependency, source file, docs, and evidence | `custom-mcp-server/server.py`, `custom-mcp-server/lorem-ipsum.md`, `custom-mcp-server/requirements.txt`, `docs/screenshots/custom-mcp-codex-read-lorem-ipsum-result.png`, `docs/screenshots/custom-mcp-codex-validation-result.png`, `docs/screenshots/task-4-using-custom-mcp-and-notion.png` | Done |
+| Task 3 | Configure Jira or Notion MCP and request the last 5 bug tickets/pages | `docs/screenshots/task-3-using-notion-mcp.png` directly shows the Notion MCP request and the five associated Homework 5 issue pages; `docs/screenshots/listing-mcp-server-actions.png` shows the available Notion MCP actions | Done |
+| Task 4 | Build a custom FastMCP server with Resource, `read` Tool, dependency, source file, docs, and evidence | `custom-mcp-server/server.py`, `custom-mcp-server/lorem-ipsum.md`, `custom-mcp-server/requirements.txt`, `docs/screenshots/custom-mcp-codex-read-lorem-ipsum-result.png`, `docs/screenshots/custom-mcp-codex-validation-result.png`, `docs/screenshots/task-4-using-custom-mcp-(and-notion).png` | Done |
 
 ## Custom FastMCP Server
 
@@ -50,8 +50,9 @@ Both Resource and Tool paths use the same validation helper. If `word_count` is 
 - `docs/screenshots/task-1-using-github-mcp-1.png` - GitHub MCP prompt and branch/PR response evidence.
 - `docs/screenshots/task-1-using-github-mcp-2.png` - Additional GitHub MCP branch/PR response and authentication status evidence.
 - `docs/screenshots/task-2-using-filesystem-mcp.png` - Filesystem MCP write/read interaction evidence.
-- `docs/screenshots/task-3-using-notion-mcp.png` - Notion MCP tools and resources availability evidence.
-- `docs/screenshots/task-4-using-custom-mcp-and-notion.png` - Custom Resource result and Notion MCP page creation evidence.
+- `docs/screenshots/task-3-using-notion-mcp.png` - Direct Notion MCP evidence for the Homework 5 five-issue request and response.
+- `docs/screenshots/listing-mcp-server-actions.png` - Notion MCP action and resource listing evidence.
+- `docs/screenshots/task-4-using-custom-mcp-(and-notion).png` - Custom Resource result and Notion MCP page creation evidence.
 - `docs/screenshots/custom-mcp-codex-read-lorem-ipsum-result.png` - Added by Codex, successful custom MCP tool call evidence from the earlier Task 4 pass.
 - `docs/screenshots/custom-mcp-codex-validation-result.png` - Added by Codex, local validation and startup evidence from the earlier Task 4 pass.
 
@@ -78,7 +79,8 @@ homework-5/
     │   ├── task-1-using-github-mcp-2.png
     │   ├── task-2-using-filesystem-mcp.png
     │   ├── task-3-using-notion-mcp.png
-    │   ├── task-4-using-custom-mcp-and-notion.png
+    │   ├── listing-mcp-server-actions.png
+    │   ├── task-4-using-custom-mcp-(and-notion).png
     │   ├── custom-mcp-codex-read-lorem-ipsum-result.png
     │   └── custom-mcp-codex-validation-result.png
     └── work-items/
@@ -100,5 +102,3 @@ python -m json.tool homework-5\mcp.json
 python -c "import sys; sys.path.insert(0, r'homework-5\custom-mcp-server'); import server; print(server.read(5))"
 Select-String -Path homework-5\custom-mcp-server\requirements.txt -Pattern '^fastmcp\b'
 ```
-
-Reviewer note: Task 3 still needs a screenshot of the exact Notion/Jira request from `TASKS.md` if strict grading requires visible proof of the "last 5 bugs" response rather than general Notion MCP capability and page-creation evidence.
