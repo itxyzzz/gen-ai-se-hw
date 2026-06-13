@@ -1,5 +1,15 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 1: Custom MCP server implementation
+
+### Added
+
+- Added the custom FastMCP server package, local MCP configuration, reviewer documentation, and Codex-marked screenshot evidence for Task 4.
+
+### Tests
+
+- Verified the custom server helper returns exact word counts and rejects invalid inputs before committing the implementation.
+
 ## Homework 5 - Step 0: Custom MCP server plan freeze
 
 ### Added
