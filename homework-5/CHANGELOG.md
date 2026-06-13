@@ -1,5 +1,19 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 6: PR description draft
+
+### Added
+
+- Added the Homework 5 pull request description draft under `docs/process-artifacts/`.
+
+### Changed
+
+- Prepared the PR narrative from the repository submission requirements, homework standards, prior PR description formats, and Homework 5 README challenge notes.
+
+### Tests
+
+- Verified the PR draft references current screenshot filenames, includes landscape images at width 600, and keeps the Homework 5 verification commands visible.
+
 ## Homework 5 - Step 5: Direct Notion evidence refresh
 
 ### Added
