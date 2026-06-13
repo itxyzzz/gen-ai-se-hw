@@ -1,0 +1,30 @@
+[shell_environment_policy]
+inherit = "all"
+set = { GIT_OPTIONAL_LOCKS = "0" }
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+bearer_token_env_var = "GITHUB_PERSONAL_ACCESS_TOKEN_FOR_MCP"
+
+[mcp_servers.filesystem]
+command = "node"
+args = [
+  "C:\\Work\\Codex\\mcp-servers\\filesystem\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+  "C:\\Work\\Codex\\folder-mcp"
+]
+enabled = true
+startup_timeout_sec = 10
+tool_timeout_sec = 60
+default_tools_approval_mode = "prompt"
+
+[mcp_servers.notion]
+url = "https://mcp.notion.com/mcp"
+
+[mcp_servers.custom-lorem-reader]
+command = "python"
+args = ["custom-mcp-server/server.py"]
+cwd = "C:/Work/Codex/SETU-HW/gen-ai-se-hw/homework-5"

@@ -36,6 +36,8 @@ Screenshots marked `Added by Codex` were captured from real local Codex-visible 
 
 ```text
 homework-5/
+├── .codex/
+│   └── config.toml
 ├── README.md
 ├── HOWTORUN.md
 ├── CHANGELOG.md
@@ -53,6 +55,10 @@ homework-5/
     └── work-items/
         └── 2026-06-13-custom-fastmcp-server/
 ```
+
+## Challenge and Takeaway
+
+The custom server can be runnable without being registered as a native Codex tool. A stdio MCP server only becomes available to Codex after Codex loads an active MCP configuration and initializes the server as a child process; starting `python server.py` separately or keeping a portable `mcp.json` nearby is not enough. Codex app project selection also matters: project-scoped MCP servers should live in `.codex/config.toml` under the active project path. For this homework, the scoped Codex config lives at `homework-5/.codex/config.toml`, so a thread started with `homework-5` as the selected project can discover the homework-specific server, while a thread started from a broader project root may not load that nested config. Some registered MCP tools may also appear only after tool discovery rather than in the initial visible tool list.
 
 ## Verification
 

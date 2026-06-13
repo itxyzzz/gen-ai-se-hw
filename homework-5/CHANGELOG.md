@@ -1,5 +1,16 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 2: Homework-scoped Codex MCP config
+
+### Added
+
+- Added the homework-scoped Codex MCP configuration under `homework-5/.codex/config.toml`.
+- Documented the Codex app MCP discovery takeaway in the homework README.
+
+### Tests
+
+- Verified the scoped config file contents and README update before committing.
+
 ## Homework 5 - Step 1: Custom MCP server implementation
 
 ### Added
