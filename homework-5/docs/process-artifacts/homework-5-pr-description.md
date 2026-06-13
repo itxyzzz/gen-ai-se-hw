@@ -39,16 +39,11 @@ Because Homework 5 depends heavily on project-scoped MCP discovery, some verific
 
 The workflow used local harness planning artifacts for the custom server and final evidence pass. For behavior changes, the `read` Tool correction was tested before implementation: the new test first failed because `server.read` did not exist, then passed after adding the wrapper.
 
-## Challenge And Takeaway
-
-The custom server can be runnable without being registered as a native Codex tool. A stdio MCP server only becomes available to Codex after Codex loads an active MCP configuration and initializes the server as a child process; starting `python server.py` separately or keeping a portable `mcp.json` nearby is not enough. Codex app project selection also matters: project-scoped MCP servers should live in `.codex/config.toml` under the active project path. For this homework, the scoped Codex config lives at `homework-5/.codex/config.toml`, so a thread started with `homework-5` as the selected project can discover the homework-specific server, while a thread started from a broader project root may not load that nested config. Some registered MCP tools may also appear only after tool discovery rather than in the initial visible tool list.
-
 ## Challenges And How They Were Addressed
 
-- **Project-scoped MCP discovery**: The custom server was not discoverable from a broader repository project. This was addressed by adding `.codex/config.toml` under `homework-5` and capturing evidence from a Codex project opened directly at that folder.
+- **Project-scoped MCP discovery**: The custom server can be runnable without being registered as a native Codex tool. A stdio MCP server only becomes available to Codex after Codex loads an active MCP configuration and initializes the server as a child process; starting `python server.py` separately or keeping a portable `mcp.json` nearby is not enough. Codex app project selection also matters: project-scoped MCP servers should live in `.codex/config.toml` under the active project path. For this homework, the scoped Codex config lives at `homework-5/.codex/config.toml`, so a thread started with `homework-5` as the selected project can discover the homework-specific server, while a thread started from a broader project root may not load that nested config. Some registered MCP tools may also appear only after tool discovery rather than in the initial visible tool list. This was addressed by adding `.codex/config.toml` under `homework-5` and capturing evidence from a Codex project opened directly at that folder.
 - **Tool-name mismatch**: The initial custom server exposed `read_lorem_ipsum`, while the assignment required a Tool named `read`. The final server now exposes `read` and keeps `read_lorem_ipsum` as a compatibility alias.
-- **All-server configuration requirement**: The first portable `mcp.json` only registered the custom server. It now registers GitHub, Filesystem, Notion, and the custom FastMCP server without committing secrets.
-- **Notion evidence gap**: Earlier evidence showed Notion MCP availability but not the exact required issue/page request. The refreshed screenshot now shows the Notion MCP request and five associated Homework 5 issue pages.
+- **Notion/Jira project compliance**: I could not use a real Jira or Notion project for the "last 5 bugs" request without risking exposure of private project data. Instead, I used the same Notion MCP server to create a grouped set of five draft Homework 5 issue/improvement pages, then retrieved those pages through Notion MCP as the Task 3 evidence.
 - **Credential and privacy handling**: Screenshots and config avoid exposing tokens. Credential-dependent entries use environment variables or local MCP session state.
 
 ## Screenshots

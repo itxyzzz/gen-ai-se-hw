@@ -1,5 +1,17 @@
 # Homework 5 Changelog
 
+## Homework 5 - Step 7: PR draft review updates
+
+### Changed
+
+- Merged the PR draft challenge/takeaway content into the challenges section.
+- Removed the minor all-server configuration challenge bullet.
+- Clarified the Notion/Jira compliance reason for using Notion MCP-created Homework 5 issue pages as Task 3 evidence.
+
+### Tests
+
+- Verified the PR draft no longer contains a standalone challenge/takeaway section or the removed all-server challenge bullet.
+
 ## Homework 5 - Step 6: PR description draft
 
 ### Added
