@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 1: Agent 1 Control Surfaces
+
+### Added
+
+- Added the Homework 6 agent guide, dual `write-spec` control surfaces, stack profile reference, run registry, and Context7 project configuration.
+
+### Changed
+
+- Established the Task 1 workflow for generating and selecting stack-specific specification runs before downstream implementation.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated skill metadata, MCP JSON, Codex TOML, stack-selection markers, placeholder scan, and cross-surface command references.
+
 ## Homework 6 - Step 0: Agent 1 Planning Package
 
 ### Added
