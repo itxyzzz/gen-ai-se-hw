@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 3: Write-Spec Sub-Agent Workflow
+
+### Added
+
+- Added mandatory Agent 1 sub-agent planning, domain research, objectives, low-level task, review, and planned handoff requirements to the shared `write-spec` workflow.
+- Added `agents.max_threads = 8` to the Homework 6 Codex project configuration for multi-agent spec-generation runs.
+
+### Changed
+
+- Replaced ad-hoc research and emergency-only handoff guidance with planned sub-agent phases and explicit handoff artifacts.
+
+### Fixed
+
+- Prevented Agent 1 from skipping sub-agents merely because a later operator prompt does not repeat the requirement.
+
+### Tests
+
+- Validated skill metadata, Codex TOML, sub-agent markers, placeholder scan, stack-selection markers, and whitespace checks.
+
 ## Homework 6 - Step 2: Canonical Write-Spec Workflow
 
 ### Added
