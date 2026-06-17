@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 11: Athena Spec Layering Plan
+
+### Added
+
+- Added the approved harness planning package for repairing Athena (Spec Writer) so it targets the transaction-processing system specification rather than the homework automation harness.
+- Planned the transaction-system brief, layer glossary, Greek identity labels, meta-leakage gates, and failed-spec marking.
+
+### Changed
+
+- Scoped the plan to Athena control-surface repair only; replacement spec generation and selection are deferred to a later clean Homework 6-root thread.
+
+### Fixed
+
+- Planned correction of the low-level task standard so Athena produces implementation-ready transaction-system slices instead of one card per Homework Automation Layer agent.
+
+### Tests
+
+- Validated the planning artifacts for required sections, placeholder markers, out-of-scope replacement-run steps, staged file scope, and whitespace issues before the planning freeze commit.
+
 ## Homework 6 - Step 10: Agent 1 Specification Run
 
 ### Added
