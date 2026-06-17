@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 10: Agent 1 Specification Run
+
+### Added
+
+- Preserved the first Python `write-spec` generation run under `docs/agent-runs/20260617-180458-write-spec-python-primary/`.
+- Added the selected canonical `specification.md` for Homework 6 Task 1.
+
+### Changed
+
+- Recorded first-run auto-selection in `docs/agent-runs/final-selection.md`.
+- Captured domain research, objective design, low-level task decomposition, final review, repair review, validation, and completion handoff for Agent 1.
+
+### Fixed
+
+- Repaired the generated `/validate-transactions` requirement so it validates `sample-transactions.json` through validator dry-run behavior instead of running tests or coverage as its primary command.
+
+### Tests
+
+- Validated the generated specification against the Task 1 section requirements, Python stack profile, privacy/audit rules, JSON file protocol, dry-run validation command requirement, and `write-spec` quality bar.
+- Ran placeholder and whitespace scans for the preserved run artifacts.
+
 ## Homework 6 - Step 9: Agent 1 Specification Run Plan
 
 ### Added

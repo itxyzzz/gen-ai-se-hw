@@ -1,6 +1,6 @@
 # Final Selection
 
-Current status: no selected run.
+Current status: selected run `20260617-180458-write-spec-python-primary`.
 
 ## Selection Criteria
 
@@ -17,6 +17,15 @@ Current status: no selected run.
 
 | Date | Run ID | Stack | Selected files | Rationale | Operator |
 |---|---|---|---|---|---|
+| 2026-06-17 | `20260617-180458-write-spec-python-primary` | `python` | `agent-1-spec/outputs/specification.md` copied to `specification.md` | First successful Python `write-spec generate` run; canonical `specification.md` was absent; final review blocker was repaired and follow-up review found no remaining blocking issues. | Repository operator in current Codex Desktop thread |
+
+## Selected Canonical Paths
+
+- `specification.md`
+
+## Post-Selection Edits
+
+- None. Canonical `specification.md` was copied directly from `docs/agent-runs/20260617-180458-write-spec-python-primary/agent-1-spec/outputs/specification.md`.
 
 ## Future Copy Targets
 
