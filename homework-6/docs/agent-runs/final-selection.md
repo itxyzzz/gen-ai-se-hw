@@ -20,13 +20,17 @@ Current status: no selected run.
 
 ## Future Copy Targets
 
-When a run is selected, copy chosen Agent 1 outputs to:
+For the first successful Agent 1 generation run, if `homework-6/specification.md` does not exist, copy:
 
 - `homework-6/specification.md`
-- `homework-6/agents.md`
+
+For later selections, copy `homework-6/specification.md` only by default. Copy the following support docs only when the operator explicitly selects them:
+
 - `homework-6/docs/domain-rules.md`
 - `homework-6/docs/technical-conventions.md`
 - `homework-6/docs/development-process.md`
 - `homework-6/research-notes.md` when selected as canonical research evidence
+
+Do not copy any run-local agent guide over `homework-6/agents.md`. That file is the stable homework-level agent guide and is updated separately when its standing instructions change.
 
 Record any post-selection edits in this file and in `homework-6/CHANGELOG.md`.

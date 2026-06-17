@@ -18,12 +18,14 @@ When instructions conflict, preserve the highest-priority user and repository ru
 
 | Agent | Role | Primary outputs |
 |---|---|---|
-| Agent 1 | Specification writer | `specification.md`, `agents.md`, spec support docs, research notes, and preserved generation runs. |
+| Agent 1 | Specification writer | `specification.md`, spec support docs, research notes, and preserved generation runs. |
 | Agent 2 | Code generator | Integrator, at least three cooperating pipeline agents, JSON file protocol, and Context7 research notes. |
 | Agent 3 | Test and hook author | Unit and integration tests, coverage gate hook, `/run-pipeline`, and `/validate-transactions`. |
 | Agent 4 | Documentation author | README, HOWTORUN, architecture and testing docs, screenshots, and final PR support. |
 
 Agent 1 is stack-flexible through the fixed enum in `.agents/skills/write-spec/references/stack-profiles.md`. The default generation stack is `python`; `java` is an optional alternate profile. `auto` is not supported. After stack selection, every generated `specification.md` must be concrete for that stack.
+
+This `homework-6/agents.md` file is the standing project-level guide required by Task 1. It lives beside `TASKS.md` so every run and downstream agent can load the same stable context. Do not regenerate or overwrite it during individual Agent 1 runs; if a run discovers a needed guide change, record the recommendation in that run's handoff and apply it as a separate control-surface update.
 
 ## Shared Data and Run Artifacts
 
@@ -89,6 +91,8 @@ Harness and Superpowers may assist planning, execution, verification, and review
 
 - Preserve every meaningful Agent 1 generation attempt under `docs/agent-runs/`.
 - Compare runs before selection when more than one viable output exists.
+- After the first successful `write-spec generate` run, if `specification.md` does not exist yet, copy the run's selected `specification.md` to the canonical path automatically and record the auto-selection.
 - Record the chosen run in `docs/agent-runs/final-selection.md`.
 - Record date, run ID, stack, selected files, copied canonical paths, rationale, operator, and post-selection edits.
+- Treat `specification.md` as the default selected package. Copy supporting docs only when explicitly selected, and never copy a run-local agent guide over this file.
 - Canonical files are submission files; run folders are evidence snapshots. Keep both roles distinct.

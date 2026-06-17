@@ -9,7 +9,6 @@ A complete Agent 1 run produces these files inside the run folder first:
 | Output | Purpose |
 |---|---|
 | `agent-1-spec/outputs/specification.md` | Canonical candidate Task 1 specification. |
-| `agent-1-spec/outputs/agents.md` | Candidate project-specific agent guide for the generated pipeline. |
 | `agent-1-spec/outputs/docs/domain-rules.md` | Research-backed banking-pipeline domain assumptions and limits. |
 | `agent-1-spec/outputs/docs/technical-conventions.md` | Money, IDs, JSON, audit, logging, redaction, and file-protocol conventions. |
 | `agent-1-spec/outputs/docs/development-process.md` | Portable execution gates for later agents. |
@@ -17,7 +16,9 @@ A complete Agent 1 run produces these files inside the run folder first:
 | `agent-1-spec/validation-checklist.md` | Completed self-review against this quality bar. |
 | `agent-1-spec/handoff.md` | Continuity record for later threads or downstream agents. |
 
-Canonical `homework-6/specification.md` and canonical docs are copied only after an operator selects a run.
+Canonical `homework-6/specification.md` is the normal selectable output. After the first successful generation run, copy it automatically only if no canonical spec exists yet. Later runs require explicit selection or overwrite authorization.
+
+Supporting docs are preserved as run evidence unless the operator explicitly selects them as canonical support docs. The standing `homework-6/agents.md` guide is not a per-run output and must not be overwritten by run selection.
 
 ## Specification Shape
 
@@ -86,6 +87,8 @@ Compare runs using these criteria:
 | Handoff usefulness | Can a fresh thread continue or implement from the artifacts? |
 
 Final selection must record selected run ID, stack, selected files, copied canonical paths, rationale, operator, date, and any post-selection edits.
+
+The default selected file is `agent-1-spec/outputs/specification.md` copied to `homework-6/specification.md`. Copy `agent-1-spec/outputs/docs/*` or `research-notes.md` only when explicitly selected. Never copy a run-local agent guide over `homework-6/agents.md`; update that standing guide separately when its global instructions need to change.
 
 ## Built-In Quality Gate
 

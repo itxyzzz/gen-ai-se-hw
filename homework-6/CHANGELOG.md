@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 4: Write-Spec Selection and Model Controls
+
+### Added
+
+- Added first-run auto-selection rules for successful Agent 1 `write-spec generate` runs when no canonical `specification.md` exists yet.
+- Added explicit Codex and Claude Code model-family and reasoning prescriptions for Agent 1 orchestration, sub-agents, and final review.
+
+### Changed
+
+- Clarified that `specification.md` is the default selectable package and supporting docs require explicit selection before canonical copy.
+- Clarified that `homework-6/agents.md` is the stable homework-level guide required by Task 1, not a per-run generated output to overwrite.
+
+### Fixed
+
+- Removed stale run-registry copy targets that could cause a generated run to overwrite the standing agent guide.
+
+### Tests
+
+- Validated skill metadata, Codex TOML, first-run selection markers, model-prescription markers, stale `outputs/agents.md` targets, placeholder scan, and whitespace checks.
+
 ## Homework 6 - Step 3: Write-Spec Sub-Agent Workflow
 
 ### Added

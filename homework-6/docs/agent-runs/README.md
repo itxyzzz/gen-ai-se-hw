@@ -32,7 +32,6 @@ Agent 1 specification runs use:
   agent-1-spec/
     outputs/
       specification.md
-      agents.md
       docs/domain-rules.md
       docs/technical-conventions.md
       docs/development-process.md
@@ -47,7 +46,10 @@ Later pipeline runs may add agent-specific folders such as `agent-2-code/`, `age
 ## Preservation Rules
 
 - Draft generated outputs inside the run folder first.
-- Do not copy to canonical homework paths until a run is selected.
+- After the first successful Agent 1 generation run, if `homework-6/specification.md` does not exist yet, copy the run's `agent-1-spec/outputs/specification.md` to that canonical path automatically and record it in `final-selection.md`.
+- If a canonical `specification.md` already exists, do not copy or overwrite canonical homework paths until a run is explicitly selected.
+- Treat `specification.md` as the default selected package. Supporting docs may be copied only when explicitly selected.
+- Do not copy a run-local agent guide over `homework-6/agents.md`; that file is the stable homework-level control surface.
 - Keep `run-metadata.md` current with stack, mode, operator prompt, tool availability, context read, and validation commands.
 - Keep `handoff.md` current even for complete runs; a complete run may state that no continuation is required.
 - Avoid committing bulky transient directories, caches, coverage HTML, or raw screenshots unless a later phase explicitly selects them as evidence.
@@ -69,10 +71,10 @@ When comparing Python and Java runs, call out build-system complexity, MCP fit, 
 
 ## Selection Process
 
-1. Review candidate run folders and update each `comparison.md`.
-2. Choose one run for canonical copy.
+1. Review candidate run folders and update each `comparison.md`, except for first-run auto-selection when no canonical spec exists yet.
+2. Choose one run for canonical copy, or confirm that first-run auto-selection applies.
 3. Update `final-selection.md` with date, run ID, stack, selected files, copied paths, rationale, operator, and post-selection edits.
-4. Copy selected files to canonical homework paths.
+4. Copy selected files to canonical homework paths. By default this means only `specification.md`.
 5. Update `CHANGELOG.md` in the same increment.
 
 ## Commit Guidance

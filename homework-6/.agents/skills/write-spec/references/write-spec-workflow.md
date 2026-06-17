@@ -25,9 +25,17 @@ Use local references as the quality bar. Do not copy Homework 3 domain claims as
 - `generate`: create a new preserved run under `homework-6/docs/agent-runs/`.
 - `resume`: continue a bounded run using its `handoff.md` and completed outputs.
 - `compare`: compare two or more preserved runs without overwriting canonical files.
-- `select`: record the chosen run in `docs/agent-runs/final-selection.md` and copy its selected outputs to canonical paths only after the operator requests selection.
+- `select`: record the chosen run in `docs/agent-runs/final-selection.md` and copy its selected output package to canonical paths.
 
 Default to `generate` unless the operator asks for comparison, selection, or continuation.
+
+After a successful `generate` run, if `homework-6/specification.md` does not exist yet, automatically select that run's `agent-1-spec/outputs/specification.md`, copy it to `homework-6/specification.md`, update `docs/agent-runs/final-selection.md`, and report that first-run canonical selection happened. If `homework-6/specification.md` already exists, preserve the run only; do not overwrite the canonical spec without explicit `select` or overwrite instruction.
+
+A successful generation run means all required outputs and handoffs for the selected stack exist, `validation-checklist.md` passes the Task 1 and quality-bar checks, and the final review has no unresolved blocking findings.
+
+The default selectable package is `specification.md` only. Supporting run artifacts such as `docs/domain-rules.md`, `docs/technical-conventions.md`, `docs/development-process.md`, `research-notes.md`, reviews, and handoffs remain evidence and source material under the run folder unless the operator explicitly selects them as canonical support docs. Do not copy a run-local `agents.md` over `homework-6/agents.md`.
+
+`homework-6/agents.md` is the standing homework-level agent guide. It lives beside `TASKS.md` and applies to all Agent 1 and later pipeline runs. It should be created and maintained as a stable control surface for the assignment, not regenerated per run. If a spec run discovers a needed permanent change to that guide, record the recommendation in the run handoff or validation checklist and handle it as a separate control-surface update.
 
 ## Stack Input
 
@@ -51,10 +59,10 @@ Reject `stack=auto` and any unsupported value with a short message naming the su
 4. Inventory required outputs and record missing local references in `run-metadata.md`.
 5. Write a run-local sub-agent plan in `agent-1-spec/handoffs/sub-agent-plan.md` before research or drafting.
 6. Run the planned sub-agent phases below and preserve each handoff artifact.
-7. Integrate the sub-agent outputs into candidate files inside the run folder first. Do not overwrite canonical `homework-6/specification.md` or canonical docs before final selection.
+7. Integrate the sub-agent outputs into candidate files inside the run folder first. Do not overwrite canonical `homework-6/specification.md` or canonical docs before explicit selection, except for first-run auto-selection when no canonical spec exists.
 8. Validate generated outputs against `references/write-spec-quality-bar.md`, the selected stack profile, Homework 6 Task 1 required sections, and all sub-agent review findings.
 9. Use emergency handoff only when the planned phases cannot finish cleanly. The emergency handoff supplements, not replaces, the planned phase handoffs.
-10. In `select` mode, copy only operator-selected outputs to canonical paths and update `docs/agent-runs/final-selection.md`.
+10. In `select` mode, copy only the selected output package to canonical paths and update `docs/agent-runs/final-selection.md`. The normal package is `specification.md`; support docs require explicit selection.
 
 When repository instructions require `dev-doc-harness` or Superpowers, comply with those planning and freeze gates. The generated Homework 6 agents must still be usable without those tools.
 
@@ -67,8 +75,28 @@ Before drafting, write `agent-1-spec/handoffs/sub-agent-plan.md` with:
 - Run ID and selected stack.
 - Planned sub-agent roles, scopes, context strategy, inputs, output artifacts, and whether roles run in parallel or in waves.
 - Model policy and reasoning intent using policy-relative wording when concrete model names are not exposed.
+- Concrete requested model family and reasoning effort for Codex and Claude Code runtimes, using the prescription below.
 - Maximum concurrent sub-agents for the run and any runtime limits observed.
 - Integration owner, which remains the orchestration thread.
+
+## Model Prescription
+
+If the runtime exposes model selection, prescribe concrete choices in `sub-agent-plan.md` instead of only saying "strong" or "high reasoning." If exact dated model IDs are exposed, record the exact ID; otherwise record the family label available in the tool UI.
+
+For Codex:
+
+- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use Codex 5.5 when available, otherwise Codex 5.4, with high or extra-high reasoning. Prefer extra-high for the first full Task 1 generation, final selection, and difficult repairs after review.
+- Domain research, objectives architecture, and low-level task decomposition sub-agents: use Codex 5.5 or Codex 5.4 with high reasoning. Medium reasoning is allowed only for bounded source inventory, summarization, or comparison notes that do not make final quality decisions.
+- Do not downshift below Codex 5.4 for final review, stack-specific implementation planning, privacy/audit decisions, or canonical selection unless the operator explicitly approves the downgrade and the limitation is recorded.
+
+For Claude Code:
+
+- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use the latest available Opus, or the next-latest Opus if the latest is unavailable. Use the highest practical thinking/reasoning setting exposed by the runtime.
+- Domain research, objectives architecture, low-level task decomposition, and stack review sub-agents: use latest Sonnet or next-latest Sonnet by default; use Opus for ambiguous, high-blast-radius, or failed review-repair work.
+- Use latest or next-latest Haiku only for narrow extraction, inventory, formatting, or non-authoritative comparison support. A Haiku run must not be the final authority for generated spec quality.
+- Exclude Fable for Homework 6 Agent 1 until the operator explicitly changes this workflow.
+
+If the runtime cannot set model or reasoning effort, record the requested prescription, the observed limitation, and the compensation used. Do not omit the prescription merely because the current tool may ignore it.
 
 Required sub-agents for normal `generate` and `resume` runs:
 
@@ -93,10 +121,10 @@ Use these phases for `generate` and `resume` runs:
 2. **Research wave:** spawn the domain research sub-agent and any stack/technical research sub-agent. Merge accepted claims into `research-notes.md`; keep raw findings in handoff files.
 3. **Objectives wave:** spawn the objectives architect sub-agent after domain research is available. Preserve `objectives-handoff.md` before drafting the top of `specification.md`.
 4. **Low-level task wave:** spawn the low-level task decomposition sub-agent after objectives and stack profile are stable. Preserve `low-level-tasks-handoff.md` before drafting or revising the task-card section.
-5. **Integration draft:** the orchestration thread integrates the handoffs into candidate `specification.md`, `agents.md`, domain rules, technical conventions, development process, validation checklist, and run handoff.
+5. **Integration draft:** the orchestration thread integrates the handoffs into candidate `specification.md`, domain rules, technical conventions, development process, validation checklist, and run handoff. Do not regenerate the standing `homework-6/agents.md` as part of a run.
 6. **Review wave:** spawn the final review sub-agent. Add optional privacy/audit, stack, or documentation reviewers if risk remains. Preserve each review under `agent-1-spec/review/`.
 7. **Repair and revalidate:** the orchestration thread fixes accepted review findings, updates validation notes, and records unresolved risks.
-8. **Comparison or selection:** compare runs when requested, or copy canonical files only after operator selection.
+8. **Comparison or selection:** compare runs when requested, copy the first successful generated spec automatically only when no canonical `specification.md` exists, or copy selected package files after operator selection.
 
 Each planned handoff must include assigned scope, files or context inspected, sources or commands used, assumptions, uncertainty, residual risks, and recommended next step. Emergency `agent-1-spec/handoff.md` is still required when the run must pause unexpectedly, but it must reference the planned phase handoffs already produced.
 
@@ -127,7 +155,6 @@ Use this layout:
       low-level-tasks-handoff.md
     outputs/
       specification.md
-      agents.md
       docs/domain-rules.md
       docs/technical-conventions.md
       docs/development-process.md
@@ -146,7 +173,6 @@ Compare runs by completeness, research provenance, stack precision, privacy hand
 For a generated Agent 1 package, produce at least:
 
 - `agent-1-spec/outputs/specification.md`
-- `agent-1-spec/outputs/agents.md`
 - `agent-1-spec/outputs/docs/domain-rules.md`
 - `agent-1-spec/outputs/docs/technical-conventions.md`
 - `agent-1-spec/outputs/docs/development-process.md`
@@ -173,7 +199,7 @@ Before reporting a run as ready for comparison or selection, verify:
 - Agent communication uses the required JSON file protocol through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Context7 and domain research notes are present, or explicit fallback limitations are recorded.
 - Required sub-agent handoffs and final review are present, or the run stopped for operator instruction because sub-agents were unavailable.
-- Canonical files are untouched unless the operator requested `select`.
+- Canonical files are untouched unless first-run auto-selection copied `specification.md` because no canonical spec existed, or the operator requested `select`.
 
 ## Handoff Rules
 
