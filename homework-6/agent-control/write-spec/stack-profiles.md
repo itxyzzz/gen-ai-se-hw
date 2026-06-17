@@ -1,6 +1,8 @@
 # Stack Profiles
 
-Use this reference before generating stack-specific files, functions, commands, tests, coverage hooks, or MCP notes for Homework 6.
+Use this reference before Athena (Spec Writer) generates stack-specific files, functions, commands, tests, coverage tooling notes, or MCP-readable result notes for Homework 6.
+
+These stack profiles are Athena (Spec Writer) generation controls. They are not generated transaction-system product requirements by themselves, and they must not cause `specification.md` to copy run-preservation, final-selection, or operator setup mechanics into product low-level tasks.
 
 ## Fixed Enum
 
@@ -19,7 +21,7 @@ Supported values are exactly `python` and `java`.
 - `stack=auto` is unsupported.
 - Any other value is unsupported.
 - The run ID must include the selected stack.
-- The generated `specification.md` must be stack-specific after selection. Domain goals may stay portable, but low-level tasks, file paths, functions, commands, tests, coverage hooks, and MCP notes must match the selected profile.
+- The generated `specification.md` must be stack-specific after selection. Domain goals may stay portable, but low-level tasks, file paths, functions, commands, tests, coverage tooling notes, and MCP notes must match the selected profile.
 
 ## One-Off Tradeoff Analysis
 
@@ -42,8 +44,8 @@ Use these concrete defaults for `stack=python`:
 | Common agent function | `process_message(message: dict) -> dict`. |
 | Shared protocol | JSON files through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`. |
 | Tests | `pytest` with isolated temporary directories. |
-| Coverage | `coverage.py` or `pytest-cov`; hook blocks below 80%, target at least 90% for final report. |
-| Commands | `python integrator.py`, `python -m pytest`, and `python -m pytest --cov=. --cov-fail-under=80` or equivalent. |
+| Coverage | `coverage.py` or `pytest-cov`; Athena (Spec Writer)'s temporary ending-context target is 75%. Themis (Test Generator) later owns raising coverage above 80% and adding the blocking coverage hook. |
+| Commands | `python integrator.py`, `python -m pytest`, and a non-blocking coverage report command such as `python -m pytest --cov=.` or equivalent. |
 | MCP | Python FastMCP server at `mcp/server.py`. |
 
 Specification task cards should name Python files and functions explicitly. Example function names include `load_transactions`, `prepare_shared_directories`, `process_transaction`, `validate_transaction`, `score_fraud_risk`, `settle_transaction`, `write_result`, and `summarize_results`.
@@ -62,7 +64,7 @@ Use these concrete defaults for `stack=java`:
 | Common agent method | `PipelineMessage processMessage(PipelineMessage message)`. |
 | Shared protocol | JSON files through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`. |
 | Tests | JUnit 5 with temporary directories. |
-| Coverage | JaCoCo; hook blocks below 80%, target at least 90% for final report. |
+| Coverage | JaCoCo; Athena (Spec Writer)'s temporary ending-context target is 75%. Themis (Test Generator) later owns raising coverage above 80% and adding the blocking coverage hook. |
 | Commands | `mvn test`, `mvn jacoco:report`, and a concrete pipeline run command such as `mvn exec:java` or a packaged `java -jar` command chosen in the generated spec. |
 | MCP | Python FastMCP server at `mcp/server.py` reading the Java pipeline's JSON result files. |
 
@@ -79,11 +81,11 @@ Both profiles must preserve:
 - ISO 4217-style currency validation.
 - Structured audit logging with timestamp, agent name, transaction ID, and outcome.
 - No plaintext PII logging; redact account identifiers in logs and audit examples.
-- Agent 2 Context7 research notes with at least two documented queries.
-- Coverage hook blocking below 80%.
-- Generated spec ending context aiming for coverage of at least 90%.
-- Context7 plus custom `pipeline-status` MCP configuration after `mcp/server.py` exists.
-- Run preservation and final-selection workflow under `docs/agent-runs/`.
+- Hephaestus (Code Generator) Context7 research notes with at least two documented queries.
+- Athena (Spec Writer) temporary ending-context coverage target of 75%.
+- Themis (Test Generator) later ownership of raising coverage above 80% and adding the blocking coverage hook.
+- Product result files and summary shapes that future `pipeline-status` MCP tools can read after `mcp/server.py` exists.
+- Athena (Spec Writer) run preservation and final-selection workflow under `docs/agent-runs/` as outer generation evidence, not as a Generated Transaction System Layer requirement.
 
 ## Unsupported Values
 

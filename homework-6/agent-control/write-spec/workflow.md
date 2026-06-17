@@ -1,6 +1,6 @@
 # Write Spec Workflow
 
-This is the canonical workflow for both Homework 6 Agent 1 entrypoints:
+This is the canonical workflow for both Homework 6 Athena (Spec Writer) entrypoints:
 
 - Codex Markdown skill: `homework-6/.agents/skills/write-spec/SKILL.md`
 - Claude Code project skill, exposed as `/write-spec`: `homework-6/.claude/skills/write-spec/SKILL.md`
@@ -13,14 +13,16 @@ All paths in this file are repository-root relative unless the active project ro
 
 ## Required Context
 
-Read the assignment context before writing or selecting outputs:
+Read the product and control context before writing or selecting outputs:
 
-1. `homework-6/TASKS.md`
+1. `homework-6/agent-control/write-spec/transaction-system-brief.md`
 2. `homework-6/sample-transactions.json`
 3. `homework-6/agents.md` when present
 4. Root `AGENTS.md`, `HOMEWORK_STANDARDS.md`, and `README.md` when available
 5. Homework 3 reference package when available: `homework-3/specification.md`, `homework-3/agents.md`, `homework-3/docs/domain-rules.md`, `homework-3/docs/technical-conventions.md`, and `homework-3/docs/development-process.md`
 6. This package's references: `agent-control/write-spec/stack-profiles.md` and `agent-control/write-spec/quality-bar.md`
+
+`homework-6/TASKS.md` is frozen and operator-facing. Operator-layer maintainers may consult it when repairing this package, but Athena (Spec Writer) does not require it for ordinary `generate` or `resume` runs. If this workflow conflicts with `TASKS.md` wording about low-level tasks, follow the clarified layer model in `agents.md`, this workflow, and `transaction-system-brief.md`.
 
 The original Homework 6 repository does not provide the referenced `specification-TEMPLATE-hint.md` in this checkout. Record that absence in `run-metadata.md` and use the Task 1 section list plus the Homework 3 reference package as the local template source. If `specification-TEMPLATE-hint.md` appears later, read it before drafting and let it override Homework 3 formatting where it is more specific.
 
@@ -41,7 +43,7 @@ A successful generation run means all required outputs and handoffs for the sele
 
 The default selectable package is `specification.md` only. Supporting run artifacts such as `docs/domain-rules.md`, `docs/technical-conventions.md`, `docs/development-process.md`, `research-notes.md`, reviews, and handoffs remain evidence and source material under the run folder unless the operator explicitly selects them as canonical support docs. Do not copy a run-local `agents.md` over `homework-6/agents.md`.
 
-`homework-6/agents.md` is the standing homework-level agent guide. It lives beside `TASKS.md` and applies to all Agent 1 and later pipeline runs. It should be created and maintained as a stable control surface for the assignment, not regenerated per run. If a spec run discovers a needed permanent change to that guide, record the recommendation in the run handoff or validation checklist and handle it as a separate control-surface update.
+`homework-6/agents.md` is the standing homework-level agent guide. It lives beside `TASKS.md` and applies to Athena (Spec Writer) and later Homework Automation Layer runs. It should be created and maintained as a stable control surface for the assignment, not regenerated per run. If a spec run discovers a needed permanent change to that guide, record the recommendation in the run handoff or validation checklist and handle it as a separate control-surface update.
 
 ## Stack Input
 
@@ -70,11 +72,25 @@ Reject `stack=auto` and any unsupported value with a short message naming the su
 9. Use emergency handoff only when the planned phases cannot finish cleanly. The emergency handoff supplements, not replaces, the planned phase handoffs.
 10. In `select` mode, copy only the selected output package to canonical paths and update `docs/agent-runs/final-selection.md`. The normal package is `specification.md`; support docs require explicit selection.
 
-When repository instructions require `dev-doc-harness` or Superpowers, comply with those planning and freeze gates. The generated Homework 6 agents must still be usable without those tools.
+Repository `dev-doc-harness` and Superpowers requirements apply to Operator Layer maintenance of this package. They do not apply inside Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), or Clio (Documentation Generator) runs. Do not add harness planning, freeze gates, or Superpowers-only requirements to generated Homework Automation Layer prompts or transaction-system specs.
 
-## Required Sub-Agent Strategy
+## Product-Only Specification Boundary
 
-Agent 1 must use sub-agents when the runtime can spawn them. Lack of an explicit operator reminder is not a reason to skip them; this workflow is the operator requirement and must be inherited by agents that run the pipeline.
+Athena (Spec Writer) generates `specification.md` for the Generated Transaction System Layer only. The spec may say that Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) consume the selected spec later, but it must not turn the four Homework Automation Layer agents into runtime transaction pipeline components.
+
+Generated product requirements must not specify:
+
+- The `write-spec` workflow, skill construction, slash-command creation, or this control package.
+- Preserved Athena (Spec Writer) run folders, canonical-copy rules, comparison workflow, final-selection records, or operator-run evidence mechanics.
+- `dev-doc-harness`, Superpowers, planning freeze gates, planning package commits, or harness variance logs.
+- Hook setup, MCP configuration setup, screenshot capture, README author evidence, PR description support, or submission packaging as transaction-system low-level tasks.
+- Greek identity labels as names for runtime transaction pipeline components or executor sub-agents.
+
+Generated product requirements should specify transaction-processing behavior: package structure, JSON message envelope, directory movement, integrator orchestration, validation, fraud/risk scoring, settlement or final outcome writing, audit-safe summaries, dry-run validation seam, test seams, MCP-readable result shapes, deterministic reruns, and error handling.
+
+## Required Executor Sub-Agent Strategy
+
+Athena (Spec Writer) must use executor sub-agents when the runtime can spawn them. Lack of an explicit operator reminder is not a reason to skip them; this workflow is the operator requirement for Athena (Spec Writer) runs.
 
 Before drafting, write `agent-1-spec/handoffs/sub-agent-plan.md` with:
 
@@ -107,9 +123,9 @@ Required sub-agents for normal `generate` and `resume` runs:
 
 | Role | Purpose | Context strategy | Required output |
 |---|---|---|---|
-| Domain research sub-agent | Research banking-pipeline domain rules, audit/privacy constraints, ISO-currency assumptions, and unsupported compliance claims. | Curated prompt plus assignment files and source requirements. | `agent-1-spec/handoffs/domain-research-handoff.md` and entries in `agent-1-spec/research-notes.md`. |
-| Objectives architect sub-agent | Shape the high-level objective and 4-5 mid-level objectives for clarity, testability, and assignment fit. | Curated prompt plus Task 1 requirements, sample transactions, and domain-research handoff. | `agent-1-spec/handoffs/objectives-handoff.md`. |
-| Low-level task decomposition sub-agent | Produce detailed low-level task cards with exact prompts, files, functions, edge cases, acceptance criteria, and verification. | Curated artifacts containing selected stack profile, objectives handoff, quality bar, and assignment requirements. | `agent-1-spec/handoffs/low-level-tasks-handoff.md`. |
+| Domain research sub-agent | Research banking-pipeline domain rules, audit/privacy constraints, ISO-currency assumptions, and unsupported compliance claims. | Curated prompt plus transaction-system brief, sample data, and source requirements. | `agent-1-spec/handoffs/domain-research-handoff.md` and entries in `agent-1-spec/research-notes.md`. |
+| Objectives architect sub-agent | Shape the high-level objective and 4-5 mid-level objectives for clarity, testability, and transaction-system fit. | Curated prompt plus transaction-system brief, sample transactions, and domain-research handoff. | `agent-1-spec/handoffs/objectives-handoff.md`. |
+| Low-level task decomposition sub-agent | Produce detailed transaction-system implementation slices with exact prompts, files, functions, edge cases, acceptance criteria, and verification. | Curated artifacts containing selected stack profile, objectives handoff, quality bar, transaction-system brief, and sample data. | `agent-1-spec/handoffs/low-level-tasks-handoff.md`. |
 | Final review sub-agent | Review the completed candidate package for objective clarity, stack specificity, privacy, research provenance, task-card executability, and handoff quality. | Curated artifacts containing all candidate outputs and validation notes. | `agent-1-spec/review/final-review.md`. |
 
 `compare` and `select` modes may use a narrower sub-agent set, but any mode that drafts or materially revises a candidate spec package must use the four roles above unless the operator explicitly approves a reduced run after being told what quality gate is being dropped.
@@ -136,8 +152,8 @@ Each planned handoff must include assigned scope, files or context inspected, so
 ## Research Rules
 
 - Prefer Context7 for selected framework and library documentation.
-- Agent 1 domain research is required and must be assigned to the domain research sub-agent. Use web, Context7 where relevant, or other current sources when available.
-- Agent 2 must later document at least two Context7 queries in canonical `research-notes.md`; prepare the spec so that requirement is explicit.
+- Athena (Spec Writer) domain research is required and must be assigned to the domain research sub-agent. Use web, Context7 where relevant, or other current sources when available.
+- Hephaestus (Code Generator) must later document at least two Context7 queries in canonical `research-notes.md`; prepare the spec so that requirement is explicit.
 - Treat the banking pipeline as an educational simulation. Do not claim legal, AML, sanctions, payment-network, or bank regulatory compliance unless a cited source and assignment scope support the statement.
 - Do not paste credentials, real account data, real customer data, tokens, secrets, or unrelated local paths into research notes.
 
@@ -175,7 +191,7 @@ Compare runs by completeness, research provenance, stack precision, privacy hand
 
 ## Output Requirements
 
-For a generated Agent 1 package, produce at least:
+For a generated Athena (Spec Writer) package, produce at least:
 
 - `agent-1-spec/outputs/specification.md`
 - `agent-1-spec/outputs/docs/domain-rules.md`
@@ -190,14 +206,14 @@ For a generated Agent 1 package, produce at least:
 - `agent-1-spec/validation-checklist.md`
 - `agent-1-spec/handoff.md`
 
-The generated `specification.md` must include high-level objective, 4-5 mid-level objectives, implementation notes, beginning and ending context, and one low-level task entry per meta-agent. The selected stack must be visible in files, functions, commands, test tools, coverage gate design, and MCP notes.
+The generated `specification.md` must include high-level objective, 4-5 mid-level objectives, implementation notes, beginning and ending context, and implementation-ready low-level task entries for the transaction-processing system. The selected stack must be visible in files, functions, commands, test tools, coverage gate design, and MCP-readable result notes.
 
 ## Self-Review Gate
 
 Before reporting a run as ready for comparison or selection, verify:
 
 - Task 1's five required sections are present.
-- Every low-level task has exact prompt, file, function, behavior details, edge cases, acceptance criteria, and verification.
+- Every low-level task is a transaction-system implementation slice with exact prompt, file, function, behavior details, edge cases, acceptance criteria, and verification.
 - Money uses precise decimal semantics, never binary floating point.
 - Currency validation uses ISO 4217-style codes.
 - Logs and audit examples avoid plaintext PII and account identifiers.

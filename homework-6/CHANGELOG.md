@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 12: Athena Control Surface Repair
+
+### Added
+
+- Added `agent-control/write-spec/transaction-system-brief.md` as Athena (Spec Writer)'s direct transaction-processing system input.
+- Added layer glossary and Homework Automation Layer identity labels for Athena, Hephaestus, Themis, and Clio.
+
+### Changed
+
+- Updated Athena (Spec Writer) workflow, stack profile, quality bar, and entrypoint wrappers so generated specs target the transaction-processing system instead of the homework automation harness.
+- Clarified that Homework Automation Layer agents do not use `dev-doc-harness` or Superpowers freeze gates.
+- Clarified that generated transaction-system runtime components include runtime application agents, and set Athena (Spec Writer)'s temporary coverage target to 75% while deferring the >80% gate to Themis (Test Generator).
+- Clarified that runtime transaction pipeline agents are stack-native application components, not Claude/Codex skills.
+
+### Fixed
+
+- Marked the first selected Athena (Spec Writer) run as failed/superseded for wrong target while preserving the run folder and canonical failed spec as evidence.
+- Replaced the low-level task standard with implementation-ready transaction-system slices and added a meta-layer leakage rejection gate.
+
+### Tests
+
+- Validated the branch, expected dirty files, untouched `TASKS.md`, untouched `specification.md`, required control-surface markers, failed-selection markers, and whitespace with the frozen plan's static checks.
+
 ## Homework 6 - Step 11: Athena Spec Layering Plan
 
 ### Added

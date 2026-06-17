@@ -1,6 +1,8 @@
 # Final Selection
 
-Current status: selected run `20260617-180458-write-spec-python-primary`.
+Current status: selected run `20260617-180458-write-spec-python-primary` is failed/superseded for wrong target.
+
+Do not use the current canonical `specification.md` as downstream input for Hephaestus (Code Generator) until a replacement Athena (Spec Writer) run is generated and selected. The file and run folder remain preserved as evidence.
 
 ## Selection Criteria
 
@@ -19,13 +21,19 @@ Current status: selected run `20260617-180458-write-spec-python-primary`.
 |---|---|---|---|---|---|
 | 2026-06-17 | `20260617-180458-write-spec-python-primary` | `python` | `agent-1-spec/outputs/specification.md` copied to `specification.md` | First successful Python `write-spec generate` run; canonical `specification.md` was absent; final review blocker was repaired and follow-up review found no remaining blocking issues. | Repository operator in current Codex Desktop thread |
 
+## Failure And Supersession Notes
+
+| Date | Run ID | Status | Reason | Follow-up |
+|---|---|---|---|---|
+| 2026-06-17 | `20260617-180458-write-spec-python-primary` | Failed / superseded | Wrong target: the selected specification described the homework automation harness and spec-generation workflow in its low-level tasks instead of specifying only the transaction-processing system. | Preserve this run and canonical copy as failed evidence. Replacement generation and selection must happen later in a separate clean Homework 6-root thread after the Athena (Spec Writer) control surface is repaired. |
+
 ## Selected Canonical Paths
 
 - `specification.md`
 
 ## Post-Selection Edits
 
-- None. Canonical `specification.md` was copied directly from `docs/agent-runs/20260617-180458-write-spec-python-primary/agent-1-spec/outputs/specification.md`.
+- 2026-06-17: No edits were made to canonical `specification.md`, but the selected output was marked failed/superseded for wrong target in this file. The preserved canonical file remains evidence only until a replacement transaction-processing system spec is selected.
 
 ## Future Copy Targets
 

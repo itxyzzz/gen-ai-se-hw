@@ -1,13 +1,13 @@
 ---
 name: write-spec
-description: Use when generating, resuming, comparing, or selecting Homework 6 Agent 1 specification runs.
-when_to_use: Use for Homework 6 Task 1 spec generation, Agent 1 runs, stack-specific write-spec runs, comparing preserved spec runs, or selecting the canonical specification.md.
+description: Use when generating, resuming, comparing, or selecting Homework 6 Athena (Spec Writer) specification runs.
+when_to_use: Use for Homework 6 Task 1 spec generation, Athena (Spec Writer) runs, stack-specific write-spec runs, comparing preserved spec runs, or selecting the canonical specification.md.
 argument-hint: "[generate|resume|compare|select] [stack=python|stack=java] [run=<run-id>]"
 ---
 
 # Write Spec
 
-Use this skill to create, resume, compare, or select preserved Homework 6 Agent 1 specification runs. The directory name exposes the Claude Code `/write-spec` slash command.
+Use this skill to create, resume, compare, or select preserved Homework 6 Athena (Spec Writer) specification runs. The directory name exposes the Claude Code `/write-spec` slash command.
 
 ## Required Workflow
 
@@ -23,6 +23,8 @@ These shared workflow files are mandatory. If any required reference is missing 
 ## Execution
 
 Follow `workflow.md` exactly. It owns modes, stack input, run layout, sub-agent requirements, model guidance, research rules, selection behavior, required outputs, and review gates.
+
+Repository `dev-doc-harness` and Superpowers requirements apply to Operator Layer maintenance of this skill package. Athena (Spec Writer) runs must follow the shared workflow without introducing harness planning, freeze gates, or Superpowers-only requirements into generated specifications or downstream Homework Automation Layer prompts.
 
 ## Examples
 
