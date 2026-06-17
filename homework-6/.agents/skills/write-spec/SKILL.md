@@ -7,7 +7,7 @@ description: Generate or refine the Homework 6 multi-agent banking pipeline spec
 
 Use this skill to create, resume, compare, or select preserved Homework 6 Agent 1 specification runs. It is the Codex Markdown entrypoint for the same core workflow used by the Claude Code `/write-spec` slash command.
 
-## Canonical Workflow
+## Required Workflow
 
 Before acting, read these references from this skill folder:
 
@@ -15,27 +15,10 @@ Before acting, read these references from this skill folder:
 2. `references/stack-profiles.md`: fixed stack enum, default stack, and stack-specific generation profiles.
 3. `references/write-spec-quality-bar.md`: generated spec, run, comparison, and handoff quality bar.
 
-Treat `write-spec-workflow.md` as the source of truth if this wrapper and the slash command differ.
-
-## Invocation Defaults
-
-- Default mode: `generate`.
-- Default stack: `stack=python`.
-- Supported stacks: `stack=python` and `stack=java`.
-- Unsupported: `stack=auto` and every unlisted stack.
-
-Reject unsupported stack values before drafting or selecting output.
+These shared workflow files are mandatory. If any required reference is missing or unreadable, stop and report the missing file instead of attempting a fallback generation.
 
 ## Execution
 
-Follow the canonical workflow exactly:
-
-1. Load assignment and repository context in the workflow's required order.
-2. Normalize mode and stack.
-3. Preserve generated outputs under `homework-6/docs/agent-runs/<run-id>/`.
-4. Research with Context7 and current sources when available, or record fallback limitations.
-5. Draft run outputs before canonical copy.
-6. Validate with `write-spec-quality-bar.md` and the selected stack profile.
-7. Compare and select only when requested.
+Follow `write-spec-workflow.md` exactly. It owns modes, stack input, run layout, sub-agent requirements, model guidance, research rules, selection behavior, and self-review gates.
 
 When repository instructions require `dev-doc-harness` or Superpowers, comply with their planning and freeze gates. The generated Homework 6 agents must remain usable without those tools.

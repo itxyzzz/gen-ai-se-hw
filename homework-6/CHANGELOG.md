@@ -1,5 +1,27 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 5: Post-Review Write-Spec Tightening
+
+### Added
+
+- Added a variance log for the intentional removal of fallback generation behavior from the `write-spec` wrappers.
+- Documented the missing original `specification-TEMPLATE-hint.md` caveat in the Agent 1 run registry workflow.
+
+### Changed
+
+- Thinned the Codex skill and Claude Code slash-command wrappers so the shared workflow, stack profiles, and quality bar are mandatory.
+- Updated the run registry to reference shared workflow files instead of restating the Agent 1 layout and comparison criteria.
+- Replaced standing exact-model labels with policy-relative Codex and Claude Code model guidance.
+
+### Fixed
+
+- Removed the stale Claude command `outputs/agents.md` run-output target.
+- Clarified repo-root versus homework-root path resolution for `write-spec` runs.
+
+### Tests
+
+- Validated skill metadata, MCP JSON, Codex TOML, placeholder scan, stack-selection markers, stale run-output/model-name searches, and whitespace checks.
+
 ## Homework 6 - Step 4: Write-Spec Selection and Model Controls
 
 ### Added

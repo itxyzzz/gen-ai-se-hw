@@ -2,6 +2,18 @@
 
 This folder preserves Homework 6 agent and pipeline runs so repeated generation, troubleshooting, comparison, and final selection do not overwrite useful evidence.
 
+## Sources of Truth
+
+To avoid drift, this registry guide does not restate the full Agent 1 workflow. Use these files as the authoritative instructions:
+
+- Workflow, modes, run layout, sub-agent phases, and selection rules: `../../.agents/skills/write-spec/references/write-spec-workflow.md`
+- Stack enum and stack-specific defaults: `../../.agents/skills/write-spec/references/stack-profiles.md`
+- Output, comparison, and review quality bar: `../../.agents/skills/write-spec/references/write-spec-quality-bar.md`
+
+If this README conflicts with the shared workflow or quality bar, update this README and follow the shared reference.
+
+The original Homework 6 repository references `specification-TEMPLATE-hint.md`, but that file is not present in this checkout. Agent 1 runs must record that absence in `run-metadata.md` and use the Task 1 section list plus Homework 3 references as the local template source unless the template file is later added.
+
 ## Run ID Format
 
 Use:
@@ -22,26 +34,7 @@ Use `python` or `java` for stack-specific Agent 1 runs. If a later run is not st
 
 ## Folder Layout
 
-Agent 1 specification runs use:
-
-```text
-<run-id>/
-  run-metadata.md
-  inputs/
-    source-context.md
-  agent-1-spec/
-    outputs/
-      specification.md
-      docs/domain-rules.md
-      docs/technical-conventions.md
-      docs/development-process.md
-    research-notes.md
-    validation-checklist.md
-    handoff.md
-  comparison.md
-```
-
-Later pipeline runs may add agent-specific folders such as `agent-2-code/`, `agent-3-tests/`, `agent-4-docs/`, or `pipeline-results/` while preserving the same metadata and handoff pattern.
+Agent 1 specification runs must use the layout defined in `write-spec-workflow.md`. Later pipeline runs may add agent-specific folders such as `agent-2-code/`, `agent-3-tests/`, `agent-4-docs/`, or `pipeline-results/` while preserving the same metadata and handoff pattern.
 
 ## Preservation Rules
 
@@ -56,16 +49,7 @@ Later pipeline runs may add agent-specific folders such as `agent-2-code/`, `age
 
 ## Comparison Criteria
 
-Compare runs with these questions:
-
-| Criterion | Question |
-|---|---|
-| Completeness | Are all expected files and Task 1 sections present? |
-| Research provenance | Are Context7 queries, web sources, dates, and fallback limitations recorded? |
-| Technical precision | Are files, functions, commands, tests, coverage tools, and MCP notes concrete for the selected stack? |
-| Privacy handling | Are account identifiers, descriptions, and logs treated as sensitive? |
-| Executability | Can downstream agents implement from the task cards without guessing? |
-| Handoff value | Can a fresh thread continue from the run folder? |
+Compare runs with the criteria in `write-spec-quality-bar.md`.
 
 When comparing Python and Java runs, call out build-system complexity, MCP fit, coverage tooling, file layout, and implementation effort.
 

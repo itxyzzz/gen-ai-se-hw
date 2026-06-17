@@ -5,7 +5,9 @@ This is the canonical workflow for both Homework 6 Agent 1 entrypoints:
 - Codex Markdown skill: `homework-6/.agents/skills/write-spec/SKILL.md`
 - Claude Code slash command: `homework-6/.claude/commands/write-spec.md`
 
-The wrappers should stay thin. Update this file first when the workflow changes.
+The wrappers must stay thin. Update this file first when the workflow changes, and do not keep independent fallback generation logic in either wrapper.
+
+All paths in this file are repository-root relative unless the active project root is already `homework-6`. When running from a homework-root project, remove the leading `homework-6/` prefix from homework-local paths while keeping root-level references such as `AGENTS.md`, `HOMEWORK_STANDARDS.md`, `README.md`, and Homework 3 paths relative to the repository root when available.
 
 ## Required Context
 
@@ -17,6 +19,8 @@ Read the assignment context before writing or selecting outputs:
 4. Root `AGENTS.md`, `HOMEWORK_STANDARDS.md`, and `README.md` when available
 5. Homework 3 reference package when available: `homework-3/specification.md`, `homework-3/agents.md`, `homework-3/docs/domain-rules.md`, `homework-3/docs/technical-conventions.md`, and `homework-3/docs/development-process.md`
 6. This skill's references: `references/stack-profiles.md` and `references/write-spec-quality-bar.md`
+
+The original Homework 6 repository does not provide the referenced `specification-TEMPLATE-hint.md` in this checkout. Record that absence in `run-metadata.md` and use the Task 1 section list plus the Homework 3 reference package as the local template source. If `specification-TEMPLATE-hint.md` appears later, read it before drafting and let it override Homework 3 formatting where it is more specific.
 
 Use local references as the quality bar. Do not copy Homework 3 domain claims as Homework 6 research.
 
@@ -74,27 +78,26 @@ Before drafting, write `agent-1-spec/handoffs/sub-agent-plan.md` with:
 
 - Run ID and selected stack.
 - Planned sub-agent roles, scopes, context strategy, inputs, output artifacts, and whether roles run in parallel or in waves.
-- Model policy and reasoning intent using policy-relative wording when concrete model names are not exposed.
-- Concrete requested model family and reasoning effort for Codex and Claude Code runtimes, using the prescription below.
+- Model policy and reasoning intent using policy-relative wording.
+- Requested model family or profile and reasoning effort for Codex and Claude Code runtimes, using the prescription below.
 - Maximum concurrent sub-agents for the run and any runtime limits observed.
 - Integration owner, which remains the orchestration thread.
 
 ## Model Prescription
 
-If the runtime exposes model selection, prescribe concrete choices in `sub-agent-plan.md` instead of only saying "strong" or "high reasoning." If exact dated model IDs are exposed, record the exact ID; otherwise record the family label available in the tool UI.
+If the runtime exposes model selection, prescribe the strongest appropriate exposed Codex or Claude Code profile in `sub-agent-plan.md`. Avoid hard-coded dated model IDs in standing instructions because they age quickly. If a run UI exposes exact model labels, record the actual label used in that run's metadata or sub-agent plan.
 
 For Codex:
 
-- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use Codex 5.5 when available, otherwise Codex 5.4, with high or extra-high reasoning. Prefer extra-high for the first full Task 1 generation, final selection, and difficult repairs after review.
-- Domain research, objectives architecture, and low-level task decomposition sub-agents: use Codex 5.5 or Codex 5.4 with high reasoning. Medium reasoning is allowed only for bounded source inventory, summarization, or comparison notes that do not make final quality decisions.
-- Do not downshift below Codex 5.4 for final review, stack-specific implementation planning, privacy/audit decisions, or canonical selection unless the operator explicitly approves the downgrade and the limitation is recorded.
+- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use the latest strongest Codex profile exposed by the UI, with high or extra-high reasoning. Prefer the highest practical reasoning for the first full Task 1 generation, final selection, and difficult repairs after review.
+- Domain research, objectives architecture, and low-level task decomposition sub-agents: use a strong current Codex profile with high reasoning. Medium reasoning is allowed only for bounded source inventory, summarization, or comparison notes that do not make final quality decisions.
+- Do not use a smaller, older, or low-reasoning Codex profile for final review, stack-specific implementation planning, privacy/audit decisions, or canonical selection unless the operator explicitly approves the downgrade and the limitation is recorded.
 
 For Claude Code:
 
-- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use the latest available Opus, or the next-latest Opus if the latest is unavailable. Use the highest practical thinking/reasoning setting exposed by the runtime.
-- Domain research, objectives architecture, low-level task decomposition, and stack review sub-agents: use latest Sonnet or next-latest Sonnet by default; use Opus for ambiguous, high-blast-radius, or failed review-repair work.
-- Use latest or next-latest Haiku only for narrow extraction, inventory, formatting, or non-authoritative comparison support. A Haiku run must not be the final authority for generated spec quality.
-- Exclude Fable for Homework 6 Agent 1 until the operator explicitly changes this workflow.
+- Orchestration, integration drafting, final review, privacy/audit review, and architecture-sensitive decisions: use the strongest reasoning-capable Claude Code model family exposed by the runtime, with the highest practical thinking/reasoning setting.
+- Domain research, objectives architecture, low-level task decomposition, and stack review sub-agents: use a current strong Claude Code model family by default; escalate to the strongest exposed family for ambiguous, high-blast-radius, or failed review-repair work.
+- Use a smaller or faster Claude Code family only for narrow extraction, inventory, formatting, or non-authoritative comparison support. A smaller/faster run must not be the final authority for generated spec quality.
 
 If the runtime cannot set model or reasoning effort, record the requested prescription, the observed limitation, and the compensation used. Do not omit the prescription merely because the current tool may ignore it.
 
