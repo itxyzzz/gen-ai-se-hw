@@ -9,7 +9,7 @@ Policy references: `module:lifecycle`, `module:quality`, `module:models`, `modul
 
 ## Goal
 
-Create the durable plan for Homework 6 Task 1: a portable Agent 1 specification writer that is callable both as a Claude Code slash command and as a Codex Markdown skill, can produce a full high-quality transaction-pipeline specification with documented research, and can preserve, compare, and select multiple generation runs before the final submission package is chosen.
+Create the durable plan for Homework 6 Task 1: a portable Agent 1 specification writer that is callable both as a Claude Code project skill exposed as `/write-spec` and as a Codex Markdown skill, can produce a full high-quality transaction-pipeline specification with documented research, and can preserve, compare, and select multiple generation runs before the final submission package is chosen.
 
 This needs phased planning because Agent 1 becomes the context source for the rest of Homework 6. A weak or single-pass spec would cascade into lower-quality code, tests, MCP evidence, and documentation. The plan must also handle project-root MCP discovery, dual command surfaces, and repeated generation attempts without losing evidence.
 
@@ -25,7 +25,7 @@ Included in this work item:
 
 - Homework 6 Task 1 planning for the Agent 1 specification writer.
 - A dual-surface `write-spec` design:
-  - Claude Code slash command at `homework-6/.claude/commands/write-spec.md`.
+  - Claude Code project skill at `homework-6/.claude/skills/write-spec/SKILL.md`, exposed as `/write-spec` by the skill directory name.
   - Codex Markdown skill at `homework-6/.agents/skills/write-spec/SKILL.md`.
 - A first-class stack selection input for `write-spec`, with a fixed enum instead of an open-ended or automatic chooser.
 - A Homework 6 `agents.md` contract that tells future agents how to load context, use run artifacts, avoid unsafe assumptions, and work with or without harness support.
@@ -73,7 +73,7 @@ After this work item is implemented and the write-spec pipeline is run:
   - Run preservation and final-selection rules.
   - Privacy and audit constraints for transaction data.
   - Built-in quality gates that work even when harness or Superpowers are unavailable.
-- The Codex Markdown skill and Claude Code slash command both generate the same kind of spec package:
+- The Codex Markdown skill and Claude Code project skill both generate the same kind of spec package:
   - A full `specification.md` with the five required Task 1 sections.
   - Rich low-level task entries with exact prompts, target files, target functions, details, edge cases, and acceptance criteria.
   - A local research/domain package for the simulated banking pipeline.
@@ -98,9 +98,9 @@ Planned implementation targets for Phase 01:
 |---|---|---|
 | `homework-6/agents.md` | Portable agent contract | Context order, agent roles, research policy, run registry, quality gates, privacy rules, and final-selection rules for Homework 6 agents. |
 | `homework-6/.agents/skills/write-spec/SKILL.md` | Codex Markdown skill | Primary Codex-facing workflow for generating, validating, preserving, and selecting spec runs. |
-| `homework-6/.agents/skills/write-spec/references/write-spec-quality-bar.md` | Skill reference | Detailed quality bar for the generated specification, low-level task cards, research notes, and handoff artifacts. |
-| `homework-6/.agents/skills/write-spec/references/stack-profiles.md` | Skill reference | One-off tradeoff analysis and fixed stack enum for Python and Java generation profiles. |
-| `homework-6/.claude/commands/write-spec.md` | Claude Code slash command | Slash-command surface that invokes the same workflow and includes enough fallback instructions to run without Codex skill discovery. |
+| `homework-6/agent-control/write-spec/quality-bar.md` | Shared write-spec reference | Detailed quality bar for the generated specification, low-level task cards, research notes, and handoff artifacts. |
+| `homework-6/agent-control/write-spec/stack-profiles.md` | Shared write-spec reference | One-off tradeoff analysis and fixed stack enum for Python and Java generation profiles. |
+| `homework-6/.claude/skills/write-spec/SKILL.md` | Claude Code project skill | Native Claude Code skill surface that invokes the same workflow and is directly invocable as `/write-spec`. |
 | `homework-6/docs/agent-runs/README.md` | Run registry guide | Describes run IDs, folder layout, comparison method, and final-selection process. |
 | `homework-6/docs/agent-runs/final-selection.md` | Selection ledger | Records the currently selected canonical run, selection criteria, and copy targets. It starts as "no run selected" until Agent 1 is executed. |
 | `homework-6/mcp.json` | Portable MCP config | Registers Context7 initially; later Homework 6 phases update the same file to include `pipeline-status` once `mcp/server.py` exists. |
@@ -261,7 +261,7 @@ Phase 02 spec-generation validation:
 
 ## Known unknowns
 
-- The exact Claude Code slash-command discovery rules in the user's current Claude installation are not verified in this thread. Phase 01 will use the standard `.claude/commands/write-spec.md` layout required by the assignment.
+- Claude Code skill discovery has been verified against official Anthropic docs at `https://code.claude.com/docs/en/skills`: project skills live under `.claude/skills/<skill-name>/SKILL.md`, the directory name supplies the `/skill-name` invocation, and a same-named skill takes precedence over `.claude/commands/` files.
 - The exact global Context7 installation location is not visible on this shell PATH. Context7 MCP tool discovery works in this thread, and `npx` is available for portable config.
 - The selected stack for the canonical final pipeline is not frozen until a generated run is selected. The allowed generation profiles are fixed as `python` and `java`; `auto` and arbitrary stack names are excluded from this work item unless a later approved amendment expands the enum.
 - The student's final author line format is not needed for Task 1, but later documentation must include the student's name.
@@ -270,7 +270,7 @@ Phase 02 spec-generation validation:
 
 - Single-pass direct generation of `specification.md` with no run folder: rejected because Homework 3 showed that one large pass loses detail and makes comparison difficult.
 - Relying only on `dev-doc-harness`: rejected because Homework 6 agents must be portable and usable by graders or tools that do not have the harness installed.
-- Relying only on Claude Code slash commands: rejected because the user must run the pipeline from Codex and needs a Codex Markdown skill.
+- Relying only on the Claude Code project skill: rejected because the user must run the pipeline from Codex and needs a Codex Markdown skill.
 - Creating only a Codex skill and asking Claude to read it manually: rejected because the assignment explicitly requires a slash command surface.
 - Committing a combined `mcp.json` that points at a missing `mcp/server.py` in Phase 01: rejected because it can break local MCP startup before the custom server exists.
 - Using Homework 3 EU banking research as Homework 6 domain source without new attribution: rejected because Agent 1 should either research current sources or explicitly use only local assignment assumptions.
@@ -342,8 +342,8 @@ Sub-agents: None for this draft package. The artifact set is small and cross-sur
 | Architecture snapshot | Snapshot | No | Covered by this anchor spec | Not created | The relevant architecture is the agent/run-control design captured here. |
 | Architecture summary delta | Living delta | Deferred | Later final docs phase | `homework-6/docs/work-items/2026-06-16-homework-6-spec-agent/deltas/architecture-summary.delta.md` | Final architecture docs are generated after code exists. |
 | Run registry guide | Living homework doc | Yes | Phase 01 implementation | `homework-6/docs/agent-runs/README.md` | Defines preservation, comparison, and selection workflow. |
-| Skill quality reference | Skill reference | Yes | Phase 01 implementation | `homework-6/.agents/skills/write-spec/references/write-spec-quality-bar.md` | Keeps the Codex skill concise and portable. |
-| Stack profile reference | Skill reference | Yes | Phase 01 implementation | `homework-6/.agents/skills/write-spec/references/stack-profiles.md` | Captures the fixed enum, default stack, Python/Java tradeoff analysis, and stack-specific generation rules. |
+| Skill quality reference | Shared write-spec reference | Yes | Phase 01 implementation | `homework-6/agent-control/write-spec/quality-bar.md` | Keeps both thin entrypoints concise and portable. |
+| Stack profile reference | Shared write-spec reference | Yes | Phase 01 implementation | `homework-6/agent-control/write-spec/stack-profiles.md` | Captures the fixed enum, default stack, Python/Java tradeoff analysis, and stack-specific generation rules. |
 
 ## Approval
 

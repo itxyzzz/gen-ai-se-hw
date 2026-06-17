@@ -1,5 +1,41 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 8: Skill Metadata Cleanup
+
+### Changed
+
+- Updated the Codex `write-spec` UI metadata default prompt to explicitly invoke `$write-spec`.
+
+### Removed
+
+- Removed the empty `write-spec/references/` skill directory now that the shared reference package lives under `agent-control/write-spec/`.
+
+### Tests
+
+- Verified the empty references directory is absent, the Codex skill validates, `openai.yaml` parses with a `$write-spec` default prompt, and the working-tree whitespace check is clean.
+
+## Homework 6 - Step 7: Claude Skill Reference Cleanup
+
+### Added
+
+- Documented the official Claude Code project-skill precedence rationale in the shared Agent 1 write-spec package and variance log.
+
+### Changed
+
+- Updated stale planning and validation references from the removed `.claude/commands/write-spec.md` wrapper to `.claude/skills/write-spec/SKILL.md`.
+
+### Removed
+
+- Removed the empty `.claude/commands/` directory to avoid implying that a legacy command wrapper still exists.
+
+### Fixed
+
+- Fixed trailing whitespace in the Homework 6 task file so diff whitespace checks are clean.
+
+### Tests
+
+- Validated Codex skill metadata, MCP JSON, Codex TOML, working-tree whitespace checks against `HEAD` and `main`, placeholder scan, stale active-path scans, and empty command-directory removal.
+
 ## Homework 6 - Step 6: Tool-Neutral Write-Spec Package
 
 ### Added

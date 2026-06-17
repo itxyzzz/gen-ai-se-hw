@@ -2,6 +2,27 @@
 
 Work ID: `2026-06-16-homework-6-spec-agent`
 
+## 2026-06-17: Official Claude skill precedence verification
+
+Class: Local technical
+
+Variance:
+
+- Kept the Claude Code `write-spec` surface as `.claude/skills/write-spec/SKILL.md` and removed the empty `.claude/commands/` directory.
+- Updated stale planning and validation references from `.claude/commands/write-spec.md` to `.claude/skills/write-spec/SKILL.md`.
+- Updated stale Codex-skill-local `references/` paths to the shared `agent-control/write-spec/` package.
+- Fixed one trailing whitespace issue in the copied Homework 6 task file so repository whitespace checks do not fail on the assignment text.
+
+Reason:
+
+- Official Anthropic Claude Code docs at `https://code.claude.com/docs/en/skills` state that custom commands have been merged into skills, that project skills are directly invocable with `/<skill-name>` based on the skill directory name, and that a same-named skill takes precedence over a `.claude/commands/` file.
+- Keeping an empty command directory or stale command references would confuse reviewers and future agents.
+
+Impact:
+
+- No assignment scope, public API, data model, security rule, or acceptance criterion changes.
+- The Task 1 command surface remains `/write-spec`, implemented through the native Claude Code project skill.
+
 ## 2026-06-17: Post-review control-surface tightening
 
 Class: Local technical

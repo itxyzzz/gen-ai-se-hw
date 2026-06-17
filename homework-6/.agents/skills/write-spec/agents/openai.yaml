@@ -1,4 +1,4 @@
 interface:
   display_name: "Write Spec"
   short_description: "Generate the Homework 6 banking pipeline specification package"
-  default_prompt: "Create or refine the Homework 6 banking pipeline specification package with run preservation."
+  default_prompt: "Use $write-spec to create or refine the Homework 6 banking pipeline specification package with run preservation."

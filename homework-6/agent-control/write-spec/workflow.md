@@ -3,9 +3,11 @@
 This is the canonical workflow for both Homework 6 Agent 1 entrypoints:
 
 - Codex Markdown skill: `homework-6/.agents/skills/write-spec/SKILL.md`
-- Claude Code skill slash command: `homework-6/.claude/skills/write-spec/SKILL.md`
+- Claude Code project skill, exposed as `/write-spec`: `homework-6/.claude/skills/write-spec/SKILL.md`
 
 The entrypoints must stay thin. Update this package first when the workflow changes, and do not keep independent fallback generation logic in either wrapper.
+
+The Claude Code surface is a project skill rather than a `.claude/commands/` file. Official Anthropic docs at `https://code.claude.com/docs/en/skills` state that skills are slash-invocable by skill directory name and that a same-named skill takes precedence over a command file.
 
 All paths in this file are repository-root relative unless the active project root is already `homework-6`. When running from a homework-root project, remove the leading `homework-6/` prefix from homework-local paths while keeping root-level references such as `AGENTS.md`, `HOMEWORK_STANDARDS.md`, `README.md`, and Homework 3 paths relative to the repository root when available.
 
