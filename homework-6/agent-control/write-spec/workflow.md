@@ -3,9 +3,9 @@
 This is the canonical workflow for both Homework 6 Agent 1 entrypoints:
 
 - Codex Markdown skill: `homework-6/.agents/skills/write-spec/SKILL.md`
-- Claude Code slash command: `homework-6/.claude/commands/write-spec.md`
+- Claude Code skill slash command: `homework-6/.claude/skills/write-spec/SKILL.md`
 
-The wrappers must stay thin. Update this file first when the workflow changes, and do not keep independent fallback generation logic in either wrapper.
+The entrypoints must stay thin. Update this package first when the workflow changes, and do not keep independent fallback generation logic in either wrapper.
 
 All paths in this file are repository-root relative unless the active project root is already `homework-6`. When running from a homework-root project, remove the leading `homework-6/` prefix from homework-local paths while keeping root-level references such as `AGENTS.md`, `HOMEWORK_STANDARDS.md`, `README.md`, and Homework 3 paths relative to the repository root when available.
 
@@ -18,7 +18,7 @@ Read the assignment context before writing or selecting outputs:
 3. `homework-6/agents.md` when present
 4. Root `AGENTS.md`, `HOMEWORK_STANDARDS.md`, and `README.md` when available
 5. Homework 3 reference package when available: `homework-3/specification.md`, `homework-3/agents.md`, `homework-3/docs/domain-rules.md`, `homework-3/docs/technical-conventions.md`, and `homework-3/docs/development-process.md`
-6. This skill's references: `references/stack-profiles.md` and `references/write-spec-quality-bar.md`
+6. This package's references: `agent-control/write-spec/stack-profiles.md` and `agent-control/write-spec/quality-bar.md`
 
 The original Homework 6 repository does not provide the referenced `specification-TEMPLATE-hint.md` in this checkout. Record that absence in `run-metadata.md` and use the Task 1 section list plus the Homework 3 reference package as the local template source. If `specification-TEMPLATE-hint.md` appears later, read it before drafting and let it override Homework 3 formatting where it is more specific.
 
@@ -45,7 +45,7 @@ The default selectable package is `specification.md` only. Supporting run artifa
 
 Accept only `stack=python` and `stack=java`. If the stack is omitted, use `stack=python`.
 
-Reject `stack=auto` and any unsupported value with a short message naming the supported enum. Do not invent a new language profile during a run. Load `references/stack-profiles.md` before drafting stack-specific files, functions, commands, test tools, coverage hooks, or MCP notes.
+Reject `stack=auto` and any unsupported value with a short message naming the supported enum. Do not invent a new language profile during a run. Load `agent-control/write-spec/stack-profiles.md` before drafting stack-specific files, functions, commands, test tools, coverage hooks, or MCP notes.
 
 ## Workflow Steps
 
@@ -64,7 +64,7 @@ Reject `stack=auto` and any unsupported value with a short message naming the su
 5. Write a run-local sub-agent plan in `agent-1-spec/handoffs/sub-agent-plan.md` before research or drafting.
 6. Run the planned sub-agent phases below and preserve each handoff artifact.
 7. Integrate the sub-agent outputs into candidate files inside the run folder first. Do not overwrite canonical `homework-6/specification.md` or canonical docs before explicit selection, except for first-run auto-selection when no canonical spec exists.
-8. Validate generated outputs against `references/write-spec-quality-bar.md`, the selected stack profile, Homework 6 Task 1 required sections, and all sub-agent review findings.
+8. Validate generated outputs against `agent-control/write-spec/quality-bar.md`, the selected stack profile, Homework 6 Task 1 required sections, and all sub-agent review findings.
 9. Use emergency handoff only when the planned phases cannot finish cleanly. The emergency handoff supplements, not replaces, the planned phase handoffs.
 10. In `select` mode, copy only the selected output package to canonical paths and update `docs/agent-runs/final-selection.md`. The normal package is `specification.md`; support docs require explicit selection.
 

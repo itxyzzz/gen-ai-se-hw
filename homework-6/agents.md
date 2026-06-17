@@ -23,7 +23,7 @@ When instructions conflict, preserve the highest-priority user and repository ru
 | Agent 3 | Test and hook author | Unit and integration tests, coverage gate hook, `/run-pipeline`, and `/validate-transactions`. |
 | Agent 4 | Documentation author | README, HOWTORUN, architecture and testing docs, screenshots, and final PR support. |
 
-Agent 1 is stack-flexible through the fixed enum in `.agents/skills/write-spec/references/stack-profiles.md`. The default generation stack is `python`; `java` is an optional alternate profile. `auto` is not supported. After stack selection, every generated `specification.md` must be concrete for that stack.
+Agent 1 is stack-flexible through the fixed enum in `agent-control/write-spec/stack-profiles.md`. The default generation stack is `python`; `java` is an optional alternate profile. `auto` is not supported. After stack selection, every generated `specification.md` must be concrete for that stack.
 
 This `homework-6/agents.md` file is the standing project-level guide required by Task 1. It lives beside `TASKS.md` so every run and downstream agent can load the same stable context. Do not regenerate or overwrite it during individual Agent 1 runs; if a run discovers a needed guide change, record the recommendation in that run's handoff and apply it as a separate control-surface update.
 

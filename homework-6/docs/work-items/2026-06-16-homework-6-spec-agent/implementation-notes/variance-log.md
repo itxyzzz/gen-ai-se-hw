@@ -21,3 +21,23 @@ Impact:
 
 - No assignment scope, public API, data model, security rule, or acceptance criterion changes.
 - Agent 1 runs now fail earlier if core workflow references are missing, which is intentional.
+
+## 2026-06-17: Tool-neutral write-spec reference package
+
+Class: Local technical
+
+Variance:
+
+- Moved the canonical Agent 1 workflow, stack profile, quality bar, and run-registry rules from the Codex skill reference folder into `agent-control/write-spec/`.
+- Replaced the Claude Code legacy command wrapper with a native project skill at `.claude/skills/write-spec/SKILL.md`.
+- Kept both Codex and Claude Code entrypoints as thin wrappers around the tool-neutral package.
+
+Reason:
+
+- The operator confirmed there is no need for a transition period and requested removal of the command file.
+- A neutral reference package avoids making Claude Code depend on Codex-owned paths and reduces cross-tool drift.
+
+Impact:
+
+- No assignment scope, public API, data model, security rule, or acceptance criterion changes.
+- Claude Code now exposes `/write-spec` through the project skill directory instead of `.claude/commands/write-spec.md`.

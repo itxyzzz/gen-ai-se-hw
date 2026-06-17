@@ -1,11 +1,13 @@
 ---
 name: write-spec
 description: Use when generating, resuming, comparing, or selecting Homework 6 Agent 1 specification runs.
+when_to_use: Use for Homework 6 Task 1 spec generation, Agent 1 runs, stack-specific write-spec runs, comparing preserved spec runs, or selecting the canonical specification.md.
+argument-hint: "[generate|resume|compare|select] [stack=python|stack=java] [run=<run-id>]"
 ---
 
 # Write Spec
 
-Use this skill to create, resume, compare, or select preserved Homework 6 Agent 1 specification runs. It is the Codex Markdown entrypoint for the same core workflow used by the Claude Code `write-spec` skill.
+Use this skill to create, resume, compare, or select preserved Homework 6 Agent 1 specification runs. The directory name exposes the Claude Code `/write-spec` slash command.
 
 ## Required Workflow
 
@@ -20,6 +22,14 @@ These shared workflow files are mandatory. If any required reference is missing 
 
 ## Execution
 
-Follow `workflow.md` exactly. It owns modes, stack input, run layout, sub-agent requirements, model guidance, research rules, selection behavior, and self-review gates.
+Follow `workflow.md` exactly. It owns modes, stack input, run layout, sub-agent requirements, model guidance, research rules, selection behavior, required outputs, and review gates.
 
-When repository instructions require `dev-doc-harness` or Superpowers, comply with their planning and freeze gates. The generated Homework 6 agents must remain usable without those tools.
+## Examples
+
+```text
+/write-spec
+/write-spec stack=python
+/write-spec stack=java
+/write-spec compare
+/write-spec select run=20260616-173000-write-spec-python-primary
+```

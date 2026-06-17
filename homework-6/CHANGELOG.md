@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 6: Tool-Neutral Write-Spec Package
+
+### Added
+
+- Added `agent-control/write-spec/` as the canonical shared Agent 1 reference package.
+- Added a Claude Code native `write-spec` project skill with Claude-oriented frontmatter and slash-command examples.
+
+### Changed
+
+- Updated the Codex `write-spec` skill, Agent 1 workflow references, run registry, and standing agent guide to point at the tool-neutral package.
+- Moved run-registry rules into the shared package so `docs/agent-runs/README.md` can stay a thin pointer.
+
+### Removed
+
+- Removed the legacy `.claude/commands/write-spec.md` wrapper with no transition period.
+
+### Tests
+
+- Validated skill metadata, reference paths, active stale path scan, MCP JSON, Codex TOML, placeholder markers, and whitespace checks.
+
 ## Homework 6 - Step 5: Post-Review Write-Spec Tightening
 
 ### Added
