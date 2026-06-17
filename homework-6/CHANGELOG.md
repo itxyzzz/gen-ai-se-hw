@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 2: Canonical Write-Spec Workflow
+
+### Added
+
+- Added `write-spec-workflow.md` as the canonical shared workflow for both the Codex Markdown skill and Claude Code slash command.
+
+### Changed
+
+- Reduced the Codex `write-spec` skill and Claude `/write-spec` command to thin wrappers around the shared workflow, stack profile, and quality-bar references.
+
+### Fixed
+
+- Removed duplicated workflow instructions from the two command surfaces to reduce drift before running Agent 1.
+
+### Tests
+
+- Validated skill metadata, wrapper references, placeholder scan, stack-selection markers, and whitespace checks.
+
 ## Homework 6 - Step 1: Agent 1 Control Surfaces
 
 ### Added

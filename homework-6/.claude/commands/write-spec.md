@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Generate, compare, resume, or select preserved Homework 6 Agent 1 specification runs. The command creates a stack-specific candidate specification package for the multi-agent banking transaction pipeline before downstream code, tests, hooks, MCP server, screenshots, or final docs are produced.
+Generate, compare, resume, or select preserved Homework 6 Agent 1 specification runs. This slash command is a thin Claude Code wrapper around the same canonical workflow used by the Codex Markdown `write-spec` skill.
 
 ## Inputs
 
@@ -25,31 +25,22 @@ Examples:
 
 ## Steps
 
-1. Prefer reading `homework-6/.agents/skills/write-spec/SKILL.md` if present.
-2. Read `homework-6/.agents/skills/write-spec/references/stack-profiles.md` and normalize stack input.
+1. Read `homework-6/.agents/skills/write-spec/references/write-spec-workflow.md`.
+2. Read `homework-6/.agents/skills/write-spec/references/stack-profiles.md`.
 3. Read `homework-6/.agents/skills/write-spec/references/write-spec-quality-bar.md`.
-4. Read assignment context: `homework-6/TASKS.md`, `homework-6/sample-transactions.json`, root `HOMEWORK_STANDARDS.md`, root `README.md`, and Homework 3 reference docs when available.
-5. Create a run folder before drafting output using `homework-6/docs/agent-runs/YYYYMMDD-HHMMSS-write-spec-<stack>-<short-label>/`.
-6. Record source context, selected stack, operator prompt, available tools, and research limitations in run metadata.
-7. Use Context7 for current technical library or framework documentation when available. Record each Context7 query, returned library ID, and applied insight.
-8. Use current authoritative web sources for domain facts when needed and available. Record URLs, dates accessed, and applied decisions.
-9. If research tools are unavailable, record the limitation and rely only on assignment files and local references.
-10. Draft all candidate outputs inside the run folder first.
-11. Validate against Homework 6 Task 1, the selected stack profile, and the quality bar.
-12. Compare preserved runs when requested. Include cross-stack differences when Python and Java runs both exist.
-13. Copy selected files to canonical homework paths only when the operator explicitly selects a run.
+4. Execute the canonical workflow. Treat `write-spec-workflow.md` as the source of truth if this command differs from the Codex skill wrapper.
 
-Fallback workflow when the Codex skill files are unavailable:
+Fallback when the shared workflow files are unavailable:
 
-1. Use this command file as the workflow source.
-2. Accept only `stack=python` and `stack=java`; default omitted stack to Python and reject `auto`.
-3. Create the same run folder structure.
-4. Generate `specification.md`, `agents.md`, domain rules, technical conventions, development process, research notes, validation checklist, and handoff in the run folder.
-5. Apply the same review gate below before comparison or selection.
+1. Accept only `stack=python` and `stack=java`; default omitted stack to Python and reject `auto`.
+2. Create a run folder under `homework-6/docs/agent-runs/` before drafting output.
+3. Generate candidate outputs in the run folder, not canonical paths.
+4. Require research notes or explicit fallback limitations.
+5. Apply the review gate below before comparison or selection.
 
 ## Required Outputs
 
-In `generate` or `resume` mode, create or update:
+Follow `write-spec-workflow.md` for exact output rules. In `generate` or `resume` mode, create or update:
 
 ```text
 homework-6/docs/agent-runs/<run-id>/
@@ -73,7 +64,7 @@ In `select` mode, update `homework-6/docs/agent-runs/final-selection.md` and cop
 
 ## Review Gate
 
-Before reporting a run as ready:
+Use `write-spec-quality-bar.md` for the full review. At minimum, before reporting a run as ready:
 
 - Confirm `specification.md` has high-level objective, 4-5 mid-level objectives, implementation notes, beginning and ending context, and one low-level task entry per meta-agent.
 - Confirm every low-level task includes exact prompt, target file, target function or method, details, edge cases, acceptance criteria, and verification.
