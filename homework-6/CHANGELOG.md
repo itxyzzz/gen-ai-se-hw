@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 9: Agent 1 Specification Run Plan
+
+### Added
+
+- Added the approved Phase 02 harness plan for the Python `write-spec` generation and first-run auto-selection workflow.
+
+### Changed
+
+- Recorded the required sub-agent waves, validation checks, selection boundary, and canonical-copy rules before running Agent 1.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated the Phase 02 plan for placeholder markers and whitespace issues before the planning freeze commit.
+
 ## Homework 6 - Step 8: Skill Metadata Cleanup
 
 ### Changed
