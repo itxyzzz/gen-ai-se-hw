@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 14: Hephaestus Planning Package
+
+### Added
+
+- Added the approved harness planning package for Hephaestus (Code Generator) under `docs/work-items/2026-06-18-hephaestus-code-generator/`.
+- Planned the `generate-code` control surface, tool-neutral workflow package, Codex and Claude Code entrypoints, run preservation, and Context7-backed `research-notes.md` requirements.
+
+### Changed
+
+- Authorized future Hephaestus (Code Generator) executor sub-agent use up to Homework 6's configured `agents.max_threads = 8` cap without additional operator approval.
+- Scoped the future Hephaestus run to Task 2 generated transaction-system code only, with Task 3 hooks/commands, Task 4 custom MCP setup, Task 5 docs/screenshots, and PR packaging explicitly out of scope.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated the planning artifacts for placeholder markers, whitespace issues, staged file scope, frozen-file diffs, Context7 requirements, and sub-agent autonomy language before the planning freeze commit.
+
 ## Homework 6 - Step 13: Replacement Athena Spec Selection
 
 ### Added
