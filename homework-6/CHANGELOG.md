@@ -1,5 +1,31 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 18: Code Run Preservation Repair
+
+### Added
+
+- Added the selected Hephaestus (Code Generator) output package under `agent-2-code/outputs/` with an inventory of selectable code, tests, research notes, canonical targets, and SHA-256 fingerprints.
+- Added selected-code traceability from Hephaestus run `20260618-223217-generate-code-python-primary` back to Athena run `20260618-003908-write-spec-python-replacement`.
+- Added integration coverage for repeated pipeline runs archiving prior `shared/` output to zero-padded `archive/shared-001` style folders.
+- Added `pytest.ini` so preserved run-local evidence tests under `docs/agent-runs/` do not collide with canonical tests during default pytest discovery.
+
+### Changed
+
+- Updated Hephaestus control docs so future code-generation runs produce run-local outputs first, then copy to canonical paths only through first-success or explicit selection.
+- Updated Athena control docs so future specs require product-level repeated-run archival behavior without leaking operator-layer selection mechanics.
+- Added future Themis traceability guidance so generated tests must name the selected Hephaestus software version they target.
+
+### Fixed
+
+- Repaired `integrator.py` so each pipeline run archives an existing `shared/` tree before creating a fresh protocol structure.
+- Repaired current run evidence so generated code is preserved in the run folder rather than existing only at canonical paths.
+
+### Tests
+
+- Watched `python -m pytest tests/test_pipeline_end_to_end.py -v` fail for missing archive folders, then pass after the archive implementation.
+- Ran `python -m pytest --cov=. --cov-fail-under=75` with 25 passing tests and 92.14% total coverage.
+- Ran `python integrator.py` twice with normal filesystem permissions, producing fresh current `shared/` output and zero-padded archived prior runs.
+
 ## Homework 6 - Step 17: Code Run Preservation Repair Plan
 
 ### Added
@@ -19,6 +45,30 @@
 ### Tests
 
 - Validated the draft planning artifacts for required sections, placeholder markers, staged-file scope, zero-padded archive naming, and source-spec/software-version traceability before the planning freeze commit.
+
+## Homework 6 - Step 16: Hephaestus Code Generation
+
+### Added
+
+- Added the Python transaction-processing pipeline generated from the selected Athena (Spec Writer) specification.
+- Added `integrator.py`, runtime pipeline components, shared Decimal/redaction/JSON utilities, and focused pytest coverage.
+- Added canonical Context7-backed `research-notes.md` plus preserved Hephaestus run evidence under `docs/agent-runs/20260618-223217-generate-code-python-primary/`.
+- Added generated JSON protocol and result evidence under `shared/input/`, `shared/processing/`, `shared/output/`, and `shared/results/`.
+
+### Changed
+
+- Established stable result shapes for later read-only status tooling without adding the Task 4 MCP server or changing MCP configuration.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Ran `python -m pytest --cov=. --cov-fail-under=75` with 24 passing tests and 92.03% total coverage.
+- Ran `python integrator.py`, producing `total=8`, `settled=3`, `rejected=2`, `review_required=3`, and `error=0`.
+- Verified generated shared files do not contain raw sample account IDs or raw transaction descriptions.
+- Verified `mcp.json` and `.codex/config.toml` remain unchanged for Task 2 scope.
 
 ## Homework 6 - Step 15: Hephaestus Control Surface
 

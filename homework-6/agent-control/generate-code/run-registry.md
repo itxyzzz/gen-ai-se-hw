@@ -29,6 +29,8 @@ homework-6/docs/agent-runs/RUN_ID/
   inputs/
     source-context.md
   agent-2-code/
+    outputs/
+      inventory.md
     handoffs/
       sub-agent-plan.md
     review/
@@ -53,7 +55,10 @@ Run folders are evidence snapshots. Canonical generated product files live at th
 A run folder must preserve:
 
 - Source context read by the run.
+- Source Athena (Spec Writer) run ID, canonical source spec path, and SHA-256 fingerprint of the selected `specification.md`.
 - Context7 query notes and limitations.
+- Complete candidate generated output package under `agent-2-code/outputs/`.
+- Output inventory listing selectable files, canonical targets, fingerprints, and excluded runtime/tool paths.
 - Planned and de-facto sub-agent strategy.
 - Sub-agent handoffs or reason sub-agents were not used.
 - Validation commands and actual results.
@@ -62,6 +67,8 @@ A run folder must preserve:
 Do not copy a run-local agent guide over `homework-6/agents.md`. Update standing guidance only through explicit Operator Layer maintenance.
 
 Do not overwrite canonical `specification.md`; Hephaestus consumes it and does not select specs.
+
+Do not place runtime or tool-output folders under selectable code packages. Exclude `shared/`, `archive/`, `.coverage`, `__pycache__/`, and `.pytest_cache/` from `agent-2-code/outputs/`.
 
 ## Sub-Agent Evidence
 
@@ -100,7 +107,13 @@ When comparing two or more Hephaestus runs, assess:
 
 ## Canonical Output Rule
 
-Hephaestus may write generated product files directly to canonical Homework 6 product paths only during an authorized code-generation run. Preserved run artifacts are evidence and are not the canonical submission by themselves.
+Hephaestus writes generated product files to `agent-2-code/outputs/` first. Preserved run artifacts are evidence snapshots, and `agent-2-code/outputs/` is the candidate package used for selection.
+
+The first successful code-generation run is auto-selected only when no selected code package exists. Auto-selection copies files from `agent-2-code/outputs/` to their inventory-declared canonical targets and records the selection.
+
+Later selections require explicit operator selection. Before copying a replacement package, remove the canonical targets declared by the prior selected inventory so stale selected files do not survive accidentally. Do not remove paths outside the inventory without explicit operator approval.
+
+Selection records must include the selected Hephaestus run ID, selected Athena source run ID, source spec SHA-256, inventory path, selected files, canonical targets, rationale, operator, and excluded runtime/tool paths.
 
 Canonical `research-notes.md` must include the Context7 entries required by Task 2. Run-local notes may mirror, expand, or link to that canonical file.
 

@@ -29,6 +29,7 @@ Beginning state:
 Ending state:
 
 - Every sample transaction is accounted for in `shared/results/`.
+- Repeated pipeline executions remain visibly separated: before a new run creates protocol directories, an existing `shared/` tree is archived beside it under the next zero-padded folder such as `archive/shared-001`, `archive/shared-002`, or `archive/shared-003`.
 - Rejected transactions include a safe reason field.
 - Accepted or review-required transactions include a clear status and safe processing summary.
 - The pipeline emits a summary report with total, accepted, rejected, review-required, and error counts.
@@ -66,7 +67,7 @@ The standard message envelope should follow this shape or a stack-equivalent ext
 }
 ```
 
-The generated spec should make file movement, idempotent reruns, deterministic directory reset, malformed JSON handling, and per-transaction failure recovery clear enough for code generation.
+The generated spec should make file movement, idempotent reruns, deterministic prior-output archival, malformed JSON handling, and per-transaction failure recovery clear enough for code generation. The product requirement is that prior runtime evidence is preserved and the current run receives a fresh `shared/input`, `shared/processing`, `shared/output`, and `shared/results` tree.
 
 ## Technical Constraints
 

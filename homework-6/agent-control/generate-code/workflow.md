@@ -49,6 +49,8 @@ homework-6/docs/agent-runs/RUN_ID/
   inputs/
     source-context.md
   agent-2-code/
+    outputs/
+      inventory.md
     handoffs/
       sub-agent-plan.md
     review/
@@ -64,11 +66,16 @@ homework-6/docs/agent-runs/RUN_ID/
 
 - Run ID, mode, selected stack, start time, and orchestration tool.
 - Whether Context7 was reachable.
+- Source Athena (Spec Writer) run ID, canonical source spec path, and SHA-256 fingerprint of the selected `specification.md`.
 - The planned sub-agent strategy and observed runtime limits.
 - The canonical files the run intends to create or modify.
 - Any pre-existing product files or dirty git state.
 
 `inputs/source-context.md` must list the exact source artifacts read, including the selected `specification.md`, sample data, assignment task file, agent guide, MCP config, and control package references.
+
+`agent-2-code/outputs/` is the complete candidate product package for the run. Create it before drafting or editing generated product files. It must include generated source files, generated tests when present, canonical `research-notes.md` content, and `inventory.md`. The inventory must list each selectable file, its canonical target, kind, and stable fingerprint; it must also list runtime and tool-output exclusions.
+
+Runtime folders are not selectable code outputs. Do not place `shared/`, `archive/`, `.coverage`, `__pycache__/`, or `.pytest_cache/` under `agent-2-code/outputs/`.
 
 ## Context7 Requirement
 
@@ -156,6 +163,8 @@ Hephaestus generates Task 2 Generated Transaction System Layer code only:
 - Focused code-level tests when needed to verify the generated pipeline and protect the implementation.
 - Canonical `research-notes.md` documenting Context7 usage.
 
+Generated transaction pipelines must be rerunnable with clearly separated runtime evidence. At startup, the integrator must archive an existing configured `shared/` tree beside that configured path under zero-padded incrementing folders such as `archive/shared-001`, `archive/shared-002`, and `archive/shared-003`, then create a fresh `shared/input`, `shared/processing`, `shared/output`, and `shared/results` tree for the current run.
+
 Hephaestus must not implement these later deliverables during a normal Task 2 run:
 
 - Task 3 slash commands, hooks, or enforced coverage gate.
@@ -177,6 +186,17 @@ Generated product files must not depend on:
 - Preserved run folders.
 - Canonical-copy or final-selection mechanics.
 
+## Output Selection
+
+Hephaestus writes candidate code to `agent-2-code/outputs/` first. Canonical Homework 6 product paths are updated only through selection:
+
+1. If this is the first successful code-generation run and no selected code package exists, auto-select it by copying the candidate files from `agent-2-code/outputs/` to their inventory-declared canonical targets.
+2. For later selections, require explicit operator selection. Remove the previously selected canonical targets declared by the prior selected inventory, then copy the chosen replacement package to the declared canonical targets.
+3. Record the selected Hephaestus run ID, source Athena run ID, source spec SHA-256, inventory path, selected files, canonical targets, rationale, operator, and excluded runtime/tool paths in `docs/agent-runs/final-selection.md` or a linked code-selection record.
+4. Preserve every meaningful Hephaestus run folder even when it is not selected.
+
+Do not copy runtime evidence such as `shared/` or `archive/` during selection.
+
 ## Validation And Handoff
 
 Before reporting a Hephaestus run complete:
@@ -184,12 +204,14 @@ Before reporting a Hephaestus run complete:
 1. Run the generated pipeline command, normally `python integrator.py` from `homework-6`.
 2. Verify all sample transactions appear under `shared/results/`.
 3. Inspect `shared/results/summary.json` for total, settled, rejected, review-required, and error counts.
-4. Run available focused tests, normally `python -m pytest` or a narrower equivalent if the generated code created tests.
-5. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
-6. Verify `research-notes.md` has at least two Context7 entries.
-7. Verify `mcp.json` and `.codex/config.toml` were not changed for Task 2.
-8. Update `homework-6/CHANGELOG.md` before any commit.
-9. Review the diff for unrelated changes, generated noise, unresolved template tokens, and scope creep.
+4. Run the pipeline a second time or run a focused test to verify prior `shared/` output archives to the next zero-padded `archive/shared-001` style folder before fresh output is created.
+5. Run available focused tests, normally `python -m pytest` or a narrower equivalent if the generated code created tests.
+6. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
+7. Verify `research-notes.md` has at least two Context7 entries.
+8. Verify `agent-2-code/outputs/` contains a complete inventory and no runtime/tool-output folders.
+9. Verify `mcp.json` and `.codex/config.toml` were not changed for Task 2.
+10. Update `homework-6/CHANGELOG.md` before any commit.
+11. Review the diff for unrelated changes, generated noise, unresolved template tokens, and scope creep.
 
 Write or update `agent-2-code/validation-checklist.md` with commands, expected signals, actual results, blockers, and any known limitations.
 

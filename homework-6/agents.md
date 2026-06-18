@@ -117,3 +117,11 @@ Harness and Superpowers may assist Operator Layer planning, execution, verificat
 - Record date, run ID, stack, selected files, copied canonical paths, rationale, operator, and post-selection edits.
 - Treat `specification.md` as the default selected package. Copy supporting docs only when explicitly selected, and never copy a run-local agent guide over this file.
 - Canonical files are submission files; run folders are evidence snapshots. Keep both roles distinct.
+
+## Code And Test Version Traceability
+
+- Preserve every meaningful Hephaestus (Code Generator) candidate under its run folder before canonical copy, with a complete `agent-2-code/outputs/` package and inventory.
+- Each selected Hephaestus code package must record the selected Athena (Spec Writer) source run ID, canonical spec path, and `specification.md` SHA-256 fingerprint.
+- The first successful Hephaestus code package may be selected by default when no selected code package exists. Later selections require an explicit selection record and clean replacement of the prior inventory-declared canonical targets.
+- Runtime output folders such as `shared/` and `archive/` are execution evidence, not selectable code packages.
+- Future Themis (Test Generator) runs must name the selected Hephaestus software version they target, including the selected code run ID, inventory path, selection record, and stable file or package fingerprints. Do not silently target "latest" when tests are generated or selected.

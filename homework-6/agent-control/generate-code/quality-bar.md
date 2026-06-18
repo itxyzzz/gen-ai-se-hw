@@ -12,6 +12,7 @@ Required Task 2 outcomes:
 - At least three cooperating runtime transaction pipeline components, including Transaction Validator and Fraud Detector plus Settlement Processor, Compliance Checker, or Reporting Agent.
 - JSON file communication through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Every record from `sample-transactions.json` represented in `shared/results/` after the pipeline runs.
+- Repeated runs preserve prior runtime output by moving an existing configured `shared/` tree to the next zero-padded archive folder, such as `archive/shared-001`, before creating fresh protocol directories.
 - Canonical `research-notes.md` with at least two Context7 query entries.
 
 Generated runtime components use functional names. Greek Homework Automation Layer labels must not be used for runtime product modules, files, classes, or functions.
@@ -22,12 +23,24 @@ Generated code must trace back to `homework-6/specification.md`.
 
 The run's `validation-checklist.md` must map:
 
+- Selected Athena (Spec Writer) run ID, canonical spec path, and SHA-256 content fingerprint.
 - Selected spec objectives to generated files.
 - Selected spec low-level tasks to generated implementation slices.
 - Required sample transaction outcomes to validation evidence.
 - Result-shape decisions to later MCP-readable status needs without adding Task 4 MCP config.
 
 If Hephaestus intentionally skips or narrows a selected-spec task, record the reason in the run handoff. Skipping because the task seems "later" is only valid when the task belongs to Task 3, Task 4 configuration/server work, Task 5 documentation/evidence, or another explicitly out-of-scope deliverable.
+
+## Output Preservation And Selection
+
+Reject or repair a Hephaestus run when:
+
+- `agent-2-code/outputs/` is missing.
+- `agent-2-code/outputs/inventory.md` is missing or does not list selectable files, canonical targets, file kinds, and stable fingerprints.
+- Run metadata, inventory, or selection records omit the selected Athena source run ID or `specification.md` SHA-256 fingerprint.
+- The selectable output package contains `shared/`, `archive/`, `.coverage`, `__pycache__/`, `.pytest_cache/`, or equivalent runtime/tool output.
+- A later selected package is copied to canonical paths without first removing the previous selected canonical targets declared by the prior inventory.
+- Selection records fail to name the selected Hephaestus software version, selected files, canonical targets, rationale, and excluded runtime/tool paths.
 
 ## Context7 Documentation
 
@@ -120,7 +133,10 @@ Minimum checks:
 - Pipeline command, normally `python integrator.py`, exits successfully.
 - All sample transactions are represented in `shared/results/`.
 - `shared/results/summary.json` accounts for all sample records.
+- A repeated run or focused test proves prior `shared/` output is archived under the next zero-padded `archive/shared-001` style folder and the current `shared/results/summary.json` is fresh.
 - Context7 notes are present in canonical `research-notes.md`.
+- `agent-2-code/outputs/` contains the complete selectable package and excludes runtime/tool output.
+- Source-spec provenance is recorded with the Athena run ID and SHA-256 fingerprint.
 - `mcp.json` and `.codex/config.toml` remain unchanged for Task 2.
 - Available tests pass, or blockers are recorded with exact command output and next action.
 - Privacy scans or focused review confirm no raw sensitive account identifiers or descriptions leak into generated outputs.
