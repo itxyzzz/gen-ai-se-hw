@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 13: Replacement Athena Spec Selection
+
+### Added
+
+- Added the replacement Athena (Spec Writer) run comparison record under `docs/agent-runs/20260618-003908-write-spec-python-replacement/comparison.md`.
+
+### Changed
+
+- Selected `20260618-003908-write-spec-python-replacement` as the canonical Python transaction-processing system specification.
+- Copied the selected run's `agent-1-spec/outputs/specification.md` to canonical `specification.md`.
+- Updated `docs/agent-runs/final-selection.md` so downstream Hephaestus (Code Generator) work uses the replacement transaction-system spec instead of the failed/superseded prior selection.
+
+### Fixed
+
+- Replaced the previously failed canonical spec that targeted the homework automation/control layer with a product-only Generated Transaction System Layer specification.
+
+### Tests
+
+- Verified canonical `specification.md` is byte-for-byte content-equivalent to the selected run output.
+- Verified required Task 1 sections are present in canonical `specification.md`.
+- Checked product-boundary leakage terms; remaining matches are negated non-product scope statements or privacy reminders, not transaction-system implementation tasks.
+- Reviewed git status and confirmed the change set is limited to canonical spec selection, final-selection metadata, the preserved replacement run folder, and this changelog entry.
+
 ## Homework 6 - Step 12: Athena Control Surface Repair
 
 ### Added
