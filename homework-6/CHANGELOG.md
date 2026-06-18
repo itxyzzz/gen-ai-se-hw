@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 19: Runtime Provenance Spec Contract
+
+### Added
+
+- Added an Athena (Spec Writer) product-spec requirement for `shared/run-provenance.json` so each current or archived runtime run can identify its source Athena specification and selected Hephaestus pipeline version.
+- Added Hephaestus (Code Generator) guidance allowing generated product code to write that runtime provenance file when the selected spec requires it, without implementing operator-layer selection workflows.
+
+### Changed
+
+- Clarified that runtime provenance belongs in the generated transaction-system specification, not as an ad hoc direct patch to the current integrator.
+- Ignored Homework 6 runtime `shared/` and `archive/` folders at the repository level so transaction-run output remains local evidence unless deliberately preserved in run artifacts.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Reverted the interrupted direct-code provenance attempt and verified no `integrator.py` or pipeline test diff remains for that path.
+- Planned static validation of Athena and Hephaestus control surfaces for `run-provenance.json` and runtime output ignore rules.
+
 ## Homework 6 - Step 18: Code Run Preservation Repair
 
 ### Added

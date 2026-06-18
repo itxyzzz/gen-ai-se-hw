@@ -165,6 +165,8 @@ Hephaestus generates Task 2 Generated Transaction System Layer code only:
 
 Generated transaction pipelines must be rerunnable with clearly separated runtime evidence. At startup, the integrator must archive an existing configured `shared/` tree beside that configured path under zero-padded incrementing folders such as `archive/shared-001`, `archive/shared-002`, and `archive/shared-003`, then create a fresh `shared/input`, `shared/processing`, `shared/output`, and `shared/results` tree for the current run.
 
+If the selected specification requires runtime provenance, Hephaestus may generate product code that writes a minimal `shared/run-provenance.json` file into the fresh shared tree. That file may record immutable source/version references such as selected Athena run ID, source spec path/fingerprint, selected Hephaestus run ID, and selected output inventory path or package fingerprint. The generated product must not perform run selection, compare preserved run folders, or depend on hidden chat state.
+
 Hephaestus must not implement these later deliverables during a normal Task 2 run:
 
 - Task 3 slash commands, hooks, or enforced coverage gate.
@@ -185,6 +187,8 @@ Generated product files must not depend on:
 - Prior chat state.
 - Preserved run folders.
 - Canonical-copy or final-selection mechanics.
+
+Runtime provenance is the narrow exception: generated code may record selected run IDs, source paths, and fingerprints when the selected specification requires it, but runtime behavior must not require reading preserved run folders or executing selection workflows.
 
 ## Output Selection
 

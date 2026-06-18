@@ -13,6 +13,7 @@ Required Task 2 outcomes:
 - JSON file communication through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Every record from `sample-transactions.json` represented in `shared/results/` after the pipeline runs.
 - Repeated runs preserve prior runtime output by moving an existing configured `shared/` tree to the next zero-padded archive folder, such as `archive/shared-001`, before creating fresh protocol directories.
+- When required by the selected spec, the fresh shared tree includes `shared/run-provenance.json` with non-sensitive source Athena spec and selected Hephaestus pipeline version references.
 - Canonical `research-notes.md` with at least two Context7 query entries.
 
 Generated runtime components use functional names. Greek Homework Automation Layer labels must not be used for runtime product modules, files, classes, or functions.
@@ -112,6 +113,7 @@ Reject or repair generated output if it includes:
 - Unfiltered metadata dumps that could expose PII.
 - Claims of real banking, AML, sanctions, KYC, payment-network, PCI, legal, regulatory, or production compliance.
 - Network calls, real payment movement, real identity screening, sanctions list lookup, or payment-network integration.
+- Runtime provenance files that include raw transactions, raw account IDs, descriptions, credentials, hidden prompt/thread content, or environment dumps.
 
 ## Scope Rejection Checks
 
@@ -123,6 +125,8 @@ A normal Task 2 Hephaestus run must not add:
 - `pipeline-status` entries in `mcp.json` or `.codex/config.toml`.
 - Final `README.md`, `HOWTORUN.md`, screenshots, or PR description support.
 - `dev-doc-harness`, Superpowers, freeze gates, plan artifacts, run-selection machinery, or Greek automation labels inside generated product code.
+
+Generated product code may write selected Athena/Hephaestus IDs and stable fingerprints into `shared/run-provenance.json` when the selected spec requires runtime traceability. It must not implement the operator-layer selection procedure itself.
 
 ## Validation Requirements
 

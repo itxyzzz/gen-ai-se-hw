@@ -26,8 +26,8 @@ The generated `specification.md` must include:
 
 1. High-Level Objective: one clear sentence describing the transaction-processing pipeline.
 2. Mid-Level Objectives: 4-5 concrete, testable objectives with observable success.
-3. Implementation Notes: precise decimal money handling, ISO 4217-style currency validation, audit logging, no plaintext PII logging, JSON file protocol, deterministic prior-output archival for repeated runs, temporary coverage expectation, and MCP-readable result responsibilities.
-4. Context: beginning state with `sample-transactions.json`; ending state with processed results in `shared/results/`, archived prior runtime output under zero-padded `archive/shared-001` style folders on repeated runs, a summary report, and a temporary test coverage target of 75%.
+3. Implementation Notes: precise decimal money handling, ISO 4217-style currency validation, audit logging, no plaintext PII logging, JSON file protocol, deterministic prior-output archival for repeated runs, runtime provenance at `shared/run-provenance.json`, temporary coverage expectation, and MCP-readable result responsibilities.
+4. Context: beginning state with `sample-transactions.json`; ending state with processed results in `shared/results/`, archived prior runtime output under zero-padded `archive/shared-001` style folders on repeated runs, a root `shared/run-provenance.json` trace file, a summary report, and a temporary test coverage target of 75%.
 5. Low-Level Tasks: implementation-ready transaction-system slices, with enough detail for code generation, tests, documentation, commands, hooks, and MCP-readable result shapes to be generated from the product specification.
 
 The spec should also include edge cases and verification mapping. Use Homework 3's selected `specification.md` as the depth target: rich product behavior, actors or components, state/data concepts, edge cases, failure modes, acceptance criteria, and implementation-ready slices. Do not copy Homework 3's dispute domain.
@@ -55,6 +55,7 @@ The low-level task section must not be one card per Homework Automation Layer ag
 - Shared JSON envelope and file movement semantics.
 - Input loading and deterministic run reset.
 - Prior-run archival before creating a fresh shared protocol tree.
+- Runtime provenance writing at `shared/run-provenance.json`, including source Athena spec run ID/fingerprint and selected Hephaestus pipeline version reference.
 - Integrator orchestration.
 - Decimal money parsing and serialization.
 - Currency and required-field validation.
@@ -82,9 +83,11 @@ Blocking leakage includes:
 - Greek identity labels used as runtime product components, implementation classes, package names, or executor sub-agent names.
 - Runtime transaction pipeline agents implemented as Claude/Codex skills instead of stack-native application components.
 
-Allowed product-level references include result files and summaries that later MCP tools can read, validation seams that later commands can invoke, and coverage expectations that later tests can enforce. The spec should describe those product contracts without instructing Athena (Spec Writer) to build the outer automation surfaces.
+Allowed product-level references include result files and summaries that later MCP tools can read, validation seams that later commands can invoke, runtime provenance that records selected source/version IDs and fingerprints, and coverage expectations that later tests can enforce. The spec should describe those product contracts without instructing Athena (Spec Writer) to build the outer automation surfaces.
 
 Allowed rerun behavior includes product-level archival of prior `shared/` runtime output under zero-padded sibling archive folders. Do not describe Hephaestus code-run inventories, selected-code records, or canonical-copy mechanics as transaction-system product requirements.
+
+Allowed runtime provenance behavior includes writing a minimal `shared/run-provenance.json` file that references selected Athena and Hephaestus run IDs, canonical paths, and stable fingerprints. The generated product should not implement selection, comparison, or canonical-copy workflows; it should only record the selected values supplied by the generated pipeline package.
 
 ## Research and Domain Rules
 
@@ -136,6 +139,7 @@ Before selecting a run, confirm:
 - The low-level task cards are implementation-ready transaction-system slices, not one entry per Homework Automation Layer agent.
 - The code-generation task requires at least three cooperating runtime transaction pipeline agents.
 - The generated transaction-system spec requires repeated pipeline runs to archive an existing `shared/` tree to zero-padded sibling archive folders before creating fresh protocol directories.
+- The generated transaction-system spec requires `shared/run-provenance.json` so each current or archived runtime run identifies the source Athena spec and selected Hephaestus pipeline version.
 - Hephaestus (Code Generator) Context7 usage and two-query documentation are explicit.
 - Coverage target is the temporary Athena (Spec Writer) ending-context target of 75%; Themis (Test Generator) later owns raising coverage above 80% and adding the blocking coverage hook.
 - `mcp.json` will include Context7 and `pipeline-status` only after `mcp/server.py` exists.

@@ -30,6 +30,7 @@ Ending state:
 
 - Every sample transaction is accounted for in `shared/results/`.
 - Repeated pipeline executions remain visibly separated: before a new run creates protocol directories, an existing `shared/` tree is archived beside it under the next zero-padded folder such as `archive/shared-001`, `archive/shared-002`, or `archive/shared-003`.
+- Each runtime run writes a minimal provenance reference at `shared/run-provenance.json` so the current run and each archived `shared-*` folder can be traced to the source Athena (Spec Writer) specification and selected Hephaestus (Code Generator) pipeline version.
 - Rejected transactions include a safe reason field.
 - Accepted or review-required transactions include a clear status and safe processing summary.
 - The pipeline emits a summary report with total, accepted, rejected, review-required, and error counts.
@@ -49,6 +50,15 @@ shared/
 
 The integrator drops initial messages into `shared/input`. Each runtime component moves or reads a message into `shared/processing` while working, writes the next safe JSON message into `shared/output`, and final outcomes land in `shared/results`.
 
+The integrator should also write `shared/run-provenance.json` at the root of the fresh shared tree. The file should contain only non-sensitive traceability metadata:
+
+- Schema version.
+- Runtime run ID and generated timestamp.
+- Source spec reference: Athena run ID, canonical spec path, and spec content fingerprint.
+- Pipeline version reference: Hephaestus run ID, selected output inventory path or package fingerprint, and any stable code-package fingerprint the implementation exposes.
+
+Because the whole `shared/` tree is archived before the next run, this provenance file becomes part of each archived run's evidence.
+
 The standard message envelope should follow this shape or a stack-equivalent extension:
 
 ```json
@@ -67,7 +77,7 @@ The standard message envelope should follow this shape or a stack-equivalent ext
 }
 ```
 
-The generated spec should make file movement, idempotent reruns, deterministic prior-output archival, malformed JSON handling, and per-transaction failure recovery clear enough for code generation. The product requirement is that prior runtime evidence is preserved and the current run receives a fresh `shared/input`, `shared/processing`, `shared/output`, and `shared/results` tree.
+The generated spec should make file movement, idempotent reruns, deterministic prior-output archival, runtime provenance writing, malformed JSON handling, and per-transaction failure recovery clear enough for code generation. The product requirement is that prior runtime evidence is preserved and the current run receives a fresh `shared/input`, `shared/processing`, `shared/output`, and `shared/results` tree plus a root `shared/run-provenance.json` trace file.
 
 ## Technical Constraints
 
@@ -79,6 +89,7 @@ The generated spec should make file movement, idempotent reruns, deterministic p
 - Tests must isolate filesystem state from the real `shared/` directories, for example with temporary directories or stack-equivalent fixtures.
 - The `/validate-transactions` workflow must be supportable as a validator dry-run over `sample-transactions.json`, without running the full pipeline as its primary behavior.
 - Future MCP tools must be able to read result shapes for `get_transaction_status`, `list_pipeline_results`, and `pipeline://summary`, but Athena (Spec Writer) should specify product result shapes, not create MCP configuration mechanics.
+- Runtime provenance must not include raw transactions, account identifiers, descriptions, credentials, or hidden prompt/thread content. It should record immutable run IDs, paths, and fingerprints only.
 
 ## Outer Homework Deliverables
 
@@ -88,7 +99,7 @@ Do not turn these outer mechanics into transaction-system product requirements i
 
 - Creating or repairing the `write-spec` skill, Claude skill, Codex command, or harness workflow.
 - `dev-doc-harness`, Superpowers freeze gates, planning package creation, or planning commits.
-- Preserved Athena (Spec Writer) run folders, final-selection records, canonical-copy mechanics, or comparison workflow.
+- Preserved Athena (Spec Writer) run folders, final-selection records, canonical-copy mechanics, or comparison workflow as implementation mechanics. A product-level runtime provenance file may reference selected Athena and Hephaestus run IDs/fingerprints for auditability.
 - Hook setup, MCP configuration setup, screenshot capture, README/PR support, or submission packaging as low-level product slices.
 
 The generated spec may mention that Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) will consume the spec later. It must not ask the generated transaction-processing software to implement those homework automation agents.
