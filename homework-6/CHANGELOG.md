@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 17: Code Run Preservation Repair Plan
+
+### Added
+
+- Added the approved planning package for repairing Hephaestus (Code Generator) run-local output preservation, selected-code traceability, and repeatable pipeline run archival.
+- Added a test-case snapshot for zero-padded runtime archive folders such as `archive/shared-001` and for code/test generation provenance checks.
+
+### Changed
+
+- Planned a source trace from the selected Athena (Spec Writer) run to each Hephaestus code version using run IDs and stable content fingerprints.
+- Planned future Themis (Test Generator) traceability so generated tests name the selected Hephaestus software version they target.
+
+### Fixed
+
+- Planned repair of the current first Hephaestus run folder so the generated code package exists under the run evidence before canonical selection.
+
+### Tests
+
+- Validated the draft planning artifacts for required sections, placeholder markers, staged-file scope, zero-padded archive naming, and source-spec/software-version traceability before the planning freeze commit.
+
 ## Homework 6 - Step 15: Hephaestus Control Surface
 
 ### Added
