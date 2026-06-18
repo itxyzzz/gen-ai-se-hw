@@ -8,9 +8,11 @@ Before changing Homework 6 files, load context in this order:
 2. Repository `AGENTS.md`, `HOMEWORK_STANDARDS.md`, and root `README.md`.
 3. For operator-layer maintenance, `homework-6/TASKS.md` and `homework-6/sample-transactions.json`.
    For Athena (Spec Writer) normal generation, use `homework-6/agent-control/write-spec/transaction-system-brief.md` instead of `TASKS.md`.
+   For Hephaestus (Code Generator) normal generation, use selected `homework-6/specification.md`, `TASKS.md` Task 2 checks, Context7 MCP configuration, and `homework-6/agent-control/generate-code/`.
 4. This `homework-6/agents.md`.
 5. Selected or active run artifacts under `homework-6/docs/agent-runs/`.
 6. For Athena (Spec Writer), the `write-spec` skill or slash command and its references.
+   For Hephaestus (Code Generator), the `generate-code` skill or slash command and its references.
 7. Current git status, existing diffs, and relevant tests or validation output.
 
 When instructions conflict, preserve the highest-priority user and repository rules first, then the most specific Homework 6 artifact.
@@ -37,6 +39,8 @@ Use this glossary before using Greek identity labels. In technical prompts and i
 | Clio / Documentation Generator | Produces reviewer-facing documentation and handoff evidence for the generated transaction-processing software. | README, HOWTORUN, architecture and testing docs, screenshots, and final PR support. |
 
 Athena (Spec Writer) is stack-flexible through the fixed enum in `agent-control/write-spec/stack-profiles.md`. The default generation stack is `python`; `java` is an optional alternate profile. `auto` is not supported. After stack selection, every generated `specification.md` must be concrete for that stack.
+
+Hephaestus (Code Generator) uses the tool-neutral control package at `agent-control/generate-code/`. Codex entrypoint: `.agents/skills/generate-code/SKILL.md`. Claude Code entrypoint: `.claude/skills/generate-code/SKILL.md`. A Hephaestus run consumes the selected `specification.md`, uses Context7 during code generation, and documents at least two Context7 query records in canonical `research-notes.md`. Hephaestus may use executor sub-agents up to the Homework 6 `agents.max_threads = 8` configuration without additional operator approval; it should use curated context, deliberate model/reasoning selection, and orchestrator-owned final integration.
 
 This `homework-6/agents.md` file is the standing project-level guide required by Task 1. It lives beside `TASKS.md` so every run and downstream Homework Automation Layer agent can load the same stable context. Do not regenerate or overwrite it during individual Athena (Spec Writer) runs; if a run discovers a needed guide change, record the recommendation in that run's handoff and apply it as a separate control-surface update.
 

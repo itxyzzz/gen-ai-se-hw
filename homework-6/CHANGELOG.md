@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 15: Hephaestus Control Surface
+
+### Added
+
+- Added the tool-neutral Hephaestus (Code Generator) control package under `agent-control/generate-code/`.
+- Added Codex and Claude Code `generate-code` skill entrypoints for Task 2 code-generation runs.
+- Added Hephaestus workflow, quality-bar, and run-registry guidance for Context7 research notes, run preservation, validation, and sub-agent evidence.
+
+### Changed
+
+- Updated `agents.md` so future Hephaestus runs discover the selected `specification.md`, `generate-code` entrypoints, Context7 requirement, and executor sub-agent autonomy up to `agents.max_threads = 8`.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated branch, expected changed files, untouched `TASKS.md`, untouched `specification.md`, unchanged Context7 MCP config, generate-code package paths, wrapper references, Context7/sub-agent markers, scope rejection markers, unresolved-template scans, and whitespace checks.
+
 ## Homework 6 - Step 14: Hephaestus Planning Package
 
 ### Added
