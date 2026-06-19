@@ -9,10 +9,12 @@ Before changing Homework 6 files, load context in this order:
 3. For operator-layer maintenance, `homework-6/TASKS.md` and `homework-6/sample-transactions.json`.
    For Athena (Spec Writer) normal generation, use `homework-6/agent-control/write-spec/transaction-system-brief.md` instead of `TASKS.md`.
    For Hephaestus (Code Generator) normal generation, use selected `homework-6/specification.md`, `TASKS.md` Task 2 checks, Context7 MCP configuration, and `homework-6/agent-control/generate-code/`.
+   For Themis (Test Generator) normal generation, use `docs/agent-runs/final-selection.md`, the selected Hephaestus (Code Generator) inventory, `agent-control/generate-tests/`, and `agent-control/operate-pipeline/` only as external support-tool behavior to validate.
 4. This `homework-6/agents.md`.
 5. Selected or active run artifacts under `homework-6/docs/agent-runs/`.
 6. For Athena (Spec Writer), the `write-spec` skill or slash command and its references.
    For Hephaestus (Code Generator), the `generate-code` skill or slash command and its references.
+   For Themis (Test Generator), the `generate-tests` skill or slash command and its references.
 7. Current git status, existing diffs, and relevant tests or validation output.
 
 When instructions conflict, preserve the highest-priority user and repository rules first, then the most specific Homework 6 artifact.
@@ -35,12 +37,18 @@ Use this glossary before using Greek identity labels. In technical prompts and i
 |---|---|---|
 | Athena / Spec Writer / write-spec | Creates the detailed technical specification for the transaction-processing system. | `specification.md`, spec support docs, research notes, and preserved generation runs. |
 | Hephaestus / Code Generator | Builds the generated transaction-processing software from the selected specification. | Integrator, at least three cooperating runtime pipeline components, JSON file protocol, and Context7 research notes. |
-| Themis / Test Generator | Creates or extends tests and quality gates for the generated transaction-processing software. | Unit and integration tests, coverage gate hook, `/run-pipeline`, and `/validate-transactions`. |
-| Clio / Documentation Generator | Produces reviewer-facing documentation and handoff evidence for the generated transaction-processing software. | README, HOWTORUN, architecture and testing docs, screenshots, and final PR support. |
+| Themis / Test Generator | Creates or extends selected-code test suites and test-quality evidence for the generated transaction-processing software. | Unit tests, integration tests, test fixtures/config, validation evidence, run inventories, and selected test-package records. |
+| Clio / Documentation Generator | Produces reviewer-facing documentation and handoff evidence for the generated transaction-processing software. | README, HOWTORUN, architecture and testing docs, screenshots, final test evidence narrative, and final PR support. |
 
 Athena (Spec Writer) is stack-flexible through the fixed enum in `agent-control/write-spec/stack-profiles.md`. The default generation stack is `python`; `java` is an optional alternate profile. `auto` is not supported. After stack selection, every generated `specification.md` must be concrete for that stack.
 
 Hephaestus (Code Generator) uses the tool-neutral control package at `agent-control/generate-code/`. Codex entrypoint: `.agents/skills/generate-code/SKILL.md`. Claude Code entrypoint: `.claude/skills/generate-code/SKILL.md`. A Hephaestus run consumes the selected `specification.md`, uses Context7 during code generation, and documents at least two Context7 query records in canonical `research-notes.md`. Hephaestus may use executor sub-agents up to the Homework 6 `agents.max_threads = 8` configuration without additional operator approval; it should use curated context, deliberate model/reasoning selection, and orchestrator-owned final integration.
+
+Themis (Test Generator) uses the tool-neutral control package at `agent-control/generate-tests/`. Codex entrypoint: `.agents/skills/generate-tests/SKILL.md`. Claude Code entrypoint: `.claude/skills/generate-tests/SKILL.md`. Claude Code legacy command wrapper: `.claude/commands/generate-tests.md`. A Themis run targets a named selected Hephaestus software version, records the selected code run ID, inventory path, selection record, source Athena run ID, source and current spec fingerprints, and selected code fingerprints, then writes candidate tests under a preserved run-local `agent-3-tests/outputs/` package before any explicit canonical selection. Themis owns test quality beyond raw coverage: meaningful assertions, unit and integration coverage, dry-run validation, privacy/audit checks, fixture isolation, repeated-run behavior, and validation of command/hook support surfaces.
+
+Pipeline operation support surfaces are maintained separately under `agent-control/operate-pipeline/`. Claude command wrappers live at `.claude/commands/run-pipeline.md` and `.claude/commands/validate-transactions.md`; modern project skills live under both `.agents/skills/` and `.claude/skills/`; the portable coverage helper is `scripts/check_coverage_gate.py`; the Git hook is `.githooks/pre-push`; and the Claude hook setting is `.claude/settings.json`. These are Operator Layer outer tools created once for Task 3. Themis validates them and reports gaps, but it must not treat `/run-pipeline`, `/validate-transactions`, or the coverage hook as routine Themis per-run outputs.
+
+Clio (Documentation Generator) consumes selected Themis results for final Task 5 documentation and evidence. Clio reruns the selected test suite, captures reviewer-facing screenshots, and writes the final testing narrative. If Clio finds a test gap, it should request a Themis follow-up or record an explicit final test-hardening delta instead of silently replacing or forking the selected Themis suite.
 
 This `homework-6/agents.md` file is the standing project-level guide required by Task 1. It lives beside `TASKS.md` so every run and downstream Homework Automation Layer agent can load the same stable context. Do not regenerate or overwrite it during individual Athena (Spec Writer) runs; if a run discovers a needed guide change, record the recommendation in that run's handoff and apply it as a separate control-surface update.
 
@@ -125,3 +133,4 @@ Harness and Superpowers may assist Operator Layer planning, execution, verificat
 - The first successful Hephaestus code package may be selected by default when no selected code package exists. Later selections require an explicit selection record and clean replacement of the prior inventory-declared canonical targets.
 - Runtime output folders such as `shared/` and `archive/` are execution evidence, not selectable code packages.
 - Future Themis (Test Generator) runs must name the selected Hephaestus software version they target, including the selected code run ID, inventory path, selection record, and stable file or package fingerprints. Do not silently target "latest" when tests are generated or selected.
+- Future Themis runs must copy the selected Hephaestus package into a run-local `workspace/selected-code/`, write candidate tests/config first under `agent-3-tests/outputs/`, overlay those outputs into `workspace/project-under-test/`, and run validation from that workspace. Root `tests/`, root `shared/`, root `.coverage`, and canonical product files stay untouched until explicit inventory-driven test selection.

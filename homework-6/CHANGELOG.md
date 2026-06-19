@@ -1,5 +1,27 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 27: Themis Test Generator Controls
+
+### Added
+
+- Added the Themis (Test Generator) control package under `agent-control/generate-tests/` with workflow, quality bar, run registry, and README.
+- Added a separate `agent-control/operate-pipeline/` package for the one-time `/run-pipeline`, `/validate-transactions`, and coverage gate behavior.
+- Added Codex and Claude Code `generate-tests`, `run-pipeline`, and `validate-transactions` skill surfaces plus Claude command wrappers.
+- Added `scripts/check_coverage_gate.py`, `.githooks/pre-push`, and `.claude/settings.json` coverage hook surfaces for the 80 percent gate.
+
+### Changed
+
+- Updated `agents.md` so Themis targets named selected Hephaestus versions, uses a run-local workspace, and owns test quality while validating rather than owning outer command/hook tools.
+- Clarified that Clio (Documentation Generator) consumes selected Themis outputs for final evidence and documentation instead of silently replacing the selected suite.
+
+### Fixed
+
+- Removed the ambiguity that treated `/run-pipeline`, `/validate-transactions`, and the coverage hook as Themis per-run outputs.
+
+### Tests
+
+- Planned validation covers required file existence, boundary marker scans, unchanged frozen assignment/spec/MCP files, coverage helper pass and demonstration-failure paths, and whitespace checks.
+
 ## Homework 6 - Step 26: Themis Test Generator Plan
 
 ### Added
