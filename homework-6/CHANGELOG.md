@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 23: Run-Local Pipeline Generation Plan
+
+### Added
+
+- Added the approved planning package for run-local pipeline generation control updates under `docs/work-items/2026-06-19-run-local-pipeline-generation/`.
+- Planned Athena (Spec Writer) quality guidance for at least four runtime pipeline components with Reporting Agent as the default fourth component.
+- Planned Hephaestus (Code Generator) run-local validation rules for candidate `sample-transactions.json`, local `shared/` last-run evidence, and local `archive/shared-001` repeated-run checks.
+
+### Changed
+
+- Planned archive-only ignore behavior so `archive/` folders stay gitignored while `shared/` folders remain commit-capable as last-run evidence.
+- Preserved `agent-control/write-spec/transaction-system-brief.md` as static general-purpose pipeline context, with implementation details assigned to quality and workflow control files.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated the draft planning package for placeholder markers.
+- Verified `agent-control/write-spec/transaction-system-brief.md` has no diff.
+- Updated the plan after review comments clarified that only `archive/` folders, not `shared/` folders, should be gitignored.
+
 ## Homework 6 - Step 22: Selected Hephaestus Run Evidence
 
 ### Added
