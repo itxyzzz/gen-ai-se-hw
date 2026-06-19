@@ -1,5 +1,29 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 21: Fresh Hephaestus Code Candidate
+
+### Added
+
+- Added Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` as a preserved Task 2 candidate generated from the latest canonical Athena (Spec Writer) specification.
+- Added a complete candidate package under `agent-2-code/outputs/` with runtime components, integrator, pytest coverage, Context7 notes, and selectable-file inventory.
+- Added run metadata, source-context notes, sub-agent strategy, validation checklist, handoff, and comparison evidence for the fresh code candidate.
+
+### Changed
+
+- Reconciled the generated Task 2 candidate with source spec `20260619-170102-write-spec-python-fresh`, including runtime provenance, deterministic protocol filenames, exact sample outcome counts, and no Task 3-5 scope creep.
+
+### Fixed
+
+- Fixed the candidate behavior relative to the prior selected code package by adding `shared/run-provenance.json` support and matching the fresh spec's expected `settled=2`, `rejected=2`, `review_required=4`, and `error=0` sample summary.
+
+### Tests
+
+- Ran candidate `python -m pytest` with 34 passing tests.
+- Ran candidate `python -m pytest --cov=. --cov-fail-under=75` with 91.80% total coverage.
+- Ran the generated candidate pipeline twice against canonical `sample-transactions.json`, producing `total=8`, `settled=2`, `rejected=2`, `review_required=4`, and `error=0` and archiving repeated runtime output through zero-padded archive folders.
+- Verified runtime results, run provenance, and candidate package files do not contain raw sample account IDs or sample descriptions.
+- Verified `mcp.json` and `.codex/config.toml` remain unchanged for Task 2 scope.
+
 ## Homework 6 - Step 20: Fresh Athena Spec Selection
 
 ### Added
