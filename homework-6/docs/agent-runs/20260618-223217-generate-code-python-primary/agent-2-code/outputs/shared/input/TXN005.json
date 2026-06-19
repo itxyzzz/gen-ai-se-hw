@@ -1,0 +1,36 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "735e5d0f-fc4a-4b59-a28d-d4054849b27c",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN005"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "75000.00",
+    "channel": "branch",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_redacted": "ACC-****6600",
+    "source_account_redacted": "ACC-****1005",
+    "status": "received",
+    "timestamp": "2026-03-16T10:00:00Z",
+    "transaction_id": "TXN005",
+    "transaction_type": "wire_transfer"
+  },
+  "message_id": "bdc67f34-a5a1-452e-8773-5a42a0f6edb1",
+  "message_type": "transaction",
+  "schema_version": "1.0",
+  "source_agent": "integrator",
+  "target_agent": "transaction_validator",
+  "transaction_id": "TXN005"
+}

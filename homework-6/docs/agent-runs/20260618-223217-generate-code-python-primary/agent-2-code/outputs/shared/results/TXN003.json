@@ -1,0 +1,65 @@
+{
+  "amount": "9999.99",
+  "audit": [
+    {
+      "agent_name": "integrator",
+      "event_id": "5e1c39a8-dac1-49dd-89d1-bb8c4c310ceb",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "ce613cca-3694-4ca1-9197-59d0684f06f3",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "2c87d58e-f5bb-48f2-8a09-5399f1f47534",
+      "outcome": "approved_for_settlement",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "73747db7-7d60-4e80-bef1-e741d00596fd",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "currency": "USD",
+  "generated_at": "2026-06-19T18:46:22Z",
+  "reason_code": null,
+  "reason_codes": [],
+  "risk_level": "low",
+  "risk_reasons": [],
+  "risk_score": 0,
+  "schema_version": "1.0",
+  "settlement_note": "simulated_settlement_ready",
+  "settlement_reference": "SIM-TXN003",
+  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed.",
+  "status": "settled",
+  "transaction_id": "TXN003",
+  "transaction_type": "transfer"
+}

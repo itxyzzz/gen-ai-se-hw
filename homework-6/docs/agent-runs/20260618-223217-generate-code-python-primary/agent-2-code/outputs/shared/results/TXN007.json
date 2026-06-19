@@ -1,0 +1,57 @@
+{
+  "amount": "-100.00",
+  "audit": [
+    {
+      "agent_name": "integrator",
+      "event_id": "d6af2105-8063-4ee9-bd80-0e3745f29093",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "e569ce6b-dba5-4157-b7fd-95c76a28d8cd",
+      "outcome": "rejected",
+      "reason_code": "NON_POSITIVE_AMOUNT",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "fb97f005-b3c5-4605-96e5-1ee64e8d90f9",
+      "outcome": "rejected",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "currency": "GBP",
+  "generated_at": "2026-06-19T18:46:22Z",
+  "reason_code": "NON_POSITIVE_AMOUNT",
+  "reason_codes": [
+    "NON_POSITIVE_AMOUNT"
+  ],
+  "risk_level": "not_scored",
+  "risk_reasons": [],
+  "risk_score": 0,
+  "schema_version": "1.0",
+  "settlement_note": "validation_rejected",
+  "settlement_reference": null,
+  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed.",
+  "status": "rejected",
+  "transaction_id": "TXN007",
+  "transaction_type": "refund"
+}

@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 22: Selected Hephaestus Run Evidence
+
+### Added
+
+- Added run-local `sample-transactions.json` and current `shared/` last-run evidence under selected Hephaestus (Code Generator) run `20260618-223217-generate-code-python-primary`.
+
+### Changed
+
+- Preserved the selected code run's local runtime evidence separately from selectable code inventory and newer candidate-generation evidence.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Inspected the run-local `shared/results/summary.json` for the selected code run evidence.
+
 ## Homework 6 - Step 21: Fresh Hephaestus Code Candidate
 
 ### Added
