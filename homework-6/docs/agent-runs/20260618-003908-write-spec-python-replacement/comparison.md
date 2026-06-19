@@ -30,3 +30,7 @@ Select `20260618-003908-write-spec-python-replacement` and copy only:
 - `agent-1-spec/outputs/specification.md` to `specification.md`
 
 Support docs remain preserved under the run folder because the operator selected the run as the canonical spec and did not explicitly select canonical support docs.
+
+## Supersession Note
+
+On 2026-06-19, this run was superseded by `20260619-170102-write-spec-python-fresh` after comparison of the last three Athena (Spec Writer) generated specs. The replacement run remains a passing historical selection, but the fresh run better matches the current Homework 6 product contract because it adds repeated-run archival and `shared/run-provenance.json` requirements directly to the Generated Transaction System Layer specification.

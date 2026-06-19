@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 20: Fresh Athena Spec Selection
+
+### Added
+
+- Added a comparison record for Athena (Spec Writer) run `20260619-170102-write-spec-python-fresh` against the prior two generated specs.
+- Added supersession notes to the prior Athena comparison records so the last-three selection history is traceable.
+
+### Changed
+
+- Selected `20260619-170102-write-spec-python-fresh` as the canonical Python transaction-processing system specification.
+- Copied the selected run's `agent-1-spec/outputs/specification.md` to canonical `specification.md`.
+- Updated `docs/agent-runs/final-selection.md` to record the fresh spec selection and the traceability caveat that the existing selected Hephaestus (Code Generator) package was generated from the prior spec.
+
+### Fixed
+
+- Superseded the earlier selected spec with one that includes the current repeated-run archival and `shared/run-provenance.json` product contract.
+
+### Tests
+
+- Compared the last three generated Athena (Spec Writer) specs against completeness, research provenance, Python stack specificity, privacy/audit handling, product-boundary leakage, task-card executability, archival/provenance requirements, and handoff usefulness.
+- Verified the fresh spec contains no plaintext sample account IDs, sample transaction descriptions, harness/Superpowers leakage, canonical-copy product tasks, screenshot/PR packaging product tasks, or Homework Automation Layer agent task cards.
+- Verified canonical `specification.md` is byte-for-byte content-equivalent to the selected fresh run output after copy.
+
 ## Homework 6 - Step 19: Runtime Provenance Spec Contract
 
 ### Added

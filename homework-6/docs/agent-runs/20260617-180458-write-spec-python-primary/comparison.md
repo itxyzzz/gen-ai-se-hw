@@ -15,3 +15,7 @@ If final review and validation pass, this run is eligible for first-run auto-sel
 - It includes required run metadata, source context, sub-agent handoffs, candidate outputs, support docs, research notes, validation checklist, review, and handoff.
 - The homework-root canonical `specification.md` was absent before generation.
 - Selection rules copy only `agent-1-spec/outputs/specification.md` to canonical `specification.md`.
+
+## Later Comparison Outcome
+
+On 2026-06-19, this run was included in the last-three Athena (Spec Writer) spec comparison with `20260618-003908-write-spec-python-replacement` and `20260619-170102-write-spec-python-fresh`. It remains failed/superseded evidence only because its low-level task structure targets Homework Automation Layer agents rather than only the Generated Transaction System Layer.
