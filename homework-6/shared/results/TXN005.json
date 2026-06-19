@@ -1,0 +1,77 @@
+{
+  "amount": "75000.00",
+  "audit_events": [
+    {
+      "component": "integrator",
+      "event_id": "67b3ff91-5385-478d-940d-7efc083c354a",
+      "outcome": "received",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "component": "transaction_validator",
+      "event_id": "29d20c19-be6e-40a4-ba9b-0c20ac78bd1e",
+      "outcome": "validated",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "component": "fraud_detector",
+      "event_id": "664d424d-8ea2-47bd-bfca-48ab3daf46f1",
+      "outcome": "review_required",
+      "reason_code": "VERY_HIGH_VALUE",
+      "risk_level": "high",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "component": "settlement_processor",
+      "event_id": "a8f427c8-12c0-47da-a155-2fb5c01df8b3",
+      "outcome": "review_required",
+      "risk_level": "high",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T16:12:47Z"
+    }
+  ],
+  "currency": "USD",
+  "processed_at": "2026-06-19T16:12:47Z",
+  "reason_codes": [
+    "VERY_HIGH_VALUE",
+    "HIGH_VALUE",
+    "WIRE_TRANSFER"
+  ],
+  "risk_level": "high",
+  "risk_score": 85,
+  "safe_summary": {
+    "channel": "branch",
+    "country": "US",
+    "settlement_note": "manual_review_required",
+    "settlement_reference": null,
+    "transaction_type": "wire_transfer"
+  },
+  "schema_version": "1.0",
+  "status": "review_required",
+  "transaction_id": "TXN005"
+}

@@ -1,0 +1,102 @@
+{
+  "audit_events": [
+    {
+      "component": "integrator",
+      "event_id": "65fa59f3-c4de-404b-a590-c85cd03b04fc",
+      "outcome": "received",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "component": "transaction_validator",
+      "event_id": "44737574-6d6a-4f3a-9833-7d332c13f3e1",
+      "outcome": "validated",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "component": "fraud_detector",
+      "event_id": "5510964c-310f-43f5-82b7-22149145c2d4",
+      "outcome": "review_required",
+      "reason_code": "ODD_HOUR_ACTIVITY",
+      "risk_level": "medium",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "component": "settlement_processor",
+      "event_id": "66003814-d3e8-4140-aec8-3be35d7eaef0",
+      "outcome": "review_required",
+      "risk_level": "medium",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN004"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T16:12:47Z"
+    }
+  ],
+  "data": {
+    "amount": "500.00",
+    "channel": "api",
+    "country": "DE",
+    "currency": "EUR",
+    "destination_account_present": true,
+    "destination_account_redacted": "ACC-****5500",
+    "metadata_present": true,
+    "source_account_present": true,
+    "source_account_redacted": "ACC-****1004",
+    "status": "review_required",
+    "timestamp": "2026-03-16T02:47:00Z",
+    "transaction_id": "TXN004",
+    "transaction_type": "transfer"
+  },
+  "message_id": "fc586642-5b08-4e55-b41e-44a959a2a0d6",
+  "message_type": "settlement_result",
+  "risk": {
+    "decision": "review_required",
+    "risk_level": "medium",
+    "risk_reasons": [
+      "ODD_HOUR_ACTIVITY",
+      "REMOTE_CHANNEL",
+      "CROSS_COUNTRY_REVIEW_SIGNAL"
+    ],
+    "risk_score": 35
+  },
+  "schema_version": "1.0",
+  "settlement": {
+    "reason_code": null,
+    "settlement_note": "manual_review_required",
+    "settlement_reference": null,
+    "status": "review_required"
+  },
+  "source_agent": "settlement_processor",
+  "target_agent": "integrator",
+  "timestamp": "2026-06-19T16:12:47Z",
+  "transaction_id": "TXN004",
+  "validation": {
+    "amount": "500.00",
+    "currency": "EUR",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}

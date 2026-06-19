@@ -1,0 +1,40 @@
+{
+  "audit_events": [
+    {
+      "component": "integrator",
+      "event_id": "b69d3ce1-77ff-4346-b0c1-469bcda0e865",
+      "outcome": "received",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN008"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    }
+  ],
+  "data": {
+    "amount": "3200.00",
+    "channel": "mobile",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_present": true,
+    "destination_account_redacted": "ACC-****9900",
+    "metadata_present": true,
+    "source_account_present": true,
+    "source_account_redacted": "ACC-****1008",
+    "status": "received",
+    "timestamp": "2026-03-16T10:15:00Z",
+    "transaction_id": "TXN008",
+    "transaction_type": "transfer"
+  },
+  "message_id": "456f5ae1-f64a-46d4-bf98-3945be34a2f9",
+  "message_type": "transaction",
+  "schema_version": "1.0",
+  "source_agent": "integrator",
+  "target_agent": "transaction_validator",
+  "timestamp": "2026-06-19T16:12:47Z",
+  "transaction_id": "TXN008"
+}

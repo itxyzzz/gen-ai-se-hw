@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 25: Root Pipeline Last-Run Evidence
+
+### Added
+
+- Added root `shared/` last-run evidence so reviewers can inspect the current selected pipeline output now that `shared/` folders are no longer gitignored.
+
+### Changed
+
+- Preserved root runtime evidence separately from the run-local candidate packages and selectable code inventories.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Inspected `shared/results/summary.json` for `total_transactions=8`, `settled=2`, `rejected=2`, `review_required=4`, and `error=0`.
+- Scanned root `shared/` for raw sample account identifiers, raw sample descriptions, credentials, tokens, and secrets before staging.
+
 ## Homework 6 - Step 24: Run-Local Pipeline Generation Controls
 
 ### Added

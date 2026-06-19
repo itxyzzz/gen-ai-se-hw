@@ -1,0 +1,61 @@
+{
+  "amount": "-100.00",
+  "audit_events": [
+    {
+      "component": "integrator",
+      "event_id": "4bc58052-6ef3-4937-acbe-b69951605dd0",
+      "outcome": "received",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "component": "transaction_validator",
+      "event_id": "6e893d50-cf45-4cba-9f5d-3a416c8c2117",
+      "outcome": "rejected",
+      "reason_code": "NON_POSITIVE_AMOUNT",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "component": "settlement_processor",
+      "event_id": "d45514de-4498-4eae-ae28-f175da800425",
+      "outcome": "rejected",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN007"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T16:12:47Z"
+    }
+  ],
+  "currency": "GBP",
+  "processed_at": "2026-06-19T16:12:47Z",
+  "reason_codes": [
+    "NON_POSITIVE_AMOUNT"
+  ],
+  "risk_level": "not_scored",
+  "risk_score": 0,
+  "safe_summary": {
+    "channel": "online",
+    "country": "GB",
+    "settlement_note": "validation_rejected",
+    "settlement_reference": null,
+    "transaction_type": "refund"
+  },
+  "schema_version": "1.0",
+  "status": "rejected",
+  "transaction_id": "TXN007"
+}

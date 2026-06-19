@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-06-19T16:12:47Z",
+  "pipeline_version": {
+    "inventory_path": "homework-6/docs/agent-runs/20260619-175211-generate-code-python-fresh-spec/agent-2-code/outputs/inventory.md",
+    "package_sha256": "371E9DE16BB255674EA59EE2A9F7779F1797969DFD95E909CD536AB9C9EE113A",
+    "run_id": "20260619-175211-generate-code-python-fresh-spec"
+  },
+  "runtime_run_id": "53efac53-eba5-45c8-b094-c19f7ba21ebd",
+  "schema_version": "1.0",
+  "source_spec": {
+    "observed_sha256": "44FD7EF6AC4FEE8070A23820DD784AA6215795D58AE3D7EB8225EFEFB8AB9E3B",
+    "path": "homework-6/specification.md",
+    "run_id": "20260619-170102-write-spec-python-fresh",
+    "sha256": "44FD7EF6AC4FEE8070A23820DD784AA6215795D58AE3D7EB8225EFEFB8AB9E3B"
+  }
+}

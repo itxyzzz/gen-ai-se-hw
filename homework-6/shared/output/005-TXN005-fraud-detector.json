@@ -1,0 +1,83 @@
+{
+  "audit_events": [
+    {
+      "component": "integrator",
+      "event_id": "67b3ff91-5385-478d-940d-7efc083c354a",
+      "outcome": "received",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "component": "transaction_validator",
+      "event_id": "29d20c19-be6e-40a4-ba9b-0c20ac78bd1e",
+      "outcome": "validated",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "component": "fraud_detector",
+      "event_id": "664d424d-8ea2-47bd-bfca-48ab3daf46f1",
+      "outcome": "review_required",
+      "reason_code": "VERY_HIGH_VALUE",
+      "risk_level": "high",
+      "schema_version": "1.0",
+      "timestamp": "2026-06-19T16:12:47Z",
+      "transaction_id": "TXN005"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T16:12:47Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T16:12:47Z"
+    }
+  ],
+  "data": {
+    "amount": "75000.00",
+    "channel": "branch",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_present": true,
+    "destination_account_redacted": "ACC-****6600",
+    "metadata_present": true,
+    "source_account_present": true,
+    "source_account_redacted": "ACC-****1005",
+    "status": "review_required",
+    "timestamp": "2026-03-16T10:00:00Z",
+    "transaction_id": "TXN005",
+    "transaction_type": "wire_transfer"
+  },
+  "message_id": "c176e999-4613-41d5-b8a4-9fab9dd308af",
+  "message_type": "risk_result",
+  "risk": {
+    "decision": "review_required",
+    "risk_level": "high",
+    "risk_reasons": [
+      "VERY_HIGH_VALUE",
+      "HIGH_VALUE",
+      "WIRE_TRANSFER"
+    ],
+    "risk_score": 85
+  },
+  "schema_version": "1.0",
+  "source_agent": "fraud_detector",
+  "target_agent": "settlement_processor",
+  "timestamp": "2026-06-19T16:12:47Z",
+  "transaction_id": "TXN005",
+  "validation": {
+    "amount": "75000.00",
+    "currency": "USD",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}
