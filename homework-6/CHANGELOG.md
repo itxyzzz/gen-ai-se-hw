@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 26: Themis Test Generator Plan
+
+### Added
+
+- Added the approved planning package for Themis (Test Generator) and pipeline operation support surfaces under `docs/work-items/2026-06-19-themis-test-generator/`.
+- Planned a Themis control surface under `agent-control/generate-tests/` for selected-code test generation, run-local execution, candidate preservation, and test-package selection.
+- Planned a separate `agent-control/operate-pipeline/` package for the one-time `/run-pipeline`, `/validate-transactions`, and coverage gate support surfaces.
+
+### Changed
+
+- Planned the boundary between Hephaestus baseline tests, Themis selected test suites, and Clio final evidence/documentation ownership.
+- Planned Themis run-local workspace handling so generated tests execute under preserved run folders before explicit canonical selection.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated the finalized planning artifacts for placeholder markers, staged whitespace issues, frozen-file diffs, stale old-support-package references, and staged-file scope before the planning freeze commit.
+
 ## Homework 6 - Step 25: Root Pipeline Last-Run Evidence
 
 ### Added
