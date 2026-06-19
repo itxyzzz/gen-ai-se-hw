@@ -10,6 +10,7 @@ Required Task 2 outcomes:
 
 - An integrator/orchestrator such as `integrator.py`.
 - At least three cooperating runtime transaction pipeline components, including Transaction Validator and Fraud Detector plus Settlement Processor, Compliance Checker, or Reporting Agent.
+- When the selected Athena (Spec Writer) spec follows the refreshed quality target, at least four cooperating runtime transaction pipeline components are required. The normal four-component target is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
 - JSON file communication through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Every record from `sample-transactions.json` represented in `shared/results/` after the pipeline runs.
 - Repeated runs preserve prior runtime output by moving an existing configured `shared/` tree to the next zero-padded archive folder, such as `archive/shared-001`, before creating fresh protocol directories.
@@ -37,11 +38,16 @@ If Hephaestus intentionally skips or narrows a selected-spec task, record the re
 Reject or repair a Hephaestus run when:
 
 - `agent-2-code/outputs/` is missing.
+- `agent-2-code/outputs/sample-transactions.json` is missing or is not traceable to canonical `homework-6/sample-transactions.json` with a source path and SHA-256 fingerprint.
 - `agent-2-code/outputs/inventory.md` is missing or does not list selectable files, canonical targets, file kinds, and stable fingerprints.
 - Run metadata, inventory, or selection records omit the selected Athena source run ID or `specification.md` SHA-256 fingerprint.
-- The selectable output package contains `shared/`, `archive/`, `.coverage`, `__pycache__/`, `.pytest_cache/`, or equivalent runtime/tool output.
+- The selectable output package contains `shared/`, `archive/`, `.coverage`, `__pycache__/`, `.pytest_cache/`, or equivalent runtime/tool output as selectable code.
+- Local `shared/` is missing from a committed candidate package after smoke validation when it is needed as current last-run evidence.
+- Local `archive/`, `.coverage*`, `.test-tmp/`, `__pycache__/`, `.pytest_cache/`, or equivalent tool output is committed as evidence or listed as selectable code.
 - A later selected package is copied to canonical paths without first removing the previous selected canonical targets declared by the prior inventory.
 - Selection records fail to name the selected Hephaestus software version, selected files, canonical targets, rationale, and excluded runtime/tool paths.
+
+`shared/` is runtime evidence, not selectable code. It may be committed as current last-run evidence for a candidate package or for the root selected package, but it must not be listed as a canonical copy target. `archive/` is historical runtime output and should remain gitignored.
 
 ## Context7 Documentation
 
@@ -134,12 +140,13 @@ Before reporting completion, Hephaestus must record validation evidence in `agen
 
 Minimum checks:
 
-- Pipeline command, normally `python integrator.py`, exits successfully.
-- All sample transactions are represented in `shared/results/`.
-- `shared/results/summary.json` accounts for all sample records.
-- A repeated run or focused test proves prior `shared/` output is archived under the next zero-padded `archive/shared-001` style folder and the current `shared/results/summary.json` is fresh.
+- Pipeline command, normally `python integrator.py --input sample-transactions.json --shared-dir shared`, exits successfully from `agent-2-code/outputs/`.
+- Candidate validation does not mutate root shared output during ordinary generate mode; root shared smoke runs require explicit operator authorization or selection-stage validation.
+- All sample transactions are represented in local `shared/results/`.
+- Local `shared/results/summary.json` accounts for all sample records.
+- A repeated local run or focused test proves prior local `shared/` output is archived under `archive/shared-001` and the current local `shared/results/summary.json` is fresh.
 - Context7 notes are present in canonical `research-notes.md`.
-- `agent-2-code/outputs/` contains the complete selectable package and excludes runtime/tool output.
+- `agent-2-code/outputs/` contains the complete selectable package, a copied `sample-transactions.json`, local `shared/` current-run evidence when committed, and an inventory that excludes `shared/` from selectable code while excluding `archive/` and tool output entirely.
 - Source-spec provenance is recorded with the Athena run ID and SHA-256 fingerprint.
 - `mcp.json` and `.codex/config.toml` remain unchanged for Task 2.
 - Available tests pass, or blockers are recorded with exact command output and next action.

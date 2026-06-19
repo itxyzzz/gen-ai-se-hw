@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 24: Run-Local Pipeline Generation Controls
+
+### Added
+
+- Added Athena (Spec Writer) quality guidance requiring at least four runtime pipeline components, with Reporting Agent as the default fourth component.
+- Added Hephaestus (Code Generator) run-local candidate validation guidance for copied `sample-transactions.json`, local `shared/` evidence, and local `archive/shared-001` repeated-run checks.
+
+### Changed
+
+- Clarified that `transaction-system-brief.md` remains static general-purpose product context while implementation-control details belong in quality and workflow guidance.
+- Updated Homework 6 ignore rules so every `archive/` folder and Python/tool cache remains ignored while `shared/` folders are commit-capable last-run evidence.
+
+### Fixed
+
+- Prevented ordinary Hephaestus generate-mode validation from mutating root `shared/` before canonical selection or explicit operator validation.
+
+### Tests
+
+- Planned static validation for unchanged static brief, run-local validation markers, archive-only ignore behavior, unchanged MCP/config/canonical runtime files, and placeholder scans.
+
 ## Homework 6 - Step 23: Run-Local Pipeline Generation Plan
 
 ### Added

@@ -32,6 +32,10 @@ The generated `specification.md` must include:
 
 The spec should also include edge cases and verification mapping. Use Homework 3's selected `specification.md` as the depth target: rich product behavior, actors or components, state/data concepts, edge cases, failure modes, acceptance criteria, and implementation-ready slices. Do not copy Homework 3's dispute domain.
 
+The generated transaction-system spec must require at least four cooperating runtime transaction pipeline components. The normal component set is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent. Reporting Agent is the default fourth component unless the operator explicitly selects Compliance Checker or another product component for the same fourth-component role.
+
+Reporting Agent is a stack-native runtime component, not an automation skill. It should own audit-safe aggregate outputs such as `summary.json`, `pipeline-status.json`, optional sanitized reporting files, result completeness checks, status count consistency checks, and final privacy review of result artifacts before handoff to later read-only status tooling.
+
 ## Low-Level Task Card Standard
 
 Each low-level task entry must be an implementation-ready transaction-system slice and include:
@@ -62,6 +66,7 @@ The low-level task section must not be one card per Homework Automation Layer ag
 - Fraud/risk scoring.
 - Settlement or final-outcome writing.
 - Result summary and audit-safe reporting.
+- Reporting Agent generation of `summary.json`, `pipeline-status.json`, status count consistency checks, result completeness checks, and final privacy checks.
 - Redaction and structured audit events.
 - Validator dry-run behavior for `/validate-transactions`.
 - Test seams and temporary-directory isolation.
@@ -69,6 +74,8 @@ The low-level task section must not be one card per Homework Automation Layer ag
 - Error handling, idempotent reruns, and failure recovery.
 
 Runtime transaction pipeline agents must be specified as stack-native application components, not Claude/Codex skills. A valid generated spec should give each runtime agent a responsibility, input contract, decision logic, output contract, audit-log identity, pipeline position, and callable interface for the integrator or dry-run commands.
+
+Run-local code-generation mechanics belong in Hephaestus (Code Generator) control guidance and in generated task-card verification details when they affect product behavior. Do not add candidate run-folder setup, preserved-run inventory rules, or validation isolation mechanics to `transaction-system-brief.md`; that brief stays static and describes only the general transaction-processing purpose.
 
 ## Meta-Layer Leakage Rejection
 
@@ -137,7 +144,7 @@ Before selecting a run, confirm:
 - `specification.md` contains all five required Task 1 sections.
 - The selected stack is either `python` or `java`; omitted input was normalized to `python`.
 - The low-level task cards are implementation-ready transaction-system slices, not one entry per Homework Automation Layer agent.
-- The code-generation task requires at least three cooperating runtime transaction pipeline agents.
+- The code-generation task requires at least four cooperating runtime transaction pipeline components, with Reporting Agent as the default fourth component unless explicitly replaced by another product component.
 - The generated transaction-system spec requires repeated pipeline runs to archive an existing `shared/` tree to zero-padded sibling archive folders before creating fresh protocol directories.
 - The generated transaction-system spec requires `shared/run-provenance.json` so each current or archived runtime run identifies the source Athena spec and selected Hephaestus pipeline version.
 - Hephaestus (Code Generator) Context7 usage and two-query documentation are explicit.

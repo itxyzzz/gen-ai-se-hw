@@ -63,6 +63,10 @@ documentation/PR description drafts/
 # Local classwork planning artifacts
 classworks/
 
-# Homework 6 runtime transaction pipeline output
-homework-6/shared/
-homework-6/archive/
+# Homework 6 generated runtime evidence and candidate tool output
+homework-6/**/archive/
+homework-6/**/.pytest_cache/
+homework-6/**/.test-tmp/
+homework-6/**/__pycache__/
+homework-6/**/*.pyc
+homework-6/**/.coverage*

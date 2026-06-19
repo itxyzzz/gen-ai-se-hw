@@ -50,6 +50,7 @@ homework-6/docs/agent-runs/RUN_ID/
     source-context.md
   agent-2-code/
     outputs/
+      sample-transactions.json
       inventory.md
     handoffs/
       sub-agent-plan.md
@@ -75,7 +76,9 @@ homework-6/docs/agent-runs/RUN_ID/
 
 `agent-2-code/outputs/` is the complete candidate product package for the run. Create it before drafting or editing generated product files. It must include generated source files, generated tests when present, canonical `research-notes.md` content, and `inventory.md`. The inventory must list each selectable file, its canonical target, kind, and stable fingerprint; it must also list runtime and tool-output exclusions.
 
-Runtime folders are not selectable code outputs. Do not place `shared/`, `archive/`, `.coverage`, `__pycache__/`, or `.pytest_cache/` under `agent-2-code/outputs/`.
+Copy canonical `homework-6/sample-transactions.json` into `agent-2-code/outputs/sample-transactions.json` during run setup. Record the canonical sample source path and SHA-256 fingerprint in `run-metadata.md`, `inputs/source-context.md`, or `inventory.md` so candidate validation is traceable to the selected input fixture.
+
+Candidate validation commands run from `agent-2-code/outputs/` and use the copied local `sample-transactions.json` by default. Local `shared/` is commit-capable last-run evidence for the candidate package, but it is runtime evidence, not selectable code. Local `archive/`, `.coverage*`, `.test-tmp/`, `__pycache__/`, and `.pytest_cache/` are tool/runtime outputs and must stay out of committed evidence and selectable inventory.
 
 ## Context7 Requirement
 
@@ -156,7 +159,7 @@ If the runtime cannot spawn sub-agents, record the limitation and proceed only w
 Hephaestus generates Task 2 Generated Transaction System Layer code only:
 
 - `integrator.py` or equivalent orchestrator.
-- At least three cooperating runtime transaction pipeline components.
+- At least four cooperating runtime transaction pipeline components when the selected spec follows the refreshed Athena (Spec Writer) quality target. The normal component set is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
 - JSON file protocol through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Safe shared utilities for Decimal money, JSON writing, redaction, timestamps, and audit events.
 - Result files and summaries that later Task 4 status tooling can read.
@@ -205,17 +208,21 @@ Do not copy runtime evidence such as `shared/` or `archive/` during selection.
 
 Before reporting a Hephaestus run complete:
 
-1. Run the generated pipeline command, normally `python integrator.py` from `homework-6`.
-2. Verify all sample transactions appear under `shared/results/`.
-3. Inspect `shared/results/summary.json` for total, settled, rejected, review-required, and error counts.
-4. Run the pipeline a second time or run a focused test to verify prior `shared/` output archives to the next zero-padded `archive/shared-001` style folder before fresh output is created.
-5. Run available focused tests, normally `python -m pytest` or a narrower equivalent if the generated code created tests.
-6. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
-7. Verify `research-notes.md` has at least two Context7 entries.
-8. Verify `agent-2-code/outputs/` contains a complete inventory and no runtime/tool-output folders.
-9. Verify `mcp.json` and `.codex/config.toml` were not changed for Task 2.
-10. Update `homework-6/CHANGELOG.md` before any commit.
-11. Review the diff for unrelated changes, generated noise, unresolved template tokens, and scope creep.
+1. From `agent-2-code/outputs/`, run the generated pipeline command against the local fixture, normally `python integrator.py --input sample-transactions.json --shared-dir shared`.
+2. Verify all sample transactions appear under local `shared/results/`.
+3. Inspect local `shared/results/summary.json` for total, settled, rejected, review-required, and error counts.
+4. From `agent-2-code/outputs/`, run the pipeline a second time with the same local command and verify the prior local `shared/` output archives to `archive/shared-001` before fresh output is created.
+5. Verify the current local `shared/results/summary.json` is fresh after the second run and that local `shared/` is preserved as current last-run evidence when the run package is committed.
+6. Run available focused tests from `agent-2-code/outputs/`, normally `python -m pytest --basetemp .test-tmp` or a narrower equivalent if the generated code created tests.
+7. Clean local tool artifacts after validation, including `.test-tmp/`, `.coverage*`, `.pytest_cache/`, and `__pycache__/`.
+8. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
+9. Verify `research-notes.md` has at least two Context7 entries.
+10. Verify `agent-2-code/outputs/` contains a complete inventory, lists `shared/` as runtime evidence rather than selectable code, and excludes `archive/` plus tool-output folders from committed evidence and selectable inventory.
+11. Verify `mcp.json` and `.codex/config.toml` were not changed for Task 2.
+12. Update `homework-6/CHANGELOG.md` before any commit.
+13. Review the diff for unrelated changes, generated noise, unresolved template tokens, and scope creep.
+
+Root-level pipeline smoke runs are optional during ordinary generate mode. Run a root-level smoke only when the operator explicitly authorizes it or during canonical-selection validation, because root `shared/` is reviewer-visible last-run evidence and should not be mutated by unselected candidates.
 
 Write or update `agent-2-code/validation-checklist.md` with commands, expected signals, actual results, blockers, and any known limitations.
 
