@@ -1,0 +1,1 @@
+Pipeline complete: total=8 settled=2 rejected=2 review_required=4 error=0

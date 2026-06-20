@@ -1,5 +1,33 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 28: Fresh Code And Themis Test Selection
+
+### Added
+
+- Added Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` with run metadata, source context, candidate test inventory, validation checklist, handoff, workspace evidence, and compact command/hook evidence.
+- Added `tests/test_themis_quality.py` to the selected canonical test suite for schema, privacy, validation-only, setup-failure, component-failure, and archived-provenance coverage.
+
+### Changed
+
+- Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` as the canonical code package generated from the current Athena (Spec Writer) specification.
+- Selected Themis run `20260620-144025-generate-tests-python-fresh-spec` as the canonical test suite for the selected fresh code package.
+- Updated `docs/agent-runs/final-selection.md` with the new code and test selection records.
+
+### Fixed
+
+- Repaired the inherited integrator pipeline tests to resolve fixture paths relative to the project root so they work both in the Themis `project-under-test` workspace and after canonical selection.
+- Removed stale prior-selected test target `tests/test_pipeline_end_to_end.py` after selecting the fresh package's `tests/test_integrator_pipeline.py`.
+
+### Tests
+
+- Ran the run-local candidate suite with `python -m pytest -p no:cacheprovider`: 40 passed.
+- Ran the run-local coverage gate with `python scripts/check_coverage_gate.py --fail-under 80`: 40 passed with 95.10% total coverage.
+- Demonstrated the hook blocking path with `python scripts/check_coverage_gate.py --fail-under 99`: expected failure because 95.10% is below 99%, while all 40 tests passed.
+- Validated full pipeline support behavior with `total=8`, `settled=2`, `rejected=2`, `review_required=4`, and `error=0`.
+- Validated validation-only support behavior with `total=8`, `settled=6`, `rejected=2`, `review_required=0`, and `error=0`.
+- Ran post-selection canonical root verification with `python -m pytest -p no:cacheprovider`: 40 passed.
+- Ran post-selection canonical root coverage gate with `python scripts/check_coverage_gate.py --fail-under 80`: 40 passed with 95.10% total coverage.
+
 ## Homework 6 - Step 27: Themis Test Generator Controls
 
 ### Added
