@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Docs"
+  short_description: "Generate Homework 6 final docs and evidence"
+  default_prompt: "Use $generate-docs to create, compare, or select a preserved Homework 6 documentation-generation run."

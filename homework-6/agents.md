@@ -10,11 +10,13 @@ Before changing Homework 6 files, load context in this order:
    For Athena (Spec Writer) normal generation, use `homework-6/agent-control/write-spec/transaction-system-brief.md` instead of `TASKS.md`.
    For Hephaestus (Code Generator) normal generation, use selected `homework-6/specification.md`, `TASKS.md` Task 2 checks, Context7 MCP configuration, and `homework-6/agent-control/generate-code/`.
    For Themis (Test Generator) normal generation, use `docs/agent-runs/final-selection.md`, the selected Hephaestus (Code Generator) inventory, `agent-control/generate-tests/`, and `agent-control/operate-pipeline/` only as external support-tool behavior to validate.
+   For Clio (Documentation Generator) normal generation, use `docs/agent-runs/final-selection.md`, selected Hephaestus and Themis inventories, `agent-control/generate-docs/`, `agent-control/operate-pipeline/`, Task 4 MCP files, prior Homeworks 1-4 documentation for author/style context, and `docs/screenshots/operator-sourced/`.
 4. This `homework-6/agents.md`.
 5. Selected or active run artifacts under `homework-6/docs/agent-runs/`.
 6. For Athena (Spec Writer), the `write-spec` skill or slash command and its references.
    For Hephaestus (Code Generator), the `generate-code` skill or slash command and its references.
    For Themis (Test Generator), the `generate-tests` skill or slash command and its references.
+   For Clio (Documentation Generator), the `generate-docs` skill or slash command and its references.
 7. Current git status, existing diffs, and relevant tests or validation output.
 
 When instructions conflict, preserve the highest-priority user and repository rules first, then the most specific Homework 6 artifact.
@@ -49,6 +51,8 @@ Themis (Test Generator) uses the tool-neutral control package at `agent-control/
 Pipeline operation support surfaces are maintained separately under `agent-control/operate-pipeline/`. Claude command wrappers live at `.claude/commands/run-pipeline.md` and `.claude/commands/validate-transactions.md`; modern project skills live under both `.agents/skills/` and `.claude/skills/`; the portable coverage helper is `scripts/check_coverage_gate.py`; the Git hook is `.githooks/pre-push`; and the Claude hook setting is `.claude/settings.json`. These are Operator Layer outer tools created once for Task 3. Themis validates them and reports gaps, but it must not treat `/run-pipeline`, `/validate-transactions`, or the coverage hook as routine Themis per-run outputs.
 
 Clio (Documentation Generator) consumes selected Themis results for final Task 5 documentation and evidence. Clio reruns the selected test suite, captures reviewer-facing screenshots, and writes the final testing narrative. If Clio finds a test gap, it should request a Themis follow-up or record an explicit final test-hardening delta instead of silently replacing or forking the selected Themis suite.
+
+Clio (Documentation Generator) uses the tool-neutral control package at `agent-control/generate-docs/`. Codex entrypoint: `.agents/skills/generate-docs/SKILL.md`. Claude Code entrypoint: `.claude/skills/generate-docs/SKILL.md`. Claude Code legacy command wrapper: `.claude/commands/generate-docs.md`. A Clio run consumes the selected Athena (Spec Writer), Hephaestus (Code Generator), and Themis (Test Generator) records; prior Homeworks 1-4 documentation as author/style examples; Task 4 MCP files; command/hook support guidance; and operator-sourced screenshots. Clio writes candidate docs under a preserved run-local `agent-4-docs/outputs/` package before canonical selection. Clio must preserve every source screenshot under `docs/screenshots/operator-sourced/`, copy only required safe evidence screenshots to stable reviewer-facing paths, and produce `docs/pr-description-draft.md` without an operator challenges or feedback narrative.
 
 This `homework-6/agents.md` file is the standing project-level guide required by Task 1. It lives beside `TASKS.md` so every run and downstream Homework Automation Layer agent can load the same stable context. Do not regenerate or overwrite it during individual Athena (Spec Writer) runs; if a run discovers a needed guide change, record the recommendation in that run's handoff and apply it as a separate control-surface update.
 
@@ -102,7 +106,7 @@ Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and 
 4. Write research notes or fallback limitations.
 5. Validate required sections, commands, tests, and privacy rules before reporting completion.
 6. Update `CHANGELOG.md` for committed homework increments.
-7. Review the diff for unrelated changes, placeholders, canonical overwrite, and generated noise.
+7. Review the diff for unrelated changes, unresolved draft markers, canonical overwrite, and generated noise.
 
 Do not introduce harness freeze gates, planning package requirements, or Superpowers-only flows into prompts for the four Homework Automation Layer agents. Athena (Spec Writer) must produce a full transaction-system specification in one `specification.md`, not a harness-style split between spec and plan.
 
@@ -134,3 +138,5 @@ Harness and Superpowers may assist Operator Layer planning, execution, verificat
 - Runtime output folders such as `shared/` and `archive/` are execution evidence, not selectable code packages.
 - Future Themis (Test Generator) runs must name the selected Hephaestus software version they target, including the selected code run ID, inventory path, selection record, and stable file or package fingerprints. Do not silently target "latest" when tests are generated or selected.
 - Future Themis runs must copy the selected Hephaestus package into a run-local `workspace/selected-code/`, write candidate tests/config first under `agent-3-tests/outputs/`, overlay those outputs into `workspace/project-under-test/`, and run validation from that workspace. Root `tests/`, root `shared/`, root `.coverage`, and canonical product files stay untouched until explicit inventory-driven test selection.
+- Future Clio (Documentation Generator) runs must name the selected Athena, Hephaestus, and Themis versions they document, including inventory paths, selection record, and stable file or package fingerprints. Do not silently target "latest" when docs or screenshots are generated or selected.
+- Future Clio runs must write candidate documentation and screenshot outputs first under `agent-4-docs/outputs/`, with an inventory declaring canonical targets. Canonical `README.md`, `HOWTORUN.md`, `ARCHITECTURE.md`, `TESTING_GUIDE.md`, `API_REFERENCE.md`, `docs/pr-description-draft.md`, and stable `docs/screenshots/*.png` targets stay untouched until explicit inventory-driven documentation selection or first-success auto-selection when no final documentation package exists.

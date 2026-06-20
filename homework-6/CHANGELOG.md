@@ -1,5 +1,27 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 34: Clio Documentation Generator Controls
+
+### Added
+
+- Added the Clio (Documentation Generator) control package under `agent-control/generate-docs/` with workflow, quality bar, run registry, and README.
+- Added Codex and Claude Code `generate-docs` skill surfaces plus the Claude legacy command wrapper.
+- Added staged operator-sourced screenshots under `docs/screenshots/operator-sourced/` as preserved source evidence for Clio to select from later.
+
+### Changed
+
+- Updated `agents.md` so future Clio runs load selected Athena, Hephaestus, Themis, MCP, command/hook, prior-homework documentation, and screenshot-source context.
+- Clarified that Clio writes candidate documentation and screenshots under run-local `agent-4-docs/outputs/` before canonical selection.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Ran baseline `python -m pytest -p no:cacheprovider`: 50 passed.
+- Planned validation covers Clio wrapper references, prior-homework author source, no hidden harness dependency in Clio runtime workflow, unresolved draft-marker scans, whitespace checks, and guarded-file diffs.
+
 ## Homework 6 - Step 33: Clio Documentation Generator Plan
 
 ### Added
