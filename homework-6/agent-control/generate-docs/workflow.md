@@ -213,7 +213,7 @@ Before reporting a Clio run complete:
 3. Confirm required docs exist and contain no unresolved draft markers.
 4. Confirm `README.md` includes `Igor Tanatarov` or the operator-provided author name.
 5. Confirm required Homework 6 docs include diagrams where repository standards require them.
-6. Confirm `docs/pr-description-draft.md` is standalone and includes screenshot links or embedding instructions.
+6. Confirm `docs/pr-description-draft.md` is standalone and includes screenshot links or embedding instructions. Screenshot links in the draft file must be correct relative to `docs/pr-description-draft.md`, for example `screenshots/pipeline-run.png` rather than `docs/screenshots/pipeline-run.png`.
 7. Confirm required screenshots exist or missing-capture notes contain exact operator steps.
 8. Confirm evidence and screenshots do not expose raw account IDs, raw descriptions, credentials, tokens, or unfiltered metadata.
 9. Confirm reviewer-facing docs do not contain internal Clio/workflow-control instructions; rephrase privacy and evidence notes as reviewer-facing expectations or product behavior.

@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 38: PR Draft Screenshot Links
+
+### Added
+
+- Added Clio workflow and quality-bar guidance that PR draft screenshot links must resolve relative to `docs/pr-description-draft.md`.
+
+### Changed
+
+- Changed `docs/pr-description-draft.md` screenshot links from `docs/screenshots/*.png` to `screenshots/*.png`.
+- Updated the preserved Clio output PR draft copy to match the canonical link repair.
+
+### Fixed
+
+- Fixed broken PR draft screenshot links that rendered as `docs/docs/screenshots/*.png`.
+
+### Tests
+
+- Planned verification covers focused scans for stale `docs/screenshots/*.png` links in PR draft files and existence checks for every linked screenshot target.
+
 ## Homework 6 - Step 37: Clio Reviewer-Facing Language Guard
 
 ### Added

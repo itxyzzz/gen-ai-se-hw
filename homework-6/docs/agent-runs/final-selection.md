@@ -197,6 +197,7 @@ Excluded from documentation selection:
 
 ## Post-Selection Edits
 
+- 2026-06-20: Repaired `docs/pr-description-draft.md` screenshot links to resolve relative to the draft file (`screenshots/*.png` instead of `docs/screenshots/*.png`) and updated the preserved Clio output inventory fingerprint.
 - 2026-06-20: Reworded a `HOWTORUN.md` privacy evidence note from an internal instruction style into reviewer-facing guidance after review feedback. The selected Clio inventory snapshot remains preserved as generated evidence.
 - 2026-06-20: Selected Clio (Documentation Generator) run `20260620-230201-generate-docs-python-primary` as the first successful documentation package and copied its inventory-declared README, HOWTORUN, architecture, testing, API, PR draft, and stable screenshot targets to canonical paths.
 - 2026-06-20: Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` and copied its inventory-declared runtime code, baseline tests, pytest config, and research notes to canonical targets. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` and copied its inventory-declared test suite and pytest config to canonical targets.

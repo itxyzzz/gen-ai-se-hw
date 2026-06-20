@@ -13,7 +13,7 @@ Clio (Documentation Generator) passes only when the documentation package is rev
 - `ARCHITECTURE.md` describes Operator Layer, Homework Automation Layer, Generated Transaction System Layer, JSON file protocol, runtime components, selection/run preservation, privacy/audit design, and known limitations.
 - `TESTING_GUIDE.md` describes the selected Themis suite, test strategy, unit/integration coverage, coverage gate, command/hook validation, privacy checks, fixture isolation, and manual checklist.
 - `API_REFERENCE.md` documents command interfaces, JSON file protocol shapes, result and summary shapes, validation-only behavior, and custom MCP tools/resource.
-- `docs/pr-description-draft.md` is standalone and includes summary, AI workflow, verification commands/results, screenshot links, reviewer run instructions, known limitations, and omitted operator challenges narrative.
+- `docs/pr-description-draft.md` is standalone and includes summary, AI workflow, verification commands/results, screenshot links that resolve from the `docs/` folder, reviewer run instructions, known limitations, and omitted operator challenges narrative.
 - Required stable screenshots exist or missing-capture notes provide exact manual capture steps:
   - `docs/screenshots/pipeline-run.png`
   - `docs/screenshots/test-coverage.png`

@@ -41,15 +41,15 @@ The first sandboxed coverage run hit a Windows coverage-file rename permission e
 
 Embed or link these screenshots in the GitHub PR body:
 
-![Pipeline run](docs/screenshots/pipeline-run.png)
+![Pipeline run](screenshots/pipeline-run.png)
 
-![Test coverage](docs/screenshots/test-coverage.png)
+![Test coverage](screenshots/test-coverage.png)
 
-![Run pipeline skill](docs/screenshots/skill-run-pipeline.png)
+![Run pipeline skill](screenshots/skill-run-pipeline.png)
 
-![Hook trigger](docs/screenshots/hook-trigger.png)
+![Hook trigger](screenshots/hook-trigger.png)
 
-![MCP interaction](docs/screenshots/mcp-interaction.png)
+![MCP interaction](screenshots/mcp-interaction.png)
 
 Original source screenshots remain preserved under `docs/screenshots/operator-sourced/`.
 
