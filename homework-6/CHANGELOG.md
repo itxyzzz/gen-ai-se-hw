@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 33: Clio Documentation Generator Plan
+
+### Added
+
+- Added the approved planning package for Clio (Documentation Generator) under `docs/work-items/2026-06-20-clio-documentation-generator/`.
+- Added a Clio test-case snapshot for shared workflow routing, required documentation scope, author-name sourcing from Homeworks 1-4, screenshot preservation, and privacy-safe evidence handling.
+
+### Changed
+
+- Planned the `generate-docs` control surface so Clio consumes selected Athena, Hephaestus, Themis, MCP, command/hook, screenshot, and prior-homework documentation context before producing final reviewer-facing docs.
+- Planned the boundary where Clio reruns and documents selected Themis evidence without silently replacing the selected test suite.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Verified prior Homeworks 1-4 README files consistently identify `Igor Tanatarov` as the author source for Clio.
+- Validated the draft planning artifacts for unresolved draft markers, whitespace issues, and guarded-file diffs before the planning freeze commit.
+
 ## Homework 6 - Step 32: Pipeline Status MCP Server
 
 ### Added
