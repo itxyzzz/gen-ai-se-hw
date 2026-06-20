@@ -1,5 +1,18 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 30: Fast Pipeline Skill Paths
+
+### Changed
+
+- Updated the shared Operator Layer `/run-pipeline` guidance to prefer a single bounded shell invocation that runs the pipeline, verifies result coverage, and extracts safe summary fields.
+- Updated the shared `/validate-transactions` guidance to call the current validator dry-run function directly instead of the stale file-path CLI form.
+- Synced Codex and Claude Code `run-pipeline` and `validate-transactions` skill wrappers with the fast-path guidance.
+
+### Tests
+
+- Measured the compact pipeline run-and-summary path at about 597 ms.
+- Measured the compact validation-only path at about 171 ms and confirmed it reports 8 total, 6 valid, 2 invalid, and safe reason-code groups only.
+
 ## Homework 6 - Step 29: Shared Runtime Archive Hardening
 
 ### Added
