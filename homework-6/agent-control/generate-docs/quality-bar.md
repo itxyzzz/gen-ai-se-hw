@@ -9,7 +9,7 @@ Clio (Documentation Generator) passes only when the documentation package is rev
 - Candidate docs and screenshots are listed in `agent-4-docs/outputs/inventory.md` with canonical targets and SHA-256 fingerprints.
 - Runtime and tool outputs are excluded from selectable inventory: `evidence/`, `review/`, `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, `.test-tmp/`, `tmp/`, and `__pycache__/`.
 - `README.md` includes the student author name, what the system does, Homework Automation Layer responsibilities, runtime pipeline agent responsibilities, ASCII architecture diagram, tech stack table, quick start, documentation map, and AI tools/workflow summary.
-- `HOWTORUN.md` provides numbered setup, run, validation, MCP, command/hook, screenshot, troubleshooting, and cleanup steps.
+- `HOWTORUN.md` provides numbered setup, run, validation, MCP, command/hook, screenshot, troubleshooting, and cleanup steps using reviewer-facing language, not internal Clio instructions.
 - `ARCHITECTURE.md` describes Operator Layer, Homework Automation Layer, Generated Transaction System Layer, JSON file protocol, runtime components, selection/run preservation, privacy/audit design, and known limitations.
 - `TESTING_GUIDE.md` describes the selected Themis suite, test strategy, unit/integration coverage, coverage gate, command/hook validation, privacy checks, fixture isolation, and manual checklist.
 - `API_REFERENCE.md` documents command interfaces, JSON file protocol shapes, result and summary shapes, validation-only behavior, and custom MCP tools/resource.
@@ -24,6 +24,7 @@ Clio (Documentation Generator) passes only when the documentation package is rev
 - Screenshot inventory records used and unused source screenshots with privacy/safety status and target mapping.
 - Pipeline, test, coverage, command/hook, and MCP evidence is fresh when local tooling permits, or blockers are explicitly recorded.
 - Evidence and docs avoid raw account IDs, raw descriptions, credentials, tokens, secrets, full audit payloads, and unfiltered metadata dumps.
+- Reviewer-facing docs do not leak Clio workflow-control language such as "Clio must," "the agent should," or privacy imperatives written as internal evidence instructions; those belong in evidence, validation, handoff, or control-package files.
 - Documentation frames the banking pipeline as an educational simulation, not legal, banking, AML, sanctions, or payment-network compliance.
 - Clio documents selected Themis evidence but does not silently modify or replace the selected Themis suite.
 - Clio does not change runtime product code, MCP server behavior, command/hook support surfaces, or selected run records without explicit operator authorization.
@@ -38,6 +39,7 @@ Reject or pause a Clio run when it attempts to:
 - Delete, edit, or prune `docs/screenshots/operator-sourced/`.
 - Use unsafe screenshots or evidence containing raw account IDs, raw descriptions, credentials, tokens, or unfiltered metadata.
 - Include an operator challenges or feedback narrative in the final docs or PR draft.
+- Include internal Clio workflow-control instructions in reviewer-facing docs instead of rephrasing them as product behavior, reviewer expectations, or known limitations.
 - Make generated documentation depend on `dev-doc-harness`, Superpowers, hidden chat state, or unavailable plugins.
 - Copy run-local evidence, review notes, caches, runtime output, or tool-output folders to canonical documentation targets.
 

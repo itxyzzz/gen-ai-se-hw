@@ -55,7 +55,7 @@ Reviewer-safe expected counts:
 | `rejected` | 2 |
 | `error` | 0 |
 
-Do not print raw input transactions in review evidence. Use transaction IDs, statuses, counts, and reason codes only.
+Reviewer-facing evidence should stay limited to transaction IDs, statuses, counts, and reason codes.
 
 ## 4. Run Validation-Only Mode
 

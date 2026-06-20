@@ -139,6 +139,8 @@ The final documentation must describe these layers clearly:
 
 Do not include a narrative about operator challenges or feedback. The documentation and PR draft should describe the system as built, AI workflow, verification, evidence, known limitations, and how to review it.
 
+Keep internal Clio instructions out of reviewer-facing outputs. Privacy and evidence guidance may appear in docs only as reviewer-facing expectations or observable properties, not as agent directives such as "do not print raw input transactions in review evidence," "Clio must," "the agent should," or similar workflow-control language. Put those imperatives in run metadata, evidence notes, validation checklists, handoff files, or this control package instead.
+
 ## Themis Boundary
 
 Clio consumes the selected Themis suite and final-selection record. Clio must rerun selected tests and coverage for evidence when local tooling permits, but it must not silently modify, fork, or replace the selected Themis suite.
@@ -214,11 +216,12 @@ Before reporting a Clio run complete:
 6. Confirm `docs/pr-description-draft.md` is standalone and includes screenshot links or embedding instructions.
 7. Confirm required screenshots exist or missing-capture notes contain exact operator steps.
 8. Confirm evidence and screenshots do not expose raw account IDs, raw descriptions, credentials, tokens, or unfiltered metadata.
-9. Rerun available pipeline, test, coverage, command, hook, and MCP checks or record blockers.
-10. Confirm Clio did not modify selected tests or runtime product code unless explicitly authorized.
-11. Confirm `agent-4-docs/outputs/inventory.md` excludes evidence, review notes, caches, runtime output, and tool-output folders.
-12. Update `homework-6/CHANGELOG.md` before any commit.
-13. Review the diff for unrelated changes, generated noise, unresolved draft markers, and scope creep.
+9. Confirm reviewer-facing docs do not contain internal Clio/workflow-control instructions; rephrase privacy and evidence notes as reviewer-facing expectations or product behavior.
+10. Rerun available pipeline, test, coverage, command, hook, and MCP checks or record blockers.
+11. Confirm Clio did not modify selected tests or runtime product code unless explicitly authorized.
+12. Confirm `agent-4-docs/outputs/inventory.md` excludes evidence, review notes, caches, runtime output, and tool-output folders.
+13. Update `homework-6/CHANGELOG.md` before any commit.
+14. Review the diff for unrelated changes, generated noise, unresolved draft markers, and scope creep.
 
 Write `agent-4-docs/validation-checklist.md` with commands, expected signals, actual results, blockers, and limitations.
 

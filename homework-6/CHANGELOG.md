@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 37: Clio Reviewer-Facing Language Guard
+
+### Added
+
+- Added Clio workflow and quality-bar checks to keep internal Clio instructions out of reviewer-facing generated documentation.
+
+### Changed
+
+- Reworded the HOWTORUN privacy evidence note so it reads as reviewer-facing guidance instead of an internal Clio directive.
+
+### Fixed
+
+- Tightened Clio generation rules for review feedback that flagged internal instruction language in the generated runbook.
+
+### Tests
+
+- Planned verification covers focused scans for the flagged HOWTORUN sentence and internal Clio workflow-control phrases in reviewer-facing docs.
+
 ## Homework 6 - Step 36: Clio Documentation Package
 
 ### Added
