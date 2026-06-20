@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 31: Pipeline Status MCP Plan
+
+### Added
+
+- Added the approved planning package for the Task 4 custom FastMCP `pipeline-status` server under `docs/work-items/2026-06-20-pipeline-status-mcp/`.
+- Added a test-case snapshot covering transaction status lookup, pipeline result listing, text summary resource behavior, missing-result handling, invalid transaction IDs, MCP config parsing, and privacy regression checks.
+
+### Changed
+
+- Planned the combined MCP configuration update so `pipeline-status` is added to `mcp.json` and `.codex/config.toml` only after `mcp/server.py` exists.
+
+### Fixed
+
+- Not applicable.
+
+### Tests
+
+- Validated the planning artifacts for placeholder markers.
+- Validated the staged planning package with `git diff --cached --check`.
+- Verified staged scope contains only the Task 4 planning artifacts and this changelog entry.
+
 ## Homework 6 - Step 30: Fast Pipeline Skill Paths
 
 ### Changed
