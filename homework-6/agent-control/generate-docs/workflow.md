@@ -188,9 +188,17 @@ Clio may copy an operator-sourced screenshot to one of those stable targets when
 
 - Source screenshot path.
 - Intended stable target, or `unused`.
+- Semantic evidence category, such as pipeline run, passing coverage, command skill execution, hook blocking behavior, Context7 MCP usage, custom `pipeline-status` MCP usage, specification produced, or README with student name.
 - Reason for use or non-use.
+- Freshness assessment: fresh, current enough with rationale, stale, or blocked.
+- Passing/blocking classification when relevant. `test-coverage.png` must show current passing 80 percent coverage evidence; `hook-trigger.png` owns deliberate blocking or failure evidence.
+- Task coverage: whether it satisfies Task 4 MCP evidence, Task 5 screenshot evidence, PR evidence, or support-only evidence.
 - Privacy/safety review status.
 - Whether a fresh automated screenshot was captured instead.
+
+Stable assignment screenshot names must remain semantically distinct unless a limitation is explicitly accepted in `agent-4-docs/evidence/screenshot-capture-notes.md` and the run handoff. Reusing one source screenshot for distinct targets such as `pipeline-run.png` and `skill-run-pipeline.png` is a selection blocker unless the operator explicitly accepts the limitation for a follow-up package.
+
+`docs/screenshots/mcp-interaction.png` must show both required MCP categories in one image when feasible: Context7 query/result evidence and a custom `pipeline-status` tool or resource interaction such as `get_transaction_status`, `list_pipeline_results`, or `pipeline://summary`. If one image is not feasible, the run must preserve paired evidence in `agent-4-docs/evidence/mcp-interaction.txt`, screenshot notes, and PR draft instructions, and selection must clearly state the accepted limitation.
 
 If a required screenshot cannot be captured automatically and no safe source screenshot exists, write the missing screenshot name, blocker, and exact manual capture steps in `agent-4-docs/evidence/screenshot-capture-notes.md`.
 
@@ -204,6 +212,8 @@ During selection, copy only inventory-declared files from `agent-4-docs/outputs/
 
 Record selected Clio run ID, selected output inventory, copied canonical paths, validation commands and results, screenshot mapping, rationale, operator, and excluded runtime/tool paths in `docs/agent-runs/final-selection.md` or a linked Clio selection record.
 
+Control-surface repairs to this package do not update the already selected Clio output. After this package changes, a clean follow-up Clio `generate` and `select` step owns any canonical README/HOWTORUN/ARCHITECTURE/TESTING_GUIDE/API_REFERENCE updates, `docs/pr-description-draft.md`, stable screenshot replacements, selected Clio run outputs, and final-selection screenshot mapping. Treat the existing selected Clio package as historical evidence until that follow-up package is generated and selected.
+
 ## Validation And Handoff
 
 Before reporting a Clio run complete:
@@ -214,14 +224,17 @@ Before reporting a Clio run complete:
 4. Confirm `README.md` includes `Igor Tanatarov` or the operator-provided author name.
 5. Confirm required Homework 6 docs include diagrams where repository standards require them.
 6. Confirm `docs/pr-description-draft.md` is standalone and includes screenshot links or embedding instructions. Screenshot links in the draft file must be correct relative to `docs/pr-description-draft.md`, for example `screenshots/pipeline-run.png` rather than `docs/screenshots/pipeline-run.png`.
+   It must account for every assignment-named PR evidence category: spec produced, pipeline run, tests/coverage, skill and hook in action, MCP usage, and README with the student name.
 7. Confirm required screenshots exist or missing-capture notes contain exact operator steps.
-8. Confirm evidence and screenshots do not expose raw account IDs, raw descriptions, credentials, tokens, or unfiltered metadata.
-9. Confirm reviewer-facing docs do not contain internal Clio/workflow-control instructions; rephrase privacy and evidence notes as reviewer-facing expectations or product behavior.
-10. Rerun available pipeline, test, coverage, command, hook, and MCP checks or record blockers.
-11. Confirm Clio did not modify selected tests or runtime product code unless explicitly authorized.
-12. Confirm `agent-4-docs/outputs/inventory.md` excludes evidence, review notes, caches, runtime output, and tool-output folders.
-13. Update `homework-6/CHANGELOG.md` before any commit.
-14. Review the diff for unrelated changes, generated noise, unresolved draft markers, and scope creep.
+8. Confirm `mcp-interaction.png` or paired MCP evidence covers both Context7 and custom `pipeline-status` interactions.
+9. Confirm screenshot mappings do not use stale duplicates for distinct assignment categories unless an accepted limitation is recorded.
+10. Confirm evidence and screenshots do not expose raw account IDs, raw descriptions, credentials, tokens, or unfiltered metadata.
+11. Confirm reviewer-facing docs do not contain internal Clio/workflow-control instructions; rephrase privacy and evidence notes as reviewer-facing expectations or product behavior.
+12. Rerun available pipeline, test, coverage, command, hook, and MCP checks or record blockers.
+13. Confirm Clio did not modify selected tests or runtime product code unless explicitly authorized.
+14. Confirm `agent-4-docs/outputs/inventory.md` excludes evidence, review notes, caches, runtime output, and tool-output folders.
+15. Update `homework-6/CHANGELOG.md` before any commit.
+16. Review the diff for unrelated changes, generated noise, unresolved draft markers, and scope creep.
 
 Write `agent-4-docs/validation-checklist.md` with commands, expected signals, actual results, blockers, and limitations.
 

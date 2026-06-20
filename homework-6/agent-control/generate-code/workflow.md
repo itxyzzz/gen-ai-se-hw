@@ -105,7 +105,7 @@ If Context7 is unavailable, stop and ask the operator whether to switch to a Con
 
 ## Executor Sub-Agent Strategy
 
-Hephaestus is authorized to spawn executor sub-agents up to the Homework 6 `agents.max_threads = 8` cap without additional operator approval. This approval comes from the frozen Hephaestus planning package and does not need to be repeated in the later start prompt.
+Hephaestus is authorized to spawn executor sub-agents up to the Homework 6 `agents.max_threads = 8` cap without additional operator approval. This authorization is recorded in the standing Homework 6 agent guide, `.codex/config.toml`, and this Hephaestus control package; it does not need to be repeated in the later start prompt.
 
 Preferred pattern:
 
@@ -159,7 +159,8 @@ If the runtime cannot spawn sub-agents, record the limitation and proceed only w
 Hephaestus generates Task 2 Generated Transaction System Layer code only:
 
 - `integrator.py` or equivalent orchestrator.
-- At least four cooperating runtime transaction pipeline components when the selected spec follows the refreshed Athena (Spec Writer) quality target. The normal component set is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
+- At least three cooperating runtime transaction pipeline components to satisfy the assignment minimum.
+- At least four cooperating runtime transaction pipeline components when the selected spec follows the refreshed Athena (Spec Writer) quality target. The normal strengthened component set is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
 - JSON file protocol through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Safe shared utilities for Decimal money, JSON writing, redaction, timestamps, and audit events.
 - Result files and summaries that later Task 4 status tooling can read.
@@ -217,7 +218,7 @@ Before reporting a Hephaestus run complete:
 7. Clean local tool artifacts after validation, including `.test-tmp/`, `.coverage*`, `.pytest_cache/`, and `__pycache__/`.
 8. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
 9. Verify `research-notes.md` has at least two Context7 entries.
-10. Verify `agent-2-code/outputs/` contains a complete inventory, lists `shared/` as runtime evidence rather than selectable code, and excludes `archive/` plus tool-output folders from committed evidence and selectable inventory.
+10. Verify `agent-2-code/outputs/` contains a complete inventory, lists `shared/` as runtime evidence rather than selectable code when local `shared/` evidence is committed, and excludes `archive/` plus tool-output folders from committed evidence and selectable inventory.
 11. Verify `mcp.json` and `.codex/config.toml` were not changed for Task 2.
 12. Update `homework-6/CHANGELOG.md` before any commit.
 13. Review the diff for unrelated changes, generated noise, unresolved template tokens, and scope creep.

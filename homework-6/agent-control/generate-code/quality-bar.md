@@ -10,7 +10,7 @@ Required Task 2 outcomes:
 
 - An integrator/orchestrator such as `integrator.py`.
 - At least three cooperating runtime transaction pipeline components, including Transaction Validator and Fraud Detector plus Settlement Processor, Compliance Checker, or Reporting Agent.
-- When the selected Athena (Spec Writer) spec follows the refreshed quality target, at least four cooperating runtime transaction pipeline components are required. The normal four-component target is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
+- When the selected Athena (Spec Writer) spec follows the refreshed quality target, at least four cooperating runtime transaction pipeline components are required. The normal four-component target is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent. This is an intentional strengthened generation target above the assignment minimum, not a retroactive requirement for already selected three-component packages.
 - JSON file communication through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
 - Every record from `sample-transactions.json` represented in `shared/results/` after the pipeline runs.
 - Repeated runs preserve prior runtime output by moving an existing configured `shared/` tree to the next zero-padded archive folder, such as `archive/shared-001`, before creating fresh protocol directories.
@@ -47,7 +47,7 @@ Reject or repair a Hephaestus run when:
 - A later selected package is copied to canonical paths without first removing the previous selected canonical targets declared by the prior inventory.
 - Selection records fail to name the selected Hephaestus software version, selected files, canonical targets, rationale, and excluded runtime/tool paths.
 
-`shared/` is runtime evidence, not selectable code. It may be committed as current last-run evidence for a candidate package or for the root selected package, but it must not be listed as a canonical copy target. `archive/` is historical runtime output and should remain gitignored.
+`shared/` is runtime evidence, not selectable code. It may live under `agent-2-code/outputs/` only as deliberate current-run evidence for a candidate package, and it may also be committed for the root selected package when refreshed intentionally. It must not be listed as selectable code or as a canonical copy target. `archive/` is historical runtime output and should remain gitignored.
 
 ## Context7 Documentation
 

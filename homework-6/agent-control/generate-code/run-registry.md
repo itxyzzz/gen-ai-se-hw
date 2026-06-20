@@ -68,7 +68,7 @@ Do not copy a run-local agent guide over `homework-6/agents.md`. Update standing
 
 Do not overwrite canonical `specification.md`; Hephaestus consumes it and does not select specs.
 
-Do not place runtime or tool-output folders under selectable code packages. Exclude `shared/`, `archive/`, `.coverage`, `__pycache__/`, and `.pytest_cache/` from `agent-2-code/outputs/`.
+Do not treat runtime or tool-output folders as selectable code. A run-local `agent-2-code/outputs/shared/` folder may be preserved only as deliberate current-run evidence when validation evidence is committed; it must be listed as excluded runtime evidence in the inventory, not as selectable code or a canonical copy target. Exclude `archive/`, `.coverage`, `.coverage*`, `.test-tmp/`, `__pycache__/`, and `.pytest_cache/` from committed evidence and selectable outputs.
 
 ## Sub-Agent Evidence
 

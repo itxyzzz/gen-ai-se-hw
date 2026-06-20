@@ -21,4 +21,6 @@ For Codex, the `write-spec` skill is discoverable when the Codex project/session
 
 Official Anthropic Claude Code docs at `https://code.claude.com/docs/en/skills` describe project skills under `.claude/skills/<skill-name>/SKILL.md` as directly invocable with `/<skill-name>`. They also state that same-named skills take precedence over `.claude/commands/` command files, so this package intentionally uses the native project-skill surface instead of keeping a duplicate command wrapper.
 
+`TASKS.md` names `.claude/commands/write-spec.md` as an example slash-command path. For this repository, `.claude/skills/write-spec/SKILL.md` is the deliberate newer Claude Code project skill surface for Athena (Spec Writer). Do not recreate a legacy command wrapper solely to mirror the example path; update this package and the project skill when Athena guidance changes.
+
 These files are mandatory for Athena (Spec Writer). If any required file is missing or unreadable, stop and report the missing file instead of attempting a fallback specification generation.

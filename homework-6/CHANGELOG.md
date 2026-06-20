@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 40: Review Repair Controls
+
+### Added
+
+- Added Clio evidence-generation checks for combined Context7 and custom `pipeline-status` MCP evidence.
+- Added Clio PR draft generation checks for spec-produced, pipeline, coverage, skill/hook, MCP, and README-with-name evidence categories.
+- Added explicit follow-up guidance that existing selected Clio output remains historical until a separate clean Clio regeneration and selection step.
+
+### Changed
+
+- Clarified the deliberate fourth-runtime-component target as a refreshed generation quality target above the assignment minimum, while preserving the current selected three-component package as assignment-compliant.
+- Clarified Athena's intentional Claude Code project-skill surface at `.claude/skills/write-spec/SKILL.md` instead of a legacy `.claude/commands/write-spec.md` wrapper.
+- Aligned Hephaestus `shared/` guidance so `shared/` is runtime evidence, not selectable code or a canonical copy target.
+
+### Fixed
+
+- Removed the Hephaestus workflow phrase that pointed Homework Automation Layer behavior at a frozen planning package.
+- Tightened Clio screenshot rules so `test-coverage.png` represents passing 80 percent coverage evidence and `hook-trigger.png` owns deliberate blocking/failure evidence.
+
+### Tests
+
+- Planned verification covers static marker scans, protected-output diff checks, pipeline run, pytest, coverage gate, and a read-only final review.
+
 ## Homework 6 - Step 39: Review Repair Plan
 
 ### Added

@@ -82,10 +82,15 @@ Do not compare against or select from "latest" files discovered in the root tree
 - Stable target path if used.
 - `unused` when not used.
 - Reason for use or non-use.
+- Freshness assessment: fresh, current enough with rationale, stale, or blocked.
+- Passing/blocking classification when relevant.
+- Task coverage: Task 4 MCP evidence, Task 5 screenshot evidence, PR evidence, or support-only evidence.
 - Privacy/safety review status.
 - Whether the stable target was copied from source or freshly captured.
 
 Clio may use only a subset of operator-sourced screenshots. It must preserve the full source folder.
+
+Stable screenshot targets have assignment-specific semantics. `test-coverage.png` is passing coverage evidence; `hook-trigger.png` is hook blocking or failure evidence; `mcp-interaction.png` must include both Context7 and custom `pipeline-status` MCP evidence in one screenshot or point to explicit paired evidence and an accepted limitation.
 
 ## Evidence
 
@@ -129,3 +134,5 @@ Selection records must name:
 - Excluded runtime/tool paths.
 
 During selection, copy only inventory-declared files from `agent-4-docs/outputs/`. Never copy evidence, review notes, source screenshots, caches, or runtime output wholesale.
+
+Regeneration after a control-surface repair is a separate Clio run and selection step. Do not edit an existing selected Clio run output to make it look as though it was generated under newer rules. A refreshed documentation package must preserve a new run folder or an explicit selection record that names the regenerated outputs and keeps canonical docs, screenshot targets, PR draft, selected run evidence, and final-selection mapping synchronized.
