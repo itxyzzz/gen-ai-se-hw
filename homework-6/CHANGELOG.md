@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 35: Clio Review Clarifications
+
+### Added
+
+- Not applicable.
+
+### Changed
+
+- Clarified that Clio documents explicitly selected output runs rather than assuming canonical root files are always the documentation target.
+- Reworded Clio selection records to name selected output run IDs and inventory versions instead of agent source versions.
+
+### Fixed
+
+- Fixed ambiguous Clio documentation workflow wording raised during review.
+
+### Tests
+
+- Ran focused markdown scans and whitespace checks for the Clio review update.
+
 ## Homework 6 - Step 34: Clio Documentation Generator Controls
 
 ### Added

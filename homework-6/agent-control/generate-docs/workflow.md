@@ -17,7 +17,7 @@ Read this context before writing, executing, comparing, or selecting documentati
 1. `homework-6/docs/agent-runs/final-selection.md`: selected Athena (Spec Writer), Hephaestus (Code Generator), and Themis (Test Generator) records.
 2. Selected Hephaestus output inventory named by the selection record.
 3. Selected Themis output inventory named by the selection record.
-4. `homework-6/specification.md`: current canonical selected specification.
+4. `homework-6/specification.md`: current canonical specification used as comparison context. Clio documents the explicitly selected Athena, Hephaestus, and Themis output runs named by the selection record or invocation; those selected outputs may or may not match the current canonical root files.
 5. `homework-6/sample-transactions.json`: canonical sample input, read only when needed for counts or safe summaries.
 6. `homework-6/agents.md`: layer glossary, privacy rules, run preservation, Clio role, and Themis boundary.
 7. `homework-6/TASKS.md`: Task 5 documentation and screenshot checks plus submission PR description requirements.
@@ -34,7 +34,7 @@ Read this context before writing, executing, comparing, or selecting documentati
 13. `homework-6/docs/screenshots/operator-sourced/`: source screenshot inventory.
 14. This package's `quality-bar.md` and `run-registry.md`.
 
-If the selected Hephaestus package, selected Themis package, or final-selection record is missing, stop and ask the operator to select or repair the package. Do not target "latest" from the file tree.
+If the selected Hephaestus package, selected Themis package, or final-selection record is missing, stop and ask the operator to select or repair the package. Do not target "latest" from the file tree, and do not assume the canonical root files are the documentation target unless the selection record explicitly names them as the selected outputs.
 
 Repository `dev-doc-harness` and Superpowers requirements apply to Operator Layer maintenance of this package. They do not apply inside Clio (Documentation Generator) runs or generated reviewer-facing documentation.
 

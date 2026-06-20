@@ -120,7 +120,7 @@ The first successful Clio package may be selected by default only when no final 
 Selection records must name:
 
 - Selected Clio run ID.
-- Selected Athena, Hephaestus, and Themis source versions.
+- Selected Athena, Hephaestus, and Themis output run IDs and inventory versions.
 - Selected output inventory path.
 - Files copied to canonical targets.
 - Screenshot source-to-target mapping.
