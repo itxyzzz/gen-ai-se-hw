@@ -1,5 +1,25 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 39: Review Repair Plan
+
+### Added
+
+- Added the approved planning package for Homework 6 end-to-end review repair under `docs/work-items/2026-06-21-homework-6-review-repair/`.
+- Added a test-case snapshot for Clio evidence-generation rules, fourth-component documentation, Claude project-skill documentation, Hephaestus `shared/` evidence consistency, and the Hephaestus terminology leak repair.
+
+### Changed
+
+- Planned the repair as a control-surface-only update for Clio, Athena, Hephaestus, and `agents.md`.
+- Recorded that clean Clio documentation-package regeneration and selection is a separate follow-up step, not part of this control-surface repair.
+
+### Fixed
+
+- Not applicable; this is the plan-only checkpoint.
+
+### Tests
+
+- Validated the staged planning package for unresolved draft markers and whitespace issues.
+
 ## Homework 6 - Step 38: PR Draft Screenshot Links
 
 ### Added
