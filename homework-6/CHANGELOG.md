@@ -1,5 +1,27 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 42: Java Stack And Hera Orchestration Spec
+
+### Added
+
+- Added the approved large/phased planning spec for Java stack readiness and Hera (Orchestrator) under `docs/work-items/2026-06-21-java-stack-and-hera-orchestration/`.
+- Planned Java as a preserved parallel alternate package rather than an automatic replacement for the selected Python submission.
+- Planned Hera as the Homework Automation Layer owner for sequence, comparison, and selection across Athena, Hephaestus, Themis, and Clio.
+
+### Changed
+
+- Recorded that shared helper surfaces should stay universal where practical, including preserving the Python `mcp/server.py` as a stack-neutral result reader unless validation proves otherwise.
+- Planned `.codex/config.toml` support for `agents.max_depth = 2` while preserving `agents.max_threads = 8`.
+- Clarified that Hera should still use first-level child agents if nested depth is unavailable, and child agents should continue without their own nested sub-agents while recording the degraded mode.
+
+### Fixed
+
+- Not applicable; this is an approved planning checkpoint.
+
+### Tests
+
+- Validated the approved spec for unresolved placeholder markers and staged whitespace issues before the planning freeze commit.
+
 ## Homework 6 - Step 41: Refreshed Clio Documentation Package
 
 ### Added
