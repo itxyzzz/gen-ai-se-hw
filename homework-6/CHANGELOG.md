@@ -1,5 +1,33 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 32: Pipeline Status MCP Server
+
+### Added
+
+- Added the custom FastMCP `pipeline-status` server at `mcp/server.py` with `get_transaction_status`, `list_pipeline_results`, and `pipeline://summary`.
+- Added focused MCP tests covering safe transaction status payloads, result listing, summary text, missing results, invalid transaction IDs, and privacy regressions.
+- Added a work-item variance log for the local MCP package import bridge and coverage-gate temp directory isolation.
+
+### Changed
+
+- Updated `mcp.json` and `.codex/config.toml` so `pipeline-status` is configured beside the existing `context7` server.
+- Changed `scripts/check_coverage_gate.py` to use a PID-scoped temp directory so repeated or tool-driven coverage runs do not collide on stale Windows coverage files.
+
+### Fixed
+
+- Preserved FastMCP access to the installed MCP SDK despite the assignment-required local `mcp/server.py` path.
+
+### Tests
+
+- Confirmed the new MCP tests failed before implementation because the planned helpers did not exist locally.
+- Ran `python -m pytest tests/test_mcp_server.py -q`: 9 passed.
+- Ran `python -m pytest -p no:cacheprovider`: 50 passed.
+- Ran `python scripts/check_coverage_gate.py --fail-under 80` outside the sandbox after sandboxed coverage file-renames were denied: 50 passed with 94.79% total coverage.
+- Validated `mcp.json` with `python -m json.tool mcp.json`.
+- Validated `.codex/config.toml` with `tomllib`.
+- Loaded `mcp/server.py` without starting stdio and confirmed `TXN001` returns `settled` while the serialized output omits raw sample account IDs, raw descriptions, and sensitive field names.
+- Verified protected generated files and assignment files have no diff.
+
 ## Homework 6 - Step 31: Pipeline Status MCP Plan
 
 ### Added

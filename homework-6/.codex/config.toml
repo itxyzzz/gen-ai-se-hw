@@ -3,5 +3,9 @@ sandbox_mode = "workspace-write"
 command = "npx"
 args = ["-y", "@upstash/context7-mcp@latest"]
 
+[mcp_servers.pipeline-status]
+command = "python"
+args = ["mcp/server.py"]
+
 [agents]
 max_threads = 8

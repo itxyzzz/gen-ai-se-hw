@@ -35,7 +35,7 @@ def main() -> int:
     if extra_args[:1] == ["--"]:
         extra_args = extra_args[1:]
 
-    temp_path = homework_root / "tmp" / "coverage-gate"
+    temp_path = homework_root / "tmp" / f"coverage-gate-{os.getpid()}"
     shutil.rmtree(temp_path, ignore_errors=True)
     temp_path.mkdir(parents=True, exist_ok=True)
 
