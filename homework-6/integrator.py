@@ -30,6 +30,7 @@ from agents.common import (
 
 PROTOCOL_DIRS = ("input", "processing", "output", "results")
 ARCHIVE_PREFIX = "shared-"
+SHARED_ARCHIVE_PERMISSION_DENIED = "SHARED_ARCHIVE_PERMISSION_DENIED"
 SIMULATION_NOTICE = (
     "Educational simulation only; no real payment, banking, legal, AML, sanctions, "
     "KYC, PCI, or payment-network compliance determination is performed."
@@ -73,7 +74,10 @@ def archive_existing_shared(shared_dir: Path) -> Path | None:
     archive_root = shared_dir.parent / "archive"
     archive_root.mkdir(parents=True, exist_ok=True)
     destination = next_archive_path(archive_root)
-    shutil.move(str(shared_dir), str(destination))
+    try:
+        shutil.copytree(shared_dir, destination)
+    except PermissionError as exc:
+        raise PipelineError(SHARED_ARCHIVE_PERMISSION_DENIED) from exc
     return destination
 
 
@@ -356,4 +360,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

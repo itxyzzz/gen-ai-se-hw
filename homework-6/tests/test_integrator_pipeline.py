@@ -35,6 +35,24 @@ def test_prepare_shared_directories_uses_next_zero_padded_archive_id(tmp_path):
     assert (tmp_path / "archive" / "shared-002" / "results" / "summary.json").exists()
 
 
+def test_prepare_shared_directories_archives_without_destructive_shared_move(tmp_path, monkeypatch):
+    dirs = prepare_shared_directories(tmp_path / "shared")
+    (dirs["results"] / "summary.json").write_text('{"run": "previous"}', encoding="utf-8")
+
+    def deny_destructive_archive_operation(*_args, **_kwargs):
+        raise PermissionError("sandbox denied destructive shared archive")
+
+    monkeypatch.setattr(Path, "rename", deny_destructive_archive_operation)
+    monkeypatch.setattr(Path, "unlink", deny_destructive_archive_operation)
+
+    prepare_shared_directories(tmp_path / "shared")
+
+    archived_summary = tmp_path / "archive" / "shared-001" / "results" / "summary.json"
+    assert archived_summary.exists()
+    assert json.loads(archived_summary.read_text(encoding="utf-8")) == {"run": "previous"}
+    assert (tmp_path / "shared" / "results" / "summary.json").exists()
+
+
 def test_write_run_provenance_contains_non_sensitive_traceability(tmp_path):
     shared = tmp_path / "shared"
     shared.mkdir()

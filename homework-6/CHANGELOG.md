@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 29: Shared Runtime Archive Hardening
+
+### Added
+
+- Added homework-local ignore rules for generated `shared/` runtime evidence while preserving the required protocol directories with `.gitkeep` files.
+
+### Changed
+
+- Changed `shared/` archival to copy the previous runtime tree into `archive/` without moving or deleting the tracked `shared/` directory structure.
+- Removed tracked generated `shared/` runtime JSON evidence from the canonical source package.
+
+### Fixed
+
+- Added a stable `SHARED_ARCHIVE_PERMISSION_DENIED` setup reason for Windows/Codex sandbox archive denials.
+
+### Tests
+
+- Added a regression test for archive permission denial without partial archive copy.
+- Ran `python -m pytest -p no:cacheprovider`: 41 passed.
+- Ran un-escalated `python integrator.py`: `total=8`, `settled=2`, `rejected=2`, `review_required=4`, and `error=0`.
+
 ## Homework 6 - Step 28: Fresh Code And Themis Test Selection
 
 ### Added
