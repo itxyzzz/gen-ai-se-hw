@@ -1,0 +1,18 @@
+# Run-Pipeline Skill Evidence
+
+Evidence source:
+
+- Fresh command evidence: `agent-4-docs/evidence/pipeline-run.txt`
+- Stable screenshot source: `docs/screenshots/operator-sourced/080-run-pipeline.png`
+- Stable screenshot target: `docs/screenshots/skill-run-pipeline.png`
+
+Observed behavior:
+
+- `/run-pipeline` completed successfully in the operator screenshot.
+- It summarized safe counts from `shared/results/summary.json`.
+- It reported only transaction IDs and reason codes for rejected records.
+- It did not print raw account IDs, raw descriptions, names, or full audit payloads.
+
+Fresh command parity:
+
+- Current Clio run command evidence also reports `total=8 settled=2 rejected=2 review_required=4 error=0`.

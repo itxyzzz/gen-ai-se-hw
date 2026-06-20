@@ -1,6 +1,6 @@
 # Final Selection
 
-Current status: selected Athena (Spec Writer) run `20260619-170102-write-spec-python-fresh` is the canonical Python transaction-processing system specification. Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` is the canonical Task 2 software version generated from that fresh specification. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` is the canonical Task 5 test suite for that selected code package.
+Current status: selected Athena (Spec Writer) run `20260619-170102-write-spec-python-fresh` is the canonical Python transaction-processing system specification. Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` is the canonical Task 2 software version generated from that fresh specification. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` is the canonical Task 5 test suite for that selected code package. Selected Clio (Documentation Generator) run `20260620-230201-generate-docs-python-primary` is the canonical Task 5 reviewer documentation package for the selected spec/code/test set.
 
 Use the current canonical `specification.md` as downstream input for any future Hephaestus (Code Generator) regeneration or repair. The prior selected run `20260617-180458-write-spec-python-primary` remains preserved as failed/superseded evidence only.
 
@@ -118,6 +118,73 @@ Excluded from test selection:
 - `__pycache__/`
 - copied validation support inputs such as `sample-transactions.json`, `specification.md`, and `scripts/check_coverage_gate.py`
 
+## Clio Documentation Generation Selection
+
+Current selected documentation run: `20260620-230201-generate-docs-python-primary`.
+
+Targeted selected source packages:
+
+- Athena run ID: `20260619-170102-write-spec-python-fresh`
+- Hephaestus run ID: `20260619-175211-generate-code-python-fresh-spec`
+- Hephaestus inventory: `docs/agent-runs/20260619-175211-generate-code-python-fresh-spec/agent-2-code/outputs/inventory.md`
+- Themis run ID: `20260620-144025-generate-tests-python-fresh-spec`
+- Themis inventory: `docs/agent-runs/20260620-144025-generate-tests-python-fresh-spec/agent-3-tests/outputs/inventory.md`
+- Current canonical spec SHA-256: `44FD7EF6AC4FEE8070A23820DD784AA6215795D58AE3D7EB8225EFEFB8AB9E3B`
+
+Selected output inventory:
+
+- `docs/agent-runs/20260620-230201-generate-docs-python-primary/agent-4-docs/outputs/inventory.md`
+
+Selected canonical paths:
+
+- `README.md`
+- `HOWTORUN.md`
+- `ARCHITECTURE.md`
+- `TESTING_GUIDE.md`
+- `API_REFERENCE.md`
+- `docs/pr-description-draft.md`
+- `docs/screenshots/pipeline-run.png`
+- `docs/screenshots/test-coverage.png`
+- `docs/screenshots/skill-run-pipeline.png`
+- `docs/screenshots/hook-trigger.png`
+- `docs/screenshots/mcp-interaction.png`
+
+Screenshot source-to-target mapping:
+
+- `docs/screenshots/operator-sourced/080-run-pipeline.png` -> `docs/screenshots/pipeline-run.png`
+- `docs/screenshots/operator-sourced/095-coverage-fail-under-99-fail.png` -> `docs/screenshots/test-coverage.png`
+- `docs/screenshots/operator-sourced/080-run-pipeline.png` -> `docs/screenshots/skill-run-pipeline.png`
+- `docs/screenshots/operator-sourced/100-pre-push-git-hook-firing.png` -> `docs/screenshots/hook-trigger.png`
+- `docs/screenshots/operator-sourced/110-custom-mcp-server.png` -> `docs/screenshots/mcp-interaction.png`
+
+Validation:
+
+- `python integrator.py` passed with `total=8 settled=2 rejected=2 review_required=4 error=0`.
+- `python -m pytest -p no:cacheprovider` passed with 50 tests.
+- `python scripts/check_coverage_gate.py --fail-under 80` passed unsandboxed with 50 tests and 94.79% total coverage after a Windows sandbox coverage-file rename failure.
+- `python scripts/check_coverage_gate.py --fail-under 99` failed as expected with 94.79% below the demonstration threshold while all tests passed.
+- Validation-only helper returned 8 total, 6 valid, and 2 rejected records.
+- MCP status helper returned safe summary/status evidence using a file-path import of `mcp/server.py`.
+
+Selection rationale: first successful Clio (Documentation Generator) package. Canonical final documentation files were absent before this run, so the run was selected by the registry's first-success default after validation.
+
+Operator: Repository operator in current Codex Desktop thread.
+
+Excluded from documentation selection:
+
+- `agent-4-docs/evidence/`
+- `agent-4-docs/review/`
+- `agent-4-docs/validation-checklist.md`
+- `agent-4-docs/handoff.md`
+- `inputs/`
+- `shared/`
+- `archive/`
+- `.coverage*`
+- `.pytest_cache/`
+- `.test-tmp/`
+- `tmp/`
+- `__pycache__/`
+
 ## Failure And Supersession Notes
 
 | Date | Run ID | Status | Reason | Follow-up |
@@ -130,6 +197,7 @@ Excluded from test selection:
 
 ## Post-Selection Edits
 
+- 2026-06-20: Selected Clio (Documentation Generator) run `20260620-230201-generate-docs-python-primary` as the first successful documentation package and copied its inventory-declared README, HOWTORUN, architecture, testing, API, PR draft, and stable screenshot targets to canonical paths.
 - 2026-06-20: Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` and copied its inventory-declared runtime code, baseline tests, pytest config, and research notes to canonical targets. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` and copied its inventory-declared test suite and pytest config to canonical targets.
 - 2026-06-19: Compared the last three generated Athena (Spec Writer) specs, selected `20260619-170102-write-spec-python-fresh`, and copied its `agent-1-spec/outputs/specification.md` to canonical `specification.md`. No support docs were copied because the operator selected the default spec package only.
 - 2026-06-18: Copied `docs/agent-runs/20260618-003908-write-spec-python-replacement/agent-1-spec/outputs/specification.md` to canonical `specification.md`. No support docs were copied because the operator selected the default spec package only.

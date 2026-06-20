@@ -1,0 +1,48 @@
+# Test And Coverage Evidence
+
+## Pytest
+
+Command:
+
+```powershell
+python -m pytest -p no:cacheprovider
+```
+
+Result:
+
+```text
+50 passed in 6.70s
+```
+
+## Coverage Gate
+
+Initial sandboxed command:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 80
+```
+
+Sandbox result:
+
+```text
+Failed with a Windows coverage-file rename/access-denied error under tmp/coverage-gate-*/.coverage.
+```
+
+Unsandboxed rerun:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 80
+```
+
+Result:
+
+```text
+50 passed in 9.74s
+Required test coverage of 80% reached. Total coverage: 94.79%
+TOTAL 1017 statements, 53 missed, 95% rounded display coverage
+```
+
+Reason for unsandboxed execution:
+
+- The workflow explicitly allows requesting unsandboxed execution when Windows coverage file rename restrictions block coverage output.
+- The unsandboxed rerun used the same repository helper and produced the coverage result above.

@@ -1,0 +1,37 @@
+# Hook Trigger Evidence
+
+## Passing Gate
+
+Stable screenshot source:
+
+- `docs/screenshots/operator-sourced/100-pre-push-git-hook-firing.png`
+
+Stable screenshot target:
+
+- `docs/screenshots/hook-trigger.png`
+
+Screenshot signal:
+
+- Git pre-push invokes `python scripts/check_coverage_gate.py --fail-under 80`.
+- The 80% gate passes in the screenshot.
+
+## Blocking Demonstration
+
+Command:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 99
+```
+
+Result:
+
+```text
+50 passed in 9.69s
+FAIL Required test coverage of 99% not reached. Total coverage: 94.79%
+Exit code: 1
+```
+
+Safety review:
+
+- Hook evidence is coverage-only and contains no transaction payloads.
+- The `--fail-under 99` command intentionally demonstrates blocking behavior without degrading the real 80% gate.

@@ -1,5 +1,31 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 36: Clio Documentation Package
+
+### Added
+
+- Added the first selected Clio (Documentation Generator) documentation package for the selected Athena, Hephaestus, and Themis runs.
+- Added canonical reviewer docs: `README.md`, `HOWTORUN.md`, `ARCHITECTURE.md`, `TESTING_GUIDE.md`, `API_REFERENCE.md`, and `docs/pr-description-draft.md`.
+- Added stable reviewer screenshot targets under `docs/screenshots/` copied from preserved operator-sourced evidence.
+- Preserved the Clio run under `docs/agent-runs/20260620-230201-generate-docs-python-primary/` with source snapshots, evidence notes, validation checklist, handoff, and output inventory.
+
+### Changed
+
+- Updated `docs/agent-runs/final-selection.md` to select Clio run `20260620-230201-generate-docs-python-primary`, list copied canonical targets, record screenshot mapping, and summarize validation evidence.
+
+### Fixed
+
+- Documented the local `mcp/server.py` import-name collision with the installed third-party `mcp` package and the file-path import workaround for direct helper checks.
+- Documented the Windows sandbox coverage-file rename limitation and the validated unsandboxed coverage rerun.
+
+### Tests
+
+- Ran `python integrator.py`: `total=8 settled=2 rejected=2 review_required=4 error=0`.
+- Ran `python -m pytest -p no:cacheprovider`: 50 passed.
+- Ran `python scripts/check_coverage_gate.py --fail-under 80` unsandboxed after sandbox coverage-file rename failure: 50 passed, 94.79% total coverage.
+- Ran `python scripts/check_coverage_gate.py --fail-under 99` unsandboxed: failed as expected with 94.79% below the demonstration threshold while all tests passed.
+- Ran validation-only and MCP status evidence commands with privacy-safe output.
+
 ## Homework 6 - Step 35: Clio Review Clarifications
 
 ### Added
