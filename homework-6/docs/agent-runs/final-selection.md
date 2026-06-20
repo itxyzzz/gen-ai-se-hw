@@ -1,6 +1,6 @@
 # Final Selection
 
-Current status: selected Athena (Spec Writer) run `20260619-170102-write-spec-python-fresh` is the canonical Python transaction-processing system specification. Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` is the canonical Task 2 software version generated from that fresh specification. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` is the canonical Task 5 test suite for that selected code package. Selected Clio (Documentation Generator) run `20260620-230201-generate-docs-python-primary` is the canonical Task 5 reviewer documentation package for the selected spec/code/test set.
+Current status: selected Athena (Spec Writer) run `20260619-170102-write-spec-python-fresh` is the canonical Python transaction-processing system specification. Selected Hephaestus (Code Generator) run `20260619-175211-generate-code-python-fresh-spec` is the canonical Task 2 software version generated from that fresh specification. Selected Themis (Test Generator) run `20260620-144025-generate-tests-python-fresh-spec` is the canonical Task 5 test suite for that selected code package. Selected Clio (Documentation Generator) run `20260621-011348-generate-docs-python-review-repair` is the canonical Task 5 reviewer documentation package for the selected spec/code/test set.
 
 Use the current canonical `specification.md` as downstream input for any future Hephaestus (Code Generator) regeneration or repair. The prior selected run `20260617-180458-write-spec-python-primary` remains preserved as failed/superseded evidence only.
 
@@ -120,7 +120,7 @@ Excluded from test selection:
 
 ## Clio Documentation Generation Selection
 
-Current selected documentation run: `20260620-230201-generate-docs-python-primary`.
+Current selected documentation run: `20260621-011348-generate-docs-python-review-repair`.
 
 Targeted selected source packages:
 
@@ -133,7 +133,7 @@ Targeted selected source packages:
 
 Selected output inventory:
 
-- `docs/agent-runs/20260620-230201-generate-docs-python-primary/agent-4-docs/outputs/inventory.md`
+- `docs/agent-runs/20260621-011348-generate-docs-python-review-repair/agent-4-docs/outputs/inventory.md`
 
 Selected canonical paths:
 
@@ -151,11 +151,11 @@ Selected canonical paths:
 
 Screenshot source-to-target mapping:
 
-- `docs/screenshots/operator-sourced/080-run-pipeline.png` -> `docs/screenshots/pipeline-run.png`
-- `docs/screenshots/operator-sourced/095-coverage-fail-under-99-fail.png` -> `docs/screenshots/test-coverage.png`
+- Fresh terminal-style evidence -> `docs/screenshots/pipeline-run.png`
+- Fresh terminal-style passing 80 percent coverage evidence -> `docs/screenshots/test-coverage.png`
 - `docs/screenshots/operator-sourced/080-run-pipeline.png` -> `docs/screenshots/skill-run-pipeline.png`
 - `docs/screenshots/operator-sourced/100-pre-push-git-hook-firing.png` -> `docs/screenshots/hook-trigger.png`
-- `docs/screenshots/operator-sourced/110-custom-mcp-server.png` -> `docs/screenshots/mcp-interaction.png`
+- Fresh terminal-style combined Context7 and custom `pipeline-status` evidence -> `docs/screenshots/mcp-interaction.png`
 
 Validation:
 
@@ -166,7 +166,7 @@ Validation:
 - Validation-only helper returned 8 total, 6 valid, and 2 rejected records.
 - MCP status helper returned safe summary/status evidence using a file-path import of `mcp/server.py`.
 
-Selection rationale: first successful Clio (Documentation Generator) package. Canonical final documentation files were absent before this run, so the run was selected by the registry's first-success default after validation.
+Selection rationale: explicit operator request to regenerate documentation after Clio instructions were updated and, if successful, select the package as canonical. This run repairs the prior screenshot mapping by using distinct stable evidence for direct pipeline execution, passing 80 percent coverage, `/run-pipeline`, hook blocking behavior, and combined Context7 plus custom `pipeline-status` MCP evidence.
 
 Operator: Repository operator in current Codex Desktop thread.
 
@@ -197,6 +197,7 @@ Excluded from documentation selection:
 
 ## Post-Selection Edits
 
+- 2026-06-21: Selected refreshed Clio (Documentation Generator) run `20260621-011348-generate-docs-python-review-repair` and copied its inventory-declared README, HOWTORUN, architecture, testing, API, PR draft, and stable screenshot targets to canonical paths. The refreshed mapping replaces the previous duplicate pipeline/skill screenshot use and replaces the prior fail-under-99 image as the passing coverage screenshot.
 - 2026-06-20: Repaired `docs/pr-description-draft.md` screenshot links to resolve relative to the draft file (`screenshots/*.png` instead of `docs/screenshots/*.png`) and updated the preserved Clio output inventory fingerprint.
 - 2026-06-20: Reworded a `HOWTORUN.md` privacy evidence note from an internal instruction style into reviewer-facing guidance after review feedback. The selected Clio inventory snapshot remains preserved as generated evidence.
 - 2026-06-20: Selected Clio (Documentation Generator) run `20260620-230201-generate-docs-python-primary` as the first successful documentation package and copied its inventory-declared README, HOWTORUN, architecture, testing, API, PR draft, and stable screenshot targets to canonical paths.

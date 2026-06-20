@@ -1,5 +1,30 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 41: Refreshed Clio Documentation Package
+
+### Added
+
+- Added refreshed Clio (Documentation Generator) run `20260621-011348-generate-docs-python-review-repair` with metadata, source snapshots, evidence notes, validation checklist, handoff, output inventory, and candidate reviewer docs.
+- Added fresh stable terminal-style screenshots for direct pipeline execution, passing 80 percent coverage evidence, and combined Context7 plus custom `pipeline-status` MCP evidence.
+
+### Changed
+
+- Selected the refreshed Clio documentation package as canonical and copied only inventory-declared docs, PR draft, and stable screenshot targets.
+- Updated canonical documentation and PR draft references from the prior Clio run to the refreshed run.
+- Updated final-selection screenshot mapping so `pipeline-run.png`, `test-coverage.png`, `skill-run-pipeline.png`, `hook-trigger.png`, and `mcp-interaction.png` have distinct evidence categories.
+
+### Fixed
+
+- Replaced the previous reuse of one operator-sourced image for both direct pipeline and `/run-pipeline` skill evidence.
+- Replaced the previous fail-under-99 coverage image as the passing `test-coverage.png` evidence.
+
+### Tests
+
+- Ran `python integrator.py`: `total=8 settled=2 rejected=2 review_required=4 error=0`.
+- Ran `python -m pytest -p no:cacheprovider`: 50 passed.
+- Ran `python scripts/check_coverage_gate.py --fail-under 80` unsandboxed after a sandbox coverage-file rename failure: 50 passed, 94.79% total coverage.
+- Ran `python scripts/check_coverage_gate.py --fail-under 99` unsandboxed: failed as expected with 94.79% below the demonstration threshold while all tests passed.
+
 ## Homework 6 - Step 40: Review Repair Controls
 
 ### Added

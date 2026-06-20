@@ -1,0 +1,24 @@
+# Hook Trigger Evidence
+
+Stable screenshot target: `docs/screenshots/hook-trigger.png`
+
+Source screenshot: `docs/screenshots/operator-sourced/100-pre-push-git-hook-firing.png`
+
+The coverage hook uses:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 80
+```
+
+The deliberate blocking-path demonstration uses:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 99
+```
+
+Observed fresh command result for the demonstration threshold:
+
+```text
+50 passed in 13.65s
+FAIL Required test coverage of 99% not reached. Total coverage: 94.79%
+```
