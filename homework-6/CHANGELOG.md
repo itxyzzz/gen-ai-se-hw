@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 45: Hera Orchestrator Phase 02 Plan
+
+### Added
+
+- Added the approved Phase 02 plan for Hera (Orchestrator) control-surface implementation.
+- Added Phase 02 test-case and architecture snapshots covering Hera modes, run preservation, selection safety, nested-agent fallback behavior, and non-runtime boundaries.
+
+### Changed
+
+- Clarified the Java stack and Hera orchestration spec's model/sub-agent strategy table by labeling the two Phase 01 review items as `01-A` and `01-B`.
+
+### Fixed
+
+- Fixed the confusing duplicate Phase 01 numbering in the approved anchor spec without changing the phase decomposition.
+
+### Tests
+
+- Validated the Phase 02 planning package with JSON/TOML parsing, focused coverage-helper tests, protected-file diff checks, placeholder scans, and staged whitespace checks.
+
 ## Homework 6 - Step 44: Java Stack Readiness Phase 01 Implementation
 
 ### Added
