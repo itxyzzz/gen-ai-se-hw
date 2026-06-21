@@ -1,5 +1,20 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 52: Themis Workflow Staging Repair Plan
+
+### Added
+
+- Added the approved planning package for repairing Themis (Test Generator) Java output staging, malformed output-tree blocking, and Maven coverage-threshold guidance.
+- Recorded the implementation scope for updating Themis workflow, quality-bar, and run-registry control docs without touching preserved run folders or canonical product artifacts.
+
+### Changed
+
+- Froze the plan to require a separate post-freeze operator instruction before editing Themis control-surface implementation files.
+
+### Tests
+
+- Verified the planning package for required sections, unresolved placeholder markers, staged scope, and freeze-gate readiness.
+
 ## Homework 6 - Step 51: Hera Orchestration Dispatch Repair
 
 ### Changed
