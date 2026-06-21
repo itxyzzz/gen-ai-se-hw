@@ -57,6 +57,7 @@ agent-5-orchestrator/comparisons/child-run-readiness.md
 - Current canonical package-set ID.
 - Source package-set ID when applicable.
 - Child-agent plan and nested-agent support status.
+- First-level child-agent dispatch availability and expected dispatch mechanism.
 - Agent config values when available, including `max_threads` and `max_depth`.
 - Pre-existing dirty git state relevant to the run.
 - Privacy and canonical-output safety notes.
@@ -87,6 +88,8 @@ For each child entry, record:
 - Requested child mode.
 - Selected or requested stack.
 - Parent Hera run ID.
+- Intended dispatch mechanism, such as first-level child agent, reused prior run, blocked before dispatch, or operator-authorized non-Hera manual recovery.
+- Observed dispatch mechanism, including whether the child ran as a first-level child agent, ran with degraded child-local execution because nested child sub-agents were unavailable, or was blocked.
 - Child run ID.
 - Child run folder path.
 - Source run IDs.
@@ -100,6 +103,8 @@ For each child entry, record:
 - Next action.
 
 If a child run is skipped, record the explicit reason. Acceptable reasons include out-of-scope mode, missing operator authorization, prior selected package reuse, or a blocker that stops the sequence.
+
+For `generate-set`, missing or non-child observed dispatch for Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), or Clio (Documentation Generator) is a blocker unless the entry is explicit prior selected package reuse outside a new generation stage. Do not mark the set preserved or complete when later child deliverables were generated in the parent Hera thread.
 
 ## Comparisons
 
@@ -141,6 +146,8 @@ It must also state that it is not authorization to copy canonical files. Selecti
 - TOML validation for `.codex/config.toml`.
 - Agent-depth assertion results when available.
 - Child ledger completeness.
+- Dispatch-mechanism completeness for Athena, Hephaestus, Themis, and Clio.
+- Evidence review confirming no child deliverables were generated in the main orchestration thread during `generate-set`.
 - Comparison or selection-plan status.
 - Privacy scan results.
 - Protected canonical-output diff review.
@@ -153,6 +160,7 @@ It must also state that it is not authorization to copy canonical files. Selecti
 - Assigned Hera scope.
 - Mode and selected or requested stack.
 - Child run statuses.
+- Per-child dispatch status for Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator): first-level child agent, degraded child-local execution, reused prior run, or blocked.
 - Files inspected or changed.
 - Commands and tests run.
 - Assumptions.

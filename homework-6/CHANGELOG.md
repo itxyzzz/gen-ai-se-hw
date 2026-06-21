@@ -1,5 +1,22 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 51: Hera Orchestration Dispatch Repair
+
+### Changed
+
+- Tightened Hera `generate-set` guidance so Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) must run as first-level child agents when first-level dispatch is available.
+- Clarified that Hera's parent thread owns setup, sequencing, child prompt construction, ledger updates, handoff integration, comparison, and selection planning, not direct child deliverable generation.
+- Updated Hera ledger, validation, handoff, operator delta, and architecture delta guidance to record each child stage's dispatch mechanism and blocked/degraded status.
+
+### Fixed
+
+- Added rejection gates for Hera evidence where later child deliverables were generated in the main orchestration thread because outputs were tightly coupled, context was low, or sequential integration was convenient.
+- Required blocked status instead of parent-thread child deliverable generation when first-level child dispatch is unavailable during an orchestration-behavior `generate-set` test.
+
+### Tests
+
+- Ran static validation for Hera dispatch language, selection registry JSON, agent-depth TOML config, protected-output diffs, privacy scans, and whitespace checks.
+
 ## Homework 6 - Step 50: Java Maven Coverage Helper Repair
 
 ### Added

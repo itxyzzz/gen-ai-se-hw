@@ -23,7 +23,12 @@ Phase: Phase 01 Java stack readiness and Phase 02 Hera orchestration
   - `select-set`: update package-set selection only after explicit operator authorization and inventory-declared copy-target review.
 - Preserve Hera evidence under `docs/agent-runs/YYYYMMDD-HHMMSS-orchestrate-runs-<stack>-short-label/agent-5-orchestrator/`.
 - Treat `agent-5-orchestrator/child-runs.md` as the mandatory child-run ledger and `agent-5-orchestrator/selection-plan.md` as a proposal until explicit selection.
+- For `generate-set`, Hera must dispatch Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) as first-level child agents when first-level child-agent dispatch is available.
+- Hera's parent thread owns setup, sequencing, ledger updates, child prompt construction, integration of child handoffs, comparison, and selection planning. It does not directly generate child deliverables such as specifications, runtime code packages, tests, validation inventories, reviewer docs, or screenshots.
 - When nested child-agent dispatch is unavailable despite `agents.max_depth = 2`, record degraded mode and use first-level child agents when available; do not waive child-agent quality bars.
+- When first-level child-agent dispatch is unavailable during a Hera `generate-set` orchestration test, record the run as blocked instead of generating the four child stages sequentially in the parent thread.
+- Require `agent-5-orchestrator/child-runs.md` and `agent-5-orchestrator/handoff.md` to state the dispatch mechanism for each child stage: first-level child agent, degraded child-local execution, reused prior run, or blocked.
+- Reject Hera evidence that says child deliverables were generated in the main orchestration thread because outputs were tightly coupled or context was low.
 
 ## Not Merged Into Canonical Manual Yet
 

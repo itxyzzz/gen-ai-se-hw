@@ -9,6 +9,16 @@ Record nontrivial implementation variance after the Phase 01 plan is frozen. Bef
 
 ## Entries
 
+### 2026-06-21 - Phase 05 implementation
+
+Variance class: None for scope, architecture, public API, data, security, privacy, compliance, acceptance criteria, or feasibility.
+
+Notes:
+
+- Tightened the existing Hera control package rather than editing the thin Codex or Claude wrappers, because the wrappers already mandate `agent-control/orchestrate-runs/` as the canonical workflow source.
+- Treated the repair as based on local run evidence only. No official OpenAI/Codex documentation was consulted because the implementation does not attribute a runtime cause for the prior Hera behavior; it only strengthens the repository contract and evidence rejection gates.
+- Required blocked status when first-level child-agent dispatch is unavailable during a Hera `generate-set` orchestration test, rather than allowing parent-thread generation of child deliverables.
+
 ### 2026-06-21 - Phase 04 implementation
 
 Variance class: Local technical.

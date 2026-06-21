@@ -92,6 +92,16 @@ homework-6/docs/agent-runs/HERA_RUN_ID/
 
 ## Child Invocation Rules
 
+### First-Level Child-Agent Dispatch Contract
+
+For `generate-set`, Hera must dispatch Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) as first-level child agents when the runtime exposes first-level child-agent dispatch. The Hera parent thread owns setup, sequencing, ledger updates, child prompt construction, integration of child handoffs, comparison, and selection planning; it must not directly produce child deliverables such as stack-specific specifications, generated runtime source packages, test suites, validation inventories, reviewer documentation, or screenshots.
+
+Before each child stage, the parent Hera thread must update `agent-5-orchestrator/child-runs.md` with a pending entry that names the intended dispatch mechanism. After the child returns, the parent updates that same entry with the observed mechanism, child run ID, validation status, blockers, and next action.
+
+If first-level child-agent dispatch is unavailable, fails, or cannot be confirmed during a `generate-set` whose purpose is to test Hera orchestration behavior, Hera must stop the run as blocked and record the limitation in `run-metadata.md`, `child-runs.md`, `validation-checklist.md`, and `handoff.md`. Hera must not silently switch to sequential child deliverable generation in the parent thread. An operator may later start a separately authorized non-Hera manual recovery sequence, but that is not a successful Hera `generate-set` orchestration run.
+
+Evidence is rejected if it shows later child work was performed in the main orchestration thread because the outputs were tightly coupled or because context was running low. Tight coupling is a sequencing concern for Hera to manage through child prompts and handoff integration, not permission for the parent thread to generate child deliverables.
+
 Every child prompt, child handoff, or child run metadata record must include:
 
 - Parent Hera run ID.
@@ -123,12 +133,16 @@ Use `generate-set` to produce a preserved stack-specific set. The normal sequenc
 
 1. Confirm the requested stack is `python` or `java`.
 2. Snapshot the current canonical Python package set when it must remain protected.
-3. Dispatch Athena (Spec Writer) for a stack-specific specification when the requested stack needs a new spec.
-4. Dispatch Hephaestus (Code Generator) against the named Athena output.
-5. Dispatch Themis (Test Generator) against the named selected or candidate Hephaestus package.
-6. Dispatch Clio (Documentation Generator) against the named Athena, Hephaestus, and Themis records.
-7. Record every child run in `agent-5-orchestrator/child-runs.md`.
-8. Stop with preserved evidence and a handoff unless the operator explicitly authorized selection.
+3. Dispatch Athena (Spec Writer) as a first-level child agent for a stack-specific specification when the requested stack needs a new spec.
+4. Wait for Athena's run folder, inventory, validation status, and handoff before constructing the Hephaestus prompt.
+5. Dispatch Hephaestus (Code Generator) as a first-level child agent against the named Athena output.
+6. Wait for Hephaestus's run folder, inventory, validation status, and handoff before constructing the Themis prompt.
+7. Dispatch Themis (Test Generator) as a first-level child agent against the named selected or candidate Hephaestus package.
+8. Wait for Themis's run folder, inventory, validation status, and handoff before constructing the Clio prompt.
+9. Dispatch Clio (Documentation Generator) as a first-level child agent against the named Athena, Hephaestus, and Themis records.
+10. Wait for Clio's run folder, inventory, validation status, and handoff before marking the package set preserved.
+11. Record every child run and observed dispatch mechanism in `agent-5-orchestrator/child-runs.md`.
+12. Stop with preserved evidence and a handoff unless the operator explicitly authorized selection.
 
 For Java alternate generation, child prompts should carry the Phase 01 Java expectations: Maven, `pom.xml`, `src/main/java/...`, `src/test/java/...`, `BigDecimal`, Jackson or equivalent JSON handling, JUnit Jupiter, JaCoCo, and the stack-neutral `shared/results/` result contract. JUnit guidance should refer to Maven Surefire or Failsafe, and JaCoCo guidance should require a build-blocking `check` goal with a covered-ratio threshold such as `0.80`.
 
@@ -192,6 +206,8 @@ Runtime support may still be unavailable or constrained. If Hera cannot spawn ne
 
 Fallback does not waive Context7 notes, run inventories, privacy scans, validation evidence, selection records, or handoff requirements.
 
+If first-level child-agent dispatch itself is unavailable during `generate-set`, record the run as blocked instead of performing Athena, Hephaestus, Themis, or Clio deliverable work in the parent Hera thread.
+
 ## Validation And Handoff
 
 Before reporting a Hera run complete or a control-surface implementation ready:
@@ -207,3 +223,5 @@ Before reporting a Hera run complete or a control-surface implementation ready:
 Write or update `agent-5-orchestrator/validation-checklist.md` with commands, expected signals, actual results, blockers, and known limitations.
 
 Write `agent-5-orchestrator/handoff.md` when a Hera run pauses or completes. It must include the Hera run ID, mode, stack, child run statuses, comparison or selection status, nested-agent behavior, validation status, known risks, and exact next suggested prompt.
+
+For `generate-set`, the handoff must explicitly state for each of Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) whether the agent ran as a first-level child agent, ran with degraded child-local execution because its own nested sub-agents were unavailable, or was blocked. If Hera did not consult official OpenAI/Codex documentation about runtime dispatch semantics, the handoff must state that no runtime-cause attribution is being made and the repair or disposition is based only on local run evidence.

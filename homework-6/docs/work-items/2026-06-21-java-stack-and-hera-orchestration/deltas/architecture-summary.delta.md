@@ -24,6 +24,10 @@ Phase: Phase 01 Java stack readiness and Phase 02 Hera orchestration
   - `.claude/commands/orchestrate-runs.md`
 - Preserve Hera run evidence under `docs/agent-runs/<hera-run-id>/agent-5-orchestrator/`, with `child-runs.md` as the ledger and `selection-plan.md` as non-authorizing proposal state.
 - Keep child agents responsible for their own quality bars while Hera owns sequence, preservation, comparison, and explicit selection workflow.
+- Define Hera `generate-set` as a parent-orchestration workflow that dispatches Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) as first-level child agents when first-level dispatch is available.
+- Treat the parent Hera thread as the coordinator for setup, sequencing, child prompts, ledger updates, handoff integration, comparison, and selection planning, not as an implementation surface for child deliverables.
+- Record dispatch mechanism as part of package-set provenance so future comparisons can distinguish clean child-agent orchestration, degraded child-local execution, reused prior runs, and blocked stages.
+- Treat parent-thread child deliverable generation during `generate-set` as invalid orchestration evidence when first-level dispatch was available or when the goal was to test Hera orchestration behavior.
 
 ## Not Merged Into Canonical Architecture Yet
 
