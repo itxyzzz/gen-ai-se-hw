@@ -1,0 +1,13 @@
+{
+  "schema_version" : "1.0",
+  "transaction_id" : "TXN004",
+  "status" : "review_required",
+  "reason_codes" : [ "ODD_HOUR", "CHANNEL_RISK", "COUNTRY_RISK" ],
+  "amount" : "500.00",
+  "currency" : "EUR",
+  "processed_at" : "2026-06-21T18:28:05.071051100Z",
+  "risk_tier" : "very_high",
+  "component_history_count" : 4,
+  "audit_event_count" : 3,
+  "settlement_reference" : null
+}

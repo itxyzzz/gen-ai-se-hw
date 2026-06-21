@@ -1,0 +1,15 @@
+{
+  "amount": "200.00",
+  "audit_event_count": 4,
+  "component_history_count": 4,
+  "currency": "XYZ",
+  "privacy_check": "passed",
+  "processed_at": "2026-06-21T20:50:11Z",
+  "reason_codes": [
+    "UNSUPPORTED_CURRENCY"
+  ],
+  "safe_summary": "Simulated rejection outcome recorded.",
+  "schema_version": 1,
+  "status": "rejected",
+  "transaction_id": "TXN006"
+}

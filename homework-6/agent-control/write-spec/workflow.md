@@ -51,6 +51,8 @@ Accept only `stack=python` and `stack=java`. If the stack is omitted, use `stack
 
 Reject `stack=auto` and any unsupported value with a short message naming the supported enum. Do not invent a new language profile during a run. Load `agent-control/write-spec/stack-profiles.md` before drafting stack-specific files, functions, commands, test tools, coverage hooks, or MCP notes.
 
+For `stack=java`, the generated `specification.md` must name concrete Maven paths and commands, including `pom.xml`, `src/main/java/...`, `src/test/java/...`, JUnit 5/JUnit Jupiter through Maven Surefire or Failsafe, JaCoCo `report` and `check` goals, `BigDecimal` money handling, Jackson or equivalent JSON handling, and the stack-neutral `shared/results/summary.json` plus `TXN*.json` shape consumed by `mcp/server.py`.
+
 ## Workflow Steps
 
 1. Confirm the requested mode and normalize stack input.

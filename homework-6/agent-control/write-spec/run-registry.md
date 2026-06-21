@@ -31,6 +31,7 @@ Examples:
 ```
 
 Use `python` or `java` for stack-specific Agent 1 runs. If a later run is not stack-specific, use the stack that produced or consumes the artifacts.
+`pipeline-*` run IDs are operation evidence, not Athena specification runs; Java operation evidence should still use `pipeline-java-*` only when it was produced by a Java package.
 
 ## Preservation Rules
 
@@ -48,6 +49,7 @@ Use `python` or `java` for stack-specific Agent 1 runs. If a later run is not st
 Compare runs with the criteria in `agent-control/write-spec/quality-bar.md`.
 
 When comparing Python and Java runs, call out build-system complexity, MCP fit, coverage tooling, file layout, and implementation effort.
+When selecting across stack sets, keep `docs/agent-runs/final-selection.md` as the human audit history and update `docs/agent-runs/selection-sets.json` so helpers can resolve the active stack without parsing markdown.
 
 Selection process:
 

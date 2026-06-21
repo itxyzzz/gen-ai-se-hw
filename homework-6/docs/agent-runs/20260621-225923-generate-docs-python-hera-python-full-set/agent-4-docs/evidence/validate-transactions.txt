@@ -1,0 +1,15 @@
+Command:
+python -c "import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))"
+
+Result:
+Pass.
+
+Safe summary:
+- total: 8
+- valid: 6
+- invalid: 2
+- reason code groups: `UNSUPPORTED_CURRENCY=1`, `NON_POSITIVE_AMOUNT=1`
+- rejected records: `TXN006`, `TXN007`
+
+Privacy:
+The command emitted only totals, transaction IDs, statuses, and safe reason codes. It did not run the full pipeline and did not print raw account IDs, raw descriptions, or metadata.

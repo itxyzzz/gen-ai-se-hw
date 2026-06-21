@@ -52,13 +52,16 @@ Default to `generate` unless the operator asks for comparison, continuation, or 
 Use run IDs in this format:
 
 ```text
-YYYYMMDD-HHMMSS-generate-docs-python-short-label
+YYYYMMDD-HHMMSS-generate-docs-<stack>-short-label
 ```
+
+Examples include `YYYYMMDD-HHMMSS-generate-docs-python-primary` for the canonical Python package and `YYYYMMDD-HHMMSS-generate-docs-java-alternate` for a preserved Java alternate. The `<stack>` value must match the selected package set being documented.
 
 ## Required Traceability
 
 Every Clio run must record:
 
+- Selected package-set ID and stack from `docs/agent-runs/selection-sets.json` when that registry exists.
 - Selected Athena run ID.
 - Selected Hephaestus run ID and output inventory path.
 - Selected Themis run ID and output inventory path.
@@ -137,6 +140,8 @@ The final documentation must describe these layers clearly:
 - Homework Automation Layer: Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator).
 - Generated Transaction System Layer: deterministic runtime pipeline, JSON file protocol, runtime components, MCP status server, tests, commands, coverage gate, and runtime evidence.
 
+When documenting multiple stack sets, Clio must state which set is canonical and which set is preserved as an alternate. A Java alternate may be documented with Maven/JUnit/JaCoCo commands and Java source paths, but it must not be presented as the canonical root package unless `selection-sets.json` and the human selection record explicitly mark it canonical.
+
 Do not include a narrative about operator challenges or feedback. The documentation and PR draft should describe the system as built, AI workflow, verification, evidence, known limitations, and how to review it.
 
 Keep internal Clio instructions out of reviewer-facing outputs. Privacy and evidence guidance may appear in docs only as reviewer-facing expectations or observable properties, not as agent directives such as "do not print raw input transactions in review evidence," "Clio must," "the agent should," or similar workflow-control language. Put those imperatives in run metadata, evidence notes, validation checklists, handoff files, or this control package instead.
@@ -153,7 +158,7 @@ If Clio finds a missing final test requirement:
 
 ## Evidence Commands
 
-Prefer fresh local evidence where safe and available:
+For the current canonical Python package, prefer fresh local evidence where safe and available:
 
 ```powershell
 python integrator.py
@@ -161,6 +166,8 @@ python -m pytest -p no:cacheprovider
 python scripts/check_coverage_gate.py --fail-under 80
 python scripts/check_coverage_gate.py --fail-under 99
 ```
+
+For `stack=java`, use the selected package-set command hints instead: `mvn test`, `python scripts/check_coverage_gate.py --stack java --project-dir <java-project> --fail-under 80`, and the generated Java pipeline or validation-only command declared by the selected inventory. If local Maven settings would otherwise block test execution before JUnit or JaCoCo runs, use the optional coverage-helper flags documented in `agent-control/operate-pipeline/commands-and-hooks.md`: `--maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml`. Do not substitute Python evidence for Java evidence.
 
 Use `agent-control/operate-pipeline/commands-and-hooks.md` for the exact `/run-pipeline` and `/validate-transactions` behavior. Evidence must summarize safe counts, statuses, and reason codes only. Do not print raw account IDs, raw descriptions, names, or full audit payloads.
 

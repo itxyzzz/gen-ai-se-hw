@@ -1,101 +1,83 @@
 # Testing Guide
 
-The selected Themis (Test Generator) package targets the selected Hephaestus (Code Generator) runtime package and validates both behavior and homework support surfaces.
-
-## Selected Test Package
-
-| Field | Value |
-|---|---|
-| Themis run | `20260620-144025-generate-tests-python-fresh-spec` |
-| Target Hephaestus run | `20260619-175211-generate-code-python-fresh-spec` |
-| Selected test inventory | `docs/agent-runs/20260620-144025-generate-tests-python-fresh-spec/agent-3-tests/outputs/inventory.md` |
-| Current Clio root evidence | 50 tests passing |
-| Current coverage evidence | 94.79% total coverage with 80% gate passing |
+This guide documents the selected Themis suite and fresh Clio validation evidence for the Hera-dispatched Python package set now copied to the canonical homework root.
 
 ## Test Strategy
 
 ```mermaid
 flowchart TB
-    Unit["Unit tests\ncommon, validator, fraud detector, settlement"] --> Integration["Integration tests\nfull pipeline and filesystem protocol"]
-    Integration --> Quality["Themis quality tests\nprivacy, command support, provenance, hooks"]
-    Quality --> MCP["MCP reader tests\nsafe status tools and resource"]
-    MCP --> Gate["Coverage gate\nfail-under 80"]
+    Unit["Unit tests"] --> Validator["Validator, fraud, settlement, reporting"]
+    Integration["Integration tests"] --> Pipeline["Full pipeline and rerun archival"]
+    Privacy["Privacy checks"] --> Results["Result JSON and command evidence"]
+    Support["Support checks"] --> Coverage["Coverage helper and command behavior"]
 ```
 
-The suite checks:
+The Themis selection extends Hephaestus baseline tests with quality checks across:
 
-- `Decimal` parsing and float rejection.
-- Strict JSON serialization and sensitive-field blocking.
-- Required field, timestamp, currency, and non-positive amount handling.
-- Expected sample outcomes for all eight synthetic transactions.
-- Repeated-run archival and provenance creation.
-- Validation-only behavior.
-- Per-transaction error recovery.
-- MCP status helper behavior.
-- Coverage gate and hook support surfaces.
+- Validator field, currency, amount, audit, and validation-only behavior.
+- Fraud scoring for high-value, unusual-time, channel, type, and destination-pattern cases.
+- Settlement status preservation and unknown-status handling.
+- Reporting result shapes, summary consistency, privacy checks, and error result behavior.
+- Integrator setup, provenance, bad-message recovery, full-pipeline results, and archival.
+- Operator support behavior for `/run-pipeline`, `/validate-transactions`, and coverage gate pass/fail paths.
 
 ## Commands
 
-Run all tests:
+| Purpose | Command | Fresh Clio result |
+|---|---|---|
+| Run tests | `python -m pytest -p no:cacheprovider` | 36 passed |
+| Coverage gate | `python scripts\check_coverage_gate.py --stack python --fail-under 80` | Passed, 97.44% total coverage |
+| Blocking demonstration | `python scripts\check_coverage_gate.py --stack python --fail-under 99` | Expected failure, 97.44% below 99% |
+| Pipeline support | documented `/run-pipeline` fast path | 8 results, all present |
+| Validation-only support | validator dry-run helper | total 8, valid 6, invalid 2 |
 
-```powershell
-python -m pytest -p no:cacheprovider
-```
+Post-selection root validation also passed with 52 tests and 95.57% total coverage. The larger root count includes Operator Layer support-surface tests for the coverage helper and MCP server in addition to the selected generated package tests.
 
-Run the coverage gate:
+## Coverage Summary
 
-```powershell
-python scripts/check_coverage_gate.py --fail-under 80
-```
+| Area | Coverage |
+|---|---:|
+| `agents/__init__.py` | 100% |
+| `agents/common.py` | 98% |
+| `agents/fraud_detector.py` | 96% |
+| `agents/reporting_agent.py` | 100% |
+| `agents/settlement_processor.py` | 100% |
+| `agents/transaction_validator.py` | 98% |
+| `integrator.py` | 88% |
+| Total | 97.44% |
 
-Demonstrate blocking behavior:
+## Expected Sample Outcomes
 
-```powershell
-python scripts/check_coverage_gate.py --fail-under 99
-```
-
-Run validation-only evidence:
-
-```powershell
-python -c "import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))"
-```
-
-## Current Evidence
-
-| Check | Result |
-|---|---|
-| `python integrator.py` | `total=8 settled=2 rejected=2 review_required=4 error=0` |
-| `python -m pytest -p no:cacheprovider` | 50 passed |
-| `python scripts/check_coverage_gate.py --fail-under 80` | 50 passed, 94.79% total coverage |
-| `python scripts/check_coverage_gate.py --fail-under 99` | 50 passed, exits nonzero because 94.79% is below 99% |
-| Validation-only command | 8 total, 6 valid, 2 rejected |
-| MCP status check | `TXN006` rejected with `UNSUPPORTED_CURRENCY`; summary counts match pipeline output |
-
-The first sandboxed coverage-gate run hit a Windows coverage-file rename permission error. The same command passed unsandboxed, matching the workflow note for Windows coverage-file restrictions.
+| Transaction | Expected status | Safe reason signal |
+|---|---|---|
+| `TXN001` | `settled` | `SETTLED` |
+| `TXN002` | `review_required` | `REVIEW_HIGH_VALUE` |
+| `TXN003` | `review_required` | `REVIEW_DESTINATION_PATTERN` |
+| `TXN004` | `review_required` | `REVIEW_UNUSUAL_TIME`, `REVIEW_CHANNEL_PATTERN` |
+| `TXN005` | `review_required` | `REVIEW_HIGH_VALUE` |
+| `TXN006` | `rejected` | `UNSUPPORTED_CURRENCY` |
+| `TXN007` | `rejected` | `NON_POSITIVE_AMOUNT` |
+| `TXN008` | `settled` | `SETTLED` |
 
 ## Fixture Isolation
 
-Tests use temporary directories for pipeline execution, archival checks, generated JSON files, and coverage helper scratch space. They should not require real `shared/` or `archive/` state to pass.
+The preserved Themis and Clio runs validated the package in run-local workspaces first. After Hera selection, the same test suite is available at the homework root and can be run directly with `python -m pytest -p no:cacheprovider`.
 
-## Privacy Checks
+## Multi-Stack Evidence
 
-The tests and documentation check that public outputs avoid:
+The canonical suite is Python and reports 36 passing tests with 97.44% total coverage in the selected Clio evidence. A Java package set is preserved separately under `docs/agent-runs/20260621-180512-orchestrate-runs-java-full-set/`; its retry Themis run passed Maven/JUnit/JaCoCo evidence with 13 tests and 87.86% coverage. The Java evidence demonstrates alternate stack availability, while the root test commands remain Python.
 
-- Raw account identifiers.
-- Raw descriptions.
-- Unfiltered metadata dumps.
-- Credentials, tokens, or authorization headers.
-- Full audit payloads in reviewer-facing summaries.
+## Manual Review Checklist
 
-Safe evidence may include transaction IDs, amount strings, currency codes, statuses, reason codes, risk levels, and aggregate counts.
+- Confirm `docs/agent-runs/selection-sets.json` names `python-canonical-20260622-hera-full-set`.
+- Run `python integrator.py` and confirm eight results.
+- Run pytest and confirm 36 passing tests.
+- Run the 80% coverage gate and confirm 97.44% or equivalent above-threshold coverage.
+- Run the 99% demonstration threshold and confirm a failing coverage gate signal.
+- Open `shared/results/summary.json` and verify counts without exposing raw transaction payloads.
+- Use the MCP helper or server after a pipeline run and verify safe status responses.
+- Confirm screenshots or capture notes cover pipeline, tests/coverage, command skill, hook, and MCP evidence, and that the full operator-sourced evidence set remains under `docs/screenshots/operator-sourced/`.
 
-## Manual QA Checklist
+## Limitations
 
-- Run `python integrator.py`.
-- Confirm `shared/results/summary.json` has 8 total results.
-- Confirm final statuses are limited to `settled`, `rejected`, `review_required`, and `error`.
-- Confirm the two validation rejections use `UNSUPPORTED_CURRENCY` and `NON_POSITIVE_AMOUNT`.
-- Run `python -m pytest -p no:cacheprovider`.
-- Run `python scripts/check_coverage_gate.py --fail-under 80`.
-- Optionally run `python scripts/check_coverage_gate.py --fail-under 99` to demonstrate blocking behavior.
-- Use the MCP server or file-path helper import to read the latest status summary safely.
+Direct shell execution of `.githooks/pre-push` was blocked in the Windows sandbox. The same delegated coverage helper passed at the real 80% threshold and failed at the demonstration 99% threshold, which validates the behavior the hook relies on.

@@ -1,0 +1,16 @@
+{
+  "message_id" : "53c1fa82-6b69-38aa-85ac-183ad427e2d3",
+  "timestamp" : "2026-06-21T18:28:04.957788900Z",
+  "source_agent" : "integrator",
+  "target_agent" : "transaction_validator",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN002",
+    "timestamp" : "2026-03-16T09:15:00Z",
+    "amount" : "25000.00",
+    "currency" : "USD",
+    "transaction_type" : "wire_transfer",
+    "channel" : "branch",
+    "country" : "US"
+  }
+}

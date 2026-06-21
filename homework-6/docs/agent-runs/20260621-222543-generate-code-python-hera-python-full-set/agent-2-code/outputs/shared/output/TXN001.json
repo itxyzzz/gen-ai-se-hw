@@ -1,0 +1,62 @@
+{
+  "audit_events": [
+    {
+      "component": "transaction_validator",
+      "outcome": "validated",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "component": "fraud_detector",
+      "outcome": "validated",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "component": "settlement_processor",
+      "outcome": "settled",
+      "reason_code": "SETTLED",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN001"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-21T20:34:53Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-21T20:34:53Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-21T20:34:53Z"
+    }
+  ],
+  "data": {
+    "amount": "1500.00",
+    "channel": "online",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_redacted": "****SENT",
+    "destination_pattern": "standard",
+    "reason_codes": [
+      "SETTLED"
+    ],
+    "risk_flags": [],
+    "risk_score": 0,
+    "settlement_reference": "SIM-TXN001",
+    "source_account_redacted": "****SENT",
+    "status": "settled",
+    "timestamp": "2026-03-16T09:00:00Z",
+    "transaction_id": "TXN001",
+    "transaction_type": "transfer",
+    "validation": "passed"
+  },
+  "message_id": "9665adb5-518b-48aa-8775-f8f9342bfde4",
+  "message_type": "transaction",
+  "source_agent": "settlement_processor",
+  "target_agent": "reporting_agent",
+  "timestamp": "2026-06-21T20:34:53Z"
+}

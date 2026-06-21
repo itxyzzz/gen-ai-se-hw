@@ -1,0 +1,25 @@
+{
+  "message_id" : "374e49df-14fe-3393-89ae-027ab6f881a6",
+  "timestamp" : "2026-06-21T17:00:08.880636Z",
+  "source_agent" : "transaction_validator",
+  "target_agent" : "reporting_agent",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN007",
+    "timestamp" : "2026-03-16T10:10:00Z",
+    "amount" : "-100.00",
+    "currency" : "GBP",
+    "transaction_type" : "refund",
+    "channel" : "online",
+    "country" : "GB"
+  },
+  "status" : "rejected",
+  "reason_codes" : [ "NON_POSITIVE_AMOUNT" ],
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T17:00:08.880636Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN007",
+    "outcome" : "rejected",
+    "reason_code" : "NON_POSITIVE_AMOUNT"
+  } ]
+}

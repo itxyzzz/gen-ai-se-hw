@@ -1,0 +1,25 @@
+Java candidate validation-only evidence from selected Themis retry.
+
+Command context:
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/workspace/project-under-test
+
+Command:
+mvn -o -s ..\maven-empty-settings.xml -gs ..\maven-empty-settings.xml exec:java '-Dexec.mainClass=edu.setu.transactionpipeline.cli.ValidateTransactionsCommand' '-Dexec.args=sample-transactions.json'
+
+Result:
+PASS
+
+Safe counts:
+total=8
+valid=6
+invalid=2
+invalid_ids=TXN006,TXN007
+unsupported_currency=1
+non_positive_amount=1
+
+Isolation note:
+The validation-only rerun left the existing summary hash unchanged in Themis evidence, so it did not rerun settlement processing.
+
+Source evidence:
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/evidence/support-validate-transactions.txt
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/evidence/support-validate-transactions-hash.txt

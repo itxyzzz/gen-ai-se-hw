@@ -1,0 +1,16 @@
+{
+  "amount": "500.00",
+  "audit_event_count": 4,
+  "component_history_count": 4,
+  "currency": "EUR",
+  "privacy_check": "passed",
+  "processed_at": "2026-06-21T20:50:11Z",
+  "reason_codes": [
+    "REVIEW_UNUSUAL_TIME",
+    "REVIEW_CHANNEL_PATTERN"
+  ],
+  "safe_summary": "Simulated review outcome recorded.",
+  "schema_version": 1,
+  "status": "review_required",
+  "transaction_id": "TXN004"
+}

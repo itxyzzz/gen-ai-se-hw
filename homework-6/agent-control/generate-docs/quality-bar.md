@@ -4,7 +4,7 @@ Clio (Documentation Generator) passes only when the documentation package is rev
 
 ## Required Gates
 
-- Version traceability names the selected Athena run ID, selected Hephaestus run ID and inventory, selected Themis run ID and inventory, final-selection record, and current canonical `specification.md` fingerprint.
+- Version traceability names the selected package-set ID and stack when `selection-sets.json` exists, selected Athena run ID, selected Hephaestus run ID and inventory, selected Themis run ID and inventory, final-selection record, and current canonical `specification.md` fingerprint.
 - Prior homework documentation context records author source and style sources. Current author source is `Igor Tanatarov` from Homeworks 1 through 4 README files.
 - Candidate docs and screenshots are listed in `agent-4-docs/outputs/inventory.md` with canonical targets and SHA-256 fingerprints.
 - Runtime and tool outputs are excluded from selectable inventory: `evidence/`, `review/`, `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, `.test-tmp/`, `tmp/`, and `__pycache__/`.
@@ -32,6 +32,7 @@ Clio (Documentation Generator) passes only when the documentation package is rev
 - Documentation frames the banking pipeline as an educational simulation, not legal, banking, AML, sanctions, or payment-network compliance.
 - Clio documents selected Themis evidence but does not silently modify or replace the selected Themis suite.
 - Clio does not change runtime product code, MCP server behavior, command/hook support surfaces, or selected run records without explicit operator authorization.
+- Java alternate documentation, when present, uses Java-native evidence terms such as Maven, JUnit 5/JUnit Jupiter, JaCoCo, `pom.xml`, `src/main/java/...`, and `src/test/java/...`, and clearly states that Python remains canonical unless the selected package set says otherwise.
 
 ## Scope Rejection
 

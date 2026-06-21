@@ -1,0 +1,16 @@
+Java validation-only command evidence
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< edu.setu:transaction-pipeline-java >-----------------
+[INFO] Building Homework 6 Java Transaction Pipeline Candidate 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.5.0:java (default-cli) @ transaction-pipeline-java ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.294 s
+[INFO] Finished at: 2026-06-21T20:24:07+02:00
+[INFO] ------------------------------------------------------------------------
+{"total":8,"valid":6,"invalid":2,"invalid_ids":"TXN006,TXN007","unsupported_currency":1,"non_positive_amount":1,"shared_mutated":true}

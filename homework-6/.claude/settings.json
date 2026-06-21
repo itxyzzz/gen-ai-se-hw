@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python scripts/check_coverage_gate.py --fail-under 80"
+            "command": "python scripts/check_coverage_gate.py --stack auto --fail-under 80"
           }
         ]
       }

@@ -1,71 +1,93 @@
 # API Reference
 
-Homework 6 exposes local command interfaces, JSON file contracts, validation-only helpers, and a custom read-only MCP server.
+This selected package is a local Python file-processing pipeline. Its public interfaces are command-line commands, JSON protocol files, validation helper behavior, and MCP status tools.
 
-## Pipeline Command
+## Commands
+
+### Run Pipeline
 
 ```powershell
 python integrator.py
 ```
 
-Optional arguments:
-
-| Argument | Meaning |
-|---|---|
-| `--input <path>` | Input transaction JSON file. Defaults to `sample-transactions.json`. |
-| `--shared-dir <path>` | Protocol output directory. Defaults to `shared`. |
-| `--spec-path <path>` | Selected canonical specification path. Defaults to `specification.md`. |
-| `--inventory-path <path>` | Selected pipeline inventory path for provenance. |
-| `--validate-only` | Write validation-only style outputs without risk scoring or settlement. |
-
-Success output:
+Expected successful terminal signal:
 
 ```text
 Pipeline complete: total=8 settled=2 rejected=2 review_required=4 error=0
 ```
 
-Setup failures print a safe reason code and exit with status `2`.
+Outputs:
 
-## JSON File Protocol
-
-```text
-shared/
-  input/
-  processing/
-  output/
-  results/
-```
-
-Stage files use deterministic names:
-
-- `shared/input/001-TXN001.json`
-- `shared/processing/001-TXN001-transaction-validator.json`
-- `shared/output/001-TXN001-fraud-detector.json`
-- `shared/output/001-TXN001-settlement-processor.json`
-- `shared/results/TXN001.json`
+- `shared/results/TXN*.json`
 - `shared/results/summary.json`
 - `shared/results/pipeline-status.json`
 
-## Message Envelope Shape
+### Run Tests
+
+```powershell
+python -m pytest -p no:cacheprovider
+```
+
+Fresh Clio evidence: 36 tests passed.
+
+Post-selection root evidence: 52 tests passed, including support-surface tests.
+
+### Coverage Gate
+
+```powershell
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+```
+
+Fresh Clio evidence: 97.44% total coverage.
+
+The coverage helper is stack-aware. The canonical root package uses `--stack python`; preserved Java package evidence can use `--stack java --project-dir <java-package>` against the Java candidate folder.
+
+Post-selection root evidence: 95.57% total coverage at the 80% threshold.
+
+### Validation-Only Behavior
+
+```powershell
+python -c "import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))"
+```
+
+Safe response fields:
+
+```json
+{
+  "total": 8,
+  "valid": 6,
+  "invalid": 2,
+  "reason_code_groups": {
+    "UNSUPPORTED_CURRENCY": 1,
+    "NON_POSITIVE_AMOUNT": 1
+  },
+  "results": [
+    {
+      "transaction_id": "TXN006",
+      "status": "rejected",
+      "reason_codes": ["UNSUPPORTED_CURRENCY"]
+    }
+  ]
+}
+```
+
+The `results` array contains one safe row per transaction.
+
+## JSON Message Envelope
+
+Runtime components pass JSON envelopes through `shared/input`, `shared/processing`, and `shared/output`.
 
 ```json
 {
   "message_id": "uuid4-string",
   "timestamp": "2026-03-16T10:00:00Z",
-  "schema_version": "1.0",
   "source_agent": "integrator",
   "target_agent": "transaction_validator",
   "message_type": "transaction",
-  "transaction_id": "TXN001",
   "data": {
     "transaction_id": "TXN001",
     "amount": "1500.00",
     "currency": "USD",
-    "transaction_type": "transfer",
-    "channel": "online",
-    "country": "US",
-    "source_account_redacted": "ACC-****1001",
-    "destination_account_redacted": "ACC-****2001",
     "status": "received"
   },
   "component_history": [],
@@ -73,120 +95,103 @@ Stage files use deterministic names:
 }
 ```
 
-Review-facing examples use redacted account references only.
+The `source_agent` and `target_agent` fields refer to runtime component identities, not Homework Automation Layer agents.
 
-## Final Result Shape
+## Transaction Result Shape
 
-`shared/results/<transaction_id>.json` contains:
+Each `shared/results/TXN*.json` file contains a safe result payload.
 
-| Field | Meaning |
-|---|---|
-| `schema_version` | Result schema version. |
-| `transaction_id` | Synthetic transaction identifier. |
-| `status` | One of `settled`, `rejected`, `review_required`, `error`. |
-| `reason_codes` | Stable reason-code list. |
-| `risk_score` | Deterministic educational risk score. |
-| `risk_level` | `low`, `medium`, `high`, or `not_scored`. |
-| `amount` | Money string. |
-| `currency` | Currency code. |
-| `component_history` | Runtime component history. |
-| `processed_at` | Processing timestamp. |
-| `safe_summary` | Safe transaction summary without raw account IDs or descriptions. |
-| `audit_events` | Sanitized audit events. |
+```json
+{
+  "schema_version": 1,
+  "transaction_id": "TXN001",
+  "status": "settled",
+  "reason_codes": ["SETTLED"],
+  "amount": "1500.00",
+  "currency": "USD",
+  "risk_score": 0,
+  "risk_level": "low",
+  "component_history": [],
+  "audit_events": [],
+  "processed_at": "2026-06-21T20:59:52Z",
+  "privacy_check": "passed"
+}
+```
+
+Allowed final statuses:
+
+- `settled`
+- `rejected`
+- `review_required`
+- `error`
 
 ## Summary Shape
 
-`shared/results/summary.json` contains:
-
-| Field | Meaning |
-|---|---|
-| `schema_version` | Summary schema version. |
-| `runtime_run_id` | UUID for the runtime run. |
-| `total_transactions` | Total final result count. |
-| `settled` | Settled count. |
-| `rejected` | Rejected count. |
-| `review_required` | Review-required count. |
-| `error` | Error count. |
-| `result_files` | Result file names. |
-| `generated_at` | Summary timestamp. |
-| `simulation_notice` | Educational simulation disclaimer. |
-
-## Validation-Only Helper
-
-Python helper:
-
-```python
-from agents.transaction_validator import validate_transactions_file
-
-result = validate_transactions_file("sample-transactions.json")
-```
-
-Safe result fields:
+`shared/results/summary.json` includes:
 
 ```json
 {
-  "schema_version": "1.0",
-  "total": 8,
-  "valid": 6,
+  "schema_version": 1,
+  "runtime_run_id": "uuid4-string",
+  "generated_at": "2026-06-21T20:59:52Z",
+  "total_records": 8,
+  "settled": 2,
   "rejected": 2,
-  "results": [
-    {
-      "transaction_id": "TXN006",
-      "status": "rejected",
-      "reason_codes": ["UNSUPPORTED_CURRENCY"],
-      "amount": "200.00",
-      "currency": "XYZ"
-    }
-  ]
+  "review_required": 4,
+  "error": 0,
+  "status_counts": {
+    "settled": 2,
+    "rejected": 2,
+    "review_required": 4
+  },
+  "reason_code_counts": {
+    "SETTLED": 2,
+    "UNSUPPORTED_CURRENCY": 1
+  },
+  "privacy_check": "passed",
+  "completeness_check": "passed"
 }
 ```
 
-The validation-only command should report counts, transaction IDs, statuses, and reason codes only.
+## Pipeline Status Shape
 
-## Coverage Gate Helper
-
-```powershell
-python scripts/check_coverage_gate.py --fail-under 80
-```
-
-The helper runs pytest with coverage in an ignored `tmp/coverage-gate-*` workspace and fails when total coverage is below the threshold.
-
-## MCP Server
-
-`mcp.json`:
+`shared/results/pipeline-status.json` includes:
 
 ```json
 {
-  "mcpServers": {
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
-    },
-    "pipeline-status": {
-      "command": "python",
-      "args": ["mcp/server.py"]
-    }
-  }
+  "schema_version": 1,
+  "pipeline_version": "python-canonical",
+  "run_status": "completed",
+  "summary_path": "shared/results/summary.json",
+  "total_records": 8,
+  "status_counts": {
+    "settled": 2,
+    "rejected": 2,
+    "review_required": 4
+  },
+  "reason_code_counts": {
+    "SETTLED": 2,
+    "UNSUPPORTED_CURRENCY": 1
+  },
+  "result_files": ["TXN001.json"],
+  "generated_at": "2026-06-21T20:59:52Z"
 }
 ```
 
-Custom server file:
+## MCP Tools And Resource
 
-```text
-mcp/server.py
-```
+The root `mcp.json` configures:
 
-### Tool: `get_transaction_status`
+- `context7`: used by Hephaestus during code generation.
+- `pipeline-status`: custom FastMCP server at `mcp/server.py`.
 
-Input:
+The Python canonical package and the preserved Java candidate both write the stack-neutral `shared/results/summary.json` and `TXN*.json` result contract expected by this reader. The Java package is retained as evidence under `docs/agent-runs/` and is not copied into the root runtime.
 
-```json
-{
-  "transaction_id": "TXN006"
-}
-```
+### `get_transaction_status(transaction_id: str)`
 
-Safe output summary:
+Returns a safe status view for one transaction result file.
+
+Example safe response:
 
 ```json
 {
@@ -195,26 +200,21 @@ Safe output summary:
   "status": "rejected",
   "reason_codes": ["UNSUPPORTED_CURRENCY"],
   "risk_score": 0,
-  "risk_level": "not_scored",
-  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed."
+  "risk_level": "unknown",
+  "amount": "200.00",
+  "currency": "XYZ",
+  "component_count": 0,
+  "audit_event_count": 0
 }
 ```
 
-### Tool: `list_pipeline_results`
+### `list_pipeline_results()`
 
-Returns:
+Returns safe aggregate counts and one safe row per transaction result.
 
-- `found`
-- `summary`
-- `result_count`
-- `transactions`
-- `simulation_notice`
+### `pipeline://summary`
 
-The `transactions` array contains safe status views, not raw transaction records.
-
-### Resource: `pipeline://summary`
-
-Returns a plain-text summary:
+Returns a plain text run summary:
 
 ```text
 Pipeline run summary
@@ -225,10 +225,6 @@ Review required: 4
 Error: 0
 ```
 
-## Import Note
+## Privacy Notes
 
-In one-off Python commands, `from mcp.server import ...` can resolve to an installed third-party package. Load the local server by file path when testing helper functions directly:
-
-```powershell
-python -c "import importlib.util; from pathlib import Path; p=Path('mcp/server.py').resolve(); spec=importlib.util.spec_from_file_location('pipeline_status_server', p); mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print(mod.build_summary_text())"
-```
+The command and MCP surfaces are intended for local educational review. They report transaction IDs, statuses, reason codes, amounts, currencies, and counts. They avoid raw account IDs, raw descriptions, credentials, tokens, and full metadata.

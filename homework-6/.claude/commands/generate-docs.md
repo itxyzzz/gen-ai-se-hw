@@ -18,6 +18,7 @@ Argument examples:
 /generate-docs
 /generate-docs generate
 /generate-docs resume run=20260620-180000-generate-docs-python-primary
+/generate-docs resume run=20260621-170000-generate-docs-java-alternate
 /generate-docs compare
 /generate-docs select run=20260620-180000-generate-docs-python-primary
 ```

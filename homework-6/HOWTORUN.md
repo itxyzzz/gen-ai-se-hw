@@ -1,65 +1,46 @@
-# How To Run Homework 6
+# How To Run The Canonical Python Package
 
-This runbook assumes PowerShell from the `homework-6` folder.
+This guide describes the selected canonical Python package generated through Hera package-set run `20260621-215717-orchestrate-runs-python-full-set` and selected through Hera `select-set` run `20260622-000718-orchestrate-runs-python-select-latest`.
 
-## 1. Confirm Prerequisites
+## 1. Confirm The Selected Package
 
-```powershell
-python --version
-python -m pytest --version
+The canonical root files are selected from these preserved runs:
+
+```text
+Athena:     docs/agent-runs/20260621-220037-write-spec-python-hera-python-full-set/
+Hephaestus: docs/agent-runs/20260621-222543-generate-code-python-hera-python-full-set/
+Themis:     docs/agent-runs/20260621-224632-generate-tests-python-hera-python-full-set/
+Clio:       docs/agent-runs/20260621-225923-generate-docs-python-hera-python-full-set/
 ```
 
-Expected local evidence used for this documentation:
-
-- Python 3.12.6
-- pytest 8.4.2
-- pytest-cov 7.1.0
+`docs/agent-runs/selection-sets.json` records `python-canonical-20260622-hera-full-set` as the canonical set. Earlier Python runs and the Java alternate remain preserved under `docs/agent-runs/`.
 
 ## 2. Run The Pipeline
+
+From the homework root:
 
 ```powershell
 python integrator.py
 ```
 
-Expected summary:
+Expected signal:
 
 ```text
 Pipeline complete: total=8 settled=2 rejected=2 review_required=4 error=0
 ```
 
-The run writes:
+The run creates:
 
-- `shared/input/*.json`
-- `shared/processing/*.json`
-- `shared/output/*.json`
-- `shared/results/TXN*.json`
-- `shared/results/summary.json`
-- `shared/results/pipeline-status.json`
-- `shared/run-provenance.json`
-
-If `shared/` already exists, the integrator preserves the previous run under `archive/shared-NNN` before creating fresh protocol folders.
-
-## 3. Inspect Safe Result Counts
-
-```powershell
-Get-Content -Raw shared/results/summary.json | ConvertFrom-Json
+```text
+shared/input/
+shared/processing/
+shared/output/
+shared/results/
 ```
 
-Reviewer-safe expected counts:
+Result files are safe reviewer evidence. They include transaction IDs, statuses, counts, risk fields, reason codes, and sanitized summaries.
 
-| Field | Expected |
-|---|---:|
-| `total_transactions` | 8 |
-| `settled` | 2 |
-| `review_required` | 4 |
-| `rejected` | 2 |
-| `error` | 0 |
-
-Reviewer-facing evidence should stay limited to transaction IDs, statuses, counts, and reason codes.
-
-## 4. Run Validation-Only Mode
-
-Use the validator dry-run helper when you want structural validation without risk scoring or settlement:
+## 3. Run The Validation-Only Check
 
 ```powershell
 python -c "import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))"
@@ -67,90 +48,78 @@ python -c "import json; from collections import Counter; from agents.transaction
 
 Expected summary:
 
-- Total: 8
-- Valid: 6
-- Invalid: 2
-- Invalid reason codes: `UNSUPPORTED_CURRENCY`, `NON_POSITIVE_AMOUNT`
+- total: 8
+- valid: 6
+- invalid: 2
+- reason-code groups: `UNSUPPORTED_CURRENCY=1`, `NON_POSITIVE_AMOUNT=1`
 
-## 5. Run Tests
+## 4. Run Tests
 
 ```powershell
 python -m pytest -p no:cacheprovider
 ```
 
-Current Clio evidence:
+Fresh Clio result:
 
 ```text
-50 passed in 5.89s
+36 passed
 ```
 
-## 6. Run The Coverage Gate
+## 5. Run The Coverage Gate
 
 ```powershell
-python scripts/check_coverage_gate.py --fail-under 80
+python scripts\check_coverage_gate.py --stack python --fail-under 80
 ```
 
-Expected passing signal:
+Fresh Clio result:
 
 ```text
-Required test coverage of 80% reached. Total coverage: 94.79%
+Required test coverage of 80% reached. Total coverage: 97.44%
+36 passed
 ```
 
-On this Windows Codex sandbox, the first sandboxed coverage run can fail during coverage-file rename inside `tmp/coverage-gate-*`. The same command passed when rerun unsandboxed, which is recorded in the Clio evidence.
-
-## 7. Demonstrate The Blocking Path
+To demonstrate the blocking path without changing the real threshold:
 
 ```powershell
-python scripts/check_coverage_gate.py --fail-under 99
+python scripts\check_coverage_gate.py --stack python --fail-under 99
 ```
 
-Expected result:
-
-- Tests still pass.
-- The command exits nonzero because total coverage is below 99%.
-- This demonstrates the gate blocking behavior without weakening the real 80% threshold.
-
-## 8. Use The Operation Skills Or Commands
-
-Codex skills:
-
-- `.agents/skills/run-pipeline/SKILL.md`
-- `.agents/skills/validate-transactions/SKILL.md`
-
-Claude Code command wrappers:
-
-- `.claude/commands/run-pipeline.md`
-- `.claude/commands/validate-transactions.md`
-
-The shared behavior is documented in:
-
-- `agent-control/operate-pipeline/commands-and-hooks.md`
-
-Both operation paths should summarize safe counts and reason codes only.
-
-## 9. Check The Git Hook
-
-The pre-push hook lives at:
+Expected signal:
 
 ```text
-.githooks/pre-push
+FAIL Required test coverage of 99% not reached. Total coverage: 97.44%
 ```
 
-It runs:
+## 6. Review The Hook
+
+The pre-push hook delegates to:
 
 ```powershell
-python scripts/check_coverage_gate.py --fail-under 80
+python scripts\check_coverage_gate.py --stack auto --fail-under 80
 ```
 
-If your clone does not already use the homework hook path, configure it from the repository root:
+In this Windows sandbox, direct shell execution of the run-local hook was blocked because Bash returned access denied and `sh` was unavailable. The same coverage helper was validated with both the real 80% pass path and the deliberate 99% failure path.
+
+## 7. Review Stack-Aware Support
+
+The root package is Python, but the support layer records both stack families:
 
 ```powershell
-git config core.hooksPath homework-6/.githooks
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+python scripts\check_coverage_gate.py --stack java --project-dir <java-package> --fail-under 80
 ```
 
-## 10. Use The MCP Status Server
+The preserved Java package set is available at:
 
-`mcp.json` configures both MCP servers:
+```text
+docs/agent-runs/20260621-180512-orchestrate-runs-java-full-set/
+```
+
+It is evidence for the alternate stack and uses Maven, JUnit, JaCoCo, Jackson, and `BigDecimal`. It is not copied into the canonical root package.
+
+## 8. Review MCP Status Behavior
+
+The MCP configuration includes both servers:
 
 ```json
 {
@@ -167,36 +136,43 @@ git config core.hooksPath homework-6/.githooks
 }
 ```
 
-The custom server exposes:
+For this selected package, `mcp/server.py` reads root `shared/results/` through the configured `pipeline-status` server. Clio also validated helper compatibility against the run-local candidate results before selection.
 
-- Tool `get_transaction_status(transaction_id: str)`
-- Tool `list_pipeline_results()`
-- Resource `pipeline://summary`
+Observed safe signals:
 
-If importing helpers from a Python one-liner, load `mcp/server.py` by file path to avoid resolving the installed third-party `mcp` package.
+- `list_pipeline_results`: total 8, settled 2, rejected 2, review-required 4, error 0.
+- `get_transaction_status("TXN006")`: rejected with `UNSUPPORTED_CURRENCY`.
+- `pipeline://summary`: returned safe aggregate status text.
 
-## 11. Review Screenshots
+## 9. Review Screenshots
 
-Stable reviewer-facing screenshots:
+Selected stable screenshots are under:
 
-- `docs/screenshots/pipeline-run.png`
-- `docs/screenshots/test-coverage.png`
-- `docs/screenshots/skill-run-pipeline.png`
-- `docs/screenshots/hook-trigger.png`
-- `docs/screenshots/mcp-interaction.png`
-
-Original operator-sourced screenshots remain preserved under:
-
-- `docs/screenshots/operator-sourced/`
-
-The refreshed stable screenshots use distinct evidence categories: fresh terminal-style evidence for the direct pipeline run, passing coverage gate, and combined MCP evidence; preserved operator-sourced evidence for the `/run-pipeline` skill and hook trigger.
-
-## 12. Cleanup
-
-Runtime evidence can be regenerated at any time:
-
-```powershell
-python integrator.py
+```text
+docs/screenshots/
 ```
 
-Normal pipeline runs archive prior `shared/` output rather than deleting it. Do not remove `docs/agent-runs/`, `docs/screenshots/operator-sourced/`, or selected inventories; they are submission evidence.
+Required images:
+
+- `pipeline-run.png`
+- `test-coverage.png`
+- `skill-run-pipeline.png`
+- `hook-trigger.png`
+- `mcp-interaction.png`
+
+The preserved operator-sourced screenshot folder remains untouched at root `docs/screenshots/operator-sourced/`.
+
+That source folder contains the full manual evidence set, including Java orchestration screenshots (`120` through `132`) and the Python orchestration handoff screenshot (`140`). The stable reviewer screenshots above are the selected subset used by the documentation and PR draft.
+
+## 10. Troubleshooting
+
+| Symptom | Likely cause | Action |
+|---|---|---|
+| `sample-transactions.json` missing | The homework root is incomplete | Restore the canonical fixture from git or the selected Hephaestus run. |
+| Coverage helper missing | Operator support files are incomplete | Restore `scripts/check_coverage_gate.py` from the root support surfaces. |
+| MCP subprocess has no results | The pipeline has not been run yet | Run `python integrator.py`, then inspect `shared/results/`. |
+| Direct hook shell execution fails on Windows | Bash or `sh` unavailable or blocked | Use the coverage helper pass/fail commands as hook behavior evidence. |
+
+## 11. Cleanup
+
+Temporary validation workspaces can be removed after evidence is preserved. Do not delete preserved run folders under `docs/agent-runs/` or source screenshots under `docs/screenshots/operator-sourced/`.

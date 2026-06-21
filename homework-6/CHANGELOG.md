@@ -1,5 +1,274 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 55: Hera Latest Python Selection
+
+### Added
+
+- Added Hera `select-set` run `20260622-000718-orchestrate-runs-python-select-latest` to preserve the canonical-selection audit trail.
+- Registered Java package set `java-candidate-20260621-180512` as preserved alternate evidence in the package-set registry.
+
+### Changed
+
+- Selected latest Hera-generated Python package set `python-canonical-20260622-hera-full-set` as canonical.
+- Copied the selected Python specification, runtime code, tests, research notes, reviewer docs, PR draft, and stable screenshots to canonical paths.
+- Updated documentation to use canonical root paths, describe stack-aware Python/Java support, preserve historical run context, and include the operator-provided Codex workflow and challenges narrative.
+
+### Tests
+
+- Validated the selection registry as JSON.
+- Verified `.codex/config.toml` still records `agents.max_threads = 8` and `agents.max_depth = 2`.
+- Ran `python -m pytest -p no:cacheprovider` with 52 passing tests.
+- Ran `python scripts\check_coverage_gate.py --stack python --fail-under 80` with 95.57% total coverage.
+- Ran `python integrator.py` with `total=8 settled=2 rejected=2 review_required=4 error=0`.
+- Ran stale-path and privacy scans for selected docs and Hera selection artifacts.
+
+## Homework 6 - Step 54: Hera Package Comparison
+
+### Added
+
+- Added a preserved Hera `compare-set` run comparing the selected canonical Python package, latest Python candidate, and latest Java candidate as full spec/code/tests/docs sets.
+- Recorded a Clio-evidence-based recommendation to keep the current Python canonical package for submission stability, prefer the latest Python candidate for any same-stack upgrade, and treat Java as an alternate unless explicitly selected.
+
+### Changed
+
+- Left canonical product files, selected docs, screenshots, MCP files, final-selection records, and selection registry unchanged.
+
+### Tests
+
+- Reviewed selection records, Clio inventories, validation checklists, handoffs, and Hera child ledgers for the compared packages.
+- Deferred fresh pipeline/test reruns because the operator authorized a documentation-based comparison.
+
+## Homework 6 - Step 53: Themis Workflow Staging Repair Implementation
+
+### Added
+
+- Added Themis Java output-staging guardrails so candidate tests must live under `agent-3-tests/outputs/src/test/java/` and malformed duplicate roots block selection.
+- Added Java Maven coverage-helper guidance for candidate `pom.xml` test/build overlays that wire `coverage.minimum` into JaCoCo checks.
+
+### Changed
+
+- Updated Themis run-registry and validation guidance so `workspace/project-under-test/` is rebuilt only after candidate outputs pass staging checks.
+
+### Fixed
+
+- Prevented future Themis child agents from spending approval-dependent cleanup loops on malformed run-local output paths such as `agent-3-tests/outputs/src/java/`.
+
+### Tests
+
+- Ran focused static scans for Themis staging, malformed-output, coverage-threshold, inventory, and unresolved draft markers.
+
+## Homework 6 - Step 52: Themis Workflow Staging Repair Plan
+
+### Added
+
+- Added the approved planning package for repairing Themis (Test Generator) Java output staging, malformed output-tree blocking, and Maven coverage-threshold guidance.
+- Recorded the implementation scope for updating Themis workflow, quality-bar, and run-registry control docs without touching preserved run folders or canonical product artifacts.
+
+### Changed
+
+- Froze the plan to require a separate post-freeze operator instruction before editing Themis control-surface implementation files.
+
+### Tests
+
+- Verified the planning package for required sections, unresolved placeholder markers, staged scope, and freeze-gate readiness.
+
+## Homework 6 - Step 51: Hera Orchestration Dispatch Repair
+
+### Changed
+
+- Tightened Hera `generate-set` guidance so Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) must run as first-level child agents when first-level dispatch is available.
+- Clarified that Hera's parent thread owns setup, sequencing, child prompt construction, ledger updates, handoff integration, comparison, and selection planning, not direct child deliverable generation.
+- Updated Hera ledger, validation, handoff, operator delta, and architecture delta guidance to record each child stage's dispatch mechanism and blocked/degraded status.
+
+### Fixed
+
+- Added rejection gates for Hera evidence where later child deliverables were generated in the main orchestration thread because outputs were tightly coupled, context was low, or sequential integration was convenient.
+- Required blocked status instead of parent-thread child deliverable generation when first-level child dispatch is unavailable during an orchestration-behavior `generate-set` test.
+
+### Tests
+
+- Ran static validation for Hera dispatch language, selection registry JSON, agent-depth TOML config, protected-output diffs, privacy scans, and whitespace checks.
+
+## Homework 6 - Step 50: Java Maven Coverage Helper Repair
+
+### Added
+
+- Added optional Java coverage-helper flags for Maven user and global settings overrides.
+- Added focused tests for Java settings CLI parsing, unchanged default Java command behavior, and Maven override command construction.
+
+### Changed
+
+- Updated Operator Layer, Themis, and Clio guidance so Java validation can use Maven settings overrides when the local environment requires them.
+
+### Tests
+
+- Ran focused helper tests, the selected Python coverage gate, Java helper validation against a temporary project copy, whitespace checks, and privacy scans.
+
+## Homework 6 - Step 49: Java Maven And Hera Repair Plans
+
+### Added
+
+- Added Plan Amendment 001 to insert Java Maven helper repair and Hera orchestration repair before cross-stack comparison.
+- Added the approved Phase 04 plan for repairing Java Maven coverage-helper settings override support.
+- Added the approved Phase 05 plan for repairing Hera child-agent orchestration control-surface guidance.
+
+### Changed
+
+- Moved cross-stack comparison behind the Maven helper and Hera orchestration repairs so comparison does not rely on suspect validation or orchestration evidence.
+- Recorded that official OpenAI/Codex documentation should be consulted if there is uncertainty about Codex thread or sub-agent behavior during Hera repair.
+
+### Tests
+
+- Validated the planning package for placeholder markers, whitespace issues, and staged scope.
+- Verified no committed or staged vendor-specific Maven mirror references remain in the planning package.
+
+## Homework 6 - Step 48: Java Alternate Evidence Preservation
+
+### Added
+
+- Preserved Hera (Orchestrator), Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) Java alternate run folders under `docs/agent-runs/`.
+- Added an operator review note for Hera run `20260621-145059-orchestrate-runs-java-alternate` identifying the degraded orchestration behavior.
+
+### Changed
+
+- Clarified the preserved Hera handoff and validation checklist so the Java alternate is treated as functional evidence, not as a clean Hera child-agent orchestration success.
+
+### Fixed
+
+- Removed generated Maven `target/`, run-local `shared/`, and run-local `archive/` trees from the Java Themis workspace before preserving evidence.
+
+### Tests
+
+- Reproduced the Java coverage helper failure against the unavailable machine Maven mirror.
+- Re-ran direct Maven/JUnit/JaCoCo validation with the run-local Maven settings override: 21 tests passed and all JaCoCo checks were met.
+- Ran a post-cleanup privacy scan confirming no raw sample account IDs or raw sample descriptions outside files named `sample-transactions.json`.
+
+## Homework 6 - Step 47: Java Alternate Generation Phase 03 Plan
+
+### Added
+
+- Added the approved minimal Phase 03 plan for invoking Hera (Orchestrator) in a clean thread to generate a preserved Java alternate package set.
+- Added minimal Phase 03 test-case and architecture snapshots that keep Hera's own skill and control package as the detailed orchestration source of truth.
+
+### Changed
+
+- Kept Phase 03 planning intentionally thin so Hera receives only a single clean execution instruction and does not inherit duplicated child-agent guidance.
+
+### Tests
+
+- Ran placeholder, sensitive-literal, and whitespace checks against the Phase 03 planning package.
+
+## Homework 6 - Step 46: Hera Orchestrator Phase 02 Implementation
+
+### Added
+
+- Added the Hera (Orchestrator) tool-neutral control package under `agent-control/orchestrate-runs/` with workflow, quality-bar, run-registry, and README files.
+- Added Codex and Claude `orchestrate-runs` entrypoints as thin wrappers around the shared Hera package.
+- Added Hera operator and architecture delta notes for future Clio documentation regeneration.
+
+### Changed
+
+- Updated `agents.md` to list Hera as a Homework Automation Layer orchestrator while excluding it from generated runtime transaction components.
+- Updated `docs/agent-runs/README.md` and `docs/agent-runs/final-selection.md` to point future cross-set comparison and selection to Hera while keeping the Python canonical set unchanged.
+
+### Fixed
+
+- Documented the nested-agent fallback path against the existing `agents.max_depth = 2` configuration without re-editing config or starting child generation.
+
+### Tests
+
+- Validated `selection-sets.json` and `mcp.json` with `python -m json.tool`.
+- Validated `.codex/config.toml` parsing and confirmed `agents.max_threads = 8` plus `agents.max_depth = 2`.
+- Ran the full selected Python test suite with `python -m pytest -p no:cacheprovider`: 54 passed.
+- Ran focused coverage-helper tests with `python -m pytest tests\test_coverage_gate.py -q -p no:cacheprovider`.
+- Confirmed Java coverage mode fails clearly without a root `pom.xml` instead of producing a traceback.
+- Ran protected-file diff checks, Hera reference scans, privacy scans, placeholder scans, and whitespace checks.
+
+## Homework 6 - Step 45: Hera Orchestrator Phase 02 Plan
+
+### Added
+
+- Added the approved Phase 02 plan for Hera (Orchestrator) control-surface implementation.
+- Added Phase 02 test-case and architecture snapshots covering Hera modes, run preservation, selection safety, nested-agent fallback behavior, and non-runtime boundaries.
+
+### Changed
+
+- Clarified the Java stack and Hera orchestration spec's model/sub-agent strategy table by labeling the two Phase 01 review items as `01-A` and `01-B`.
+
+### Fixed
+
+- Fixed the confusing duplicate Phase 01 numbering in the approved anchor spec without changing the phase decomposition.
+
+### Tests
+
+- Validated the Phase 02 planning package with JSON/TOML parsing, focused coverage-helper tests, protected-file diff checks, placeholder scans, and staged whitespace checks.
+
+## Homework 6 - Step 44: Java Stack Readiness Phase 01 Implementation
+
+### Added
+
+- Added `docs/agent-runs/selection-sets.json` as the machine-readable package-set registry seeded with the current canonical Python set.
+- Added focused coverage-helper tests for stack parsing, registry-backed auto resolution, Python command construction, and Java missing-`pom.xml` failure.
+- Added Phase 01 testing, operator-manual, and architecture deltas for later Clio documentation regeneration.
+
+### Changed
+
+- Made `scripts/check_coverage_gate.py` a stack-aware helper with `--stack {auto,python,java}` and `--project-dir`.
+- Updated Athena, Hephaestus, Themis, Clio, and Operator Layer guidance to preserve Python as canonical while preparing Java-native Maven/JUnit/JaCoCo package generation and validation.
+- Updated `/run-pipeline`, `/validate-transactions`, Git hook, Claude hook, and skill/command wrappers to resolve stack behavior through selection metadata or explicit stack choice.
+- Included the previously prepared `.codex/config.toml` `agents.max_depth = 2` setting as authorized by the operator.
+
+### Fixed
+
+- Removed unqualified Python-only assumptions from Java-capable helper and generation-control paths where Phase 01 requires stack dispatch.
+
+### Tests
+
+- Ran focused coverage-helper tests with `python -m pytest tests\test_coverage_gate.py -q -p no:cacheprovider`.
+
+## Homework 6 - Step 43: Java Stack Readiness Phase 01 Plan
+
+### Added
+
+- Added the approved Phase 01 plan for Java stack readiness under `docs/work-items/2026-06-21-java-stack-and-hera-orchestration/`.
+- Added Phase 01 test-case and architecture snapshots covering stack-aware helper dispatch, Java control-surface readiness, selection-set metadata, MCP compatibility, and Python baseline protection.
+- Added a Phase 01 variance log placeholder for implementation-only deviations after the plan freeze.
+
+### Changed
+
+- Planned `docs/agent-runs/final-selection.md` as the human selection record with a future `docs/agent-runs/selection-sets.json` machine-readable stack registry for helper dispatch.
+- Planned the universal coverage helper shape so the existing Python gate remains compatible while Java mode can dispatch through Maven, JUnit 5, and JaCoCo.
+
+### Fixed
+
+- Not applicable; this is a plan-only checkpoint.
+
+### Tests
+
+- Validated the staged Phase 01 draft artifacts for placeholder markers and whitespace issues before approval.
+
+## Homework 6 - Step 42: Java Stack And Hera Orchestration Spec
+
+### Added
+
+- Added the approved large/phased planning spec for Java stack readiness and Hera (Orchestrator) under `docs/work-items/2026-06-21-java-stack-and-hera-orchestration/`.
+- Planned Java as a preserved parallel alternate package rather than an automatic replacement for the selected Python submission.
+- Planned Hera as the Homework Automation Layer owner for sequence, comparison, and selection across Athena, Hephaestus, Themis, and Clio.
+
+### Changed
+
+- Recorded that shared helper surfaces should stay universal where practical, including preserving the Python `mcp/server.py` as a stack-neutral result reader unless validation proves otherwise.
+- Planned `.codex/config.toml` support for `agents.max_depth = 2` while preserving `agents.max_threads = 8`.
+- Clarified that Hera should still use first-level child agents if nested depth is unavailable, and child agents should continue without their own nested sub-agents while recording the degraded mode.
+
+### Fixed
+
+- Not applicable; this is an approved planning checkpoint.
+
+### Tests
+
+- Validated the approved spec for unresolved placeholder markers and staged whitespace issues before the planning freeze commit.
+
 ## Homework 6 - Step 41: Refreshed Clio Documentation Package
 
 ### Added

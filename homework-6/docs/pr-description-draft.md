@@ -1,93 +1,94 @@
-# Homework 6 Final Capstone: AI-Powered Transaction Processing Pipeline
+# Homework 6 Canonical Python Package PR Draft
 
 ## Summary
 
-This PR completes Homework 6 with a selected Python transaction-processing system generated through the four required Homework Automation Layer agents:
+This package selects the latest Hera-generated Python Homework 6 package as canonical. It includes the selected Athena (Spec Writer) specification, Hephaestus (Code Generator) runtime code, Themis (Test Generator) tests, and Clio (Documentation Generator) documentation/evidence package.
 
-- Athena (Spec Writer) produced the selected `specification.md`.
-- Hephaestus (Code Generator) produced the selected Python runtime pipeline and Context7 research notes.
-- Themis (Test Generator) produced the selected test suite and coverage evidence.
-- Clio (Documentation Generator) produced the final reviewer documentation, screenshot mapping, and this PR draft.
+The canonical set is `python-canonical-20260622-hera-full-set`. Historical Python runs remain preserved, and a Java package set is also preserved as alternate stack evidence under `docs/agent-runs/20260621-180512-orchestrate-runs-java-full-set/`.
 
-The runtime system processes the eight synthetic transactions from `sample-transactions.json` through a file-based JSON protocol and writes final safe results under `shared/results/`.
+## Author
 
-## What The Pipeline Does
+Igor Tanatarov
 
-- Validates required transaction fields, positive string-based `Decimal` amounts, supported currencies, and timestamps.
-- Applies deterministic educational risk scoring for high-value, wire-transfer, odd-hour, channel, and country signals.
-- Produces final statuses limited to `settled`, `rejected`, `review_required`, and `error`.
-- Archives previous `shared/` output before each normal run.
-- Provides read-only MCP status tools and `pipeline://summary`.
-- Avoids raw account IDs, descriptions, and unfiltered metadata in reviewer-facing outputs.
+## AI Tools And Workflow
 
-This is an educational simulation only and does not perform real banking, legal, compliance, fraud, AML, KYC, PCI, settlement, sanctions, or payment-network determinations.
+- Hera (Orchestrator) coordinated a `generate-set` run for the Python stack.
+- Athena (Spec Writer) produced candidate specification `20260621-220037-write-spec-python-hera-python-full-set`.
+- Hephaestus (Code Generator) produced candidate runtime code `20260621-222543-generate-code-python-hera-python-full-set`.
+- Themis (Test Generator) produced candidate test expansion `20260621-224632-generate-tests-python-hera-python-full-set`.
+- Clio (Documentation Generator) produced this preserved documentation candidate `20260621-225923-generate-docs-python-hera-python-full-set`.
+- Hephaestus used Context7 for `/python/cpython` and `/pytest-dev/pytest`, recorded in candidate `research-notes.md`.
+
+The work was completed primarily in the Codex app with Codex. As in the previous homework, some operations had to happen in a Codex project opened directly at the `homework-6` folder because Codex tool discovery behaves differently when the project root, git root, and assignment folder are not the same directory.
+
+The workflow used local `dev-doc-harness` planning artifacts from [itxyzzz/dev-doc-harness](https://github.com/itxyzzz/dev-doc-harness). The Homework Automation Layer agents were instructed not to follow that harness; their generated specs, code, tests, docs, and Hera records remain standalone assignment artifacts.
+
+## Challenges And How They Were Addressed
+
+The recurring root-layout issue from Homework 5 appeared again: the project root, git root, and homework folder are different. Most of the friction was resolved by opening a Codex project directly at the `homework-6` folder for operations that depend on local tool discovery.
+
+The main early challenge was conceptual confusion, shared by both operator and agents, about which "agents" in the assignment meant automation agents, deterministic runtime components, or tool executor sub-agents. That confusion caused an early specification attempt to mix those layers. It was resolved by clearly naming and separating the Operator Layer, Homework Automation Layer, Generated Transaction System Layer, runtime transaction pipeline agents, and executor sub-agents in `AGENTS.md` and related control documents. The named Homework Automation Layer labels, including Athena, Hephaestus, Themis, Clio, and Hera, come from that clarification.
+
+The pipeline support now recognizes both Python and Java stack evidence. Python is selected as the canonical root package, while Java remains a preserved alternate with Maven/JUnit/JaCoCo evidence and its own Clio documentation run.
 
 ## Verification
 
-Fresh Clio evidence from `docs/agent-runs/20260621-011348-generate-docs-python-review-repair/agent-4-docs/evidence/`:
+Fresh Clio validation ran from a temporary workspace built from the selected Hephaestus package plus the Themis test overlay before Hera copied the package to the canonical root.
 
-| Command | Result |
+| Check | Result |
 |---|---|
-| `python integrator.py` | `total=8 settled=2 rejected=2 review_required=4 error=0` |
-| `python -m pytest -p no:cacheprovider` | 50 passed |
-| `python scripts/check_coverage_gate.py --fail-under 80` | 50 passed, 94.79% total coverage |
-| `python scripts/check_coverage_gate.py --fail-under 99` | 50 passed, exits nonzero as expected because 94.79% is below 99% |
-| Validation-only helper | 8 total, 6 valid, 2 rejected |
-| MCP status helper | `TXN006` rejected with `UNSUPPORTED_CURRENCY`; summary counts match pipeline output |
+| `python integrator.py` | Passed: total 8, settled 2, rejected 2, review-required 4, error 0 |
+| `python -m pytest -p no:cacheprovider` | Passed: 36 tests |
+| `python scripts\check_coverage_gate.py --stack python --fail-under 80` | Passed: 97.44% total coverage |
+| `python scripts\check_coverage_gate.py --stack python --fail-under 99` | Expected failure, demonstrating the blocking path |
+| Validation-only helper | Passed: total 8, valid 6, invalid 2 |
+| MCP helper import | Passed against candidate result files |
 
-The first sandboxed coverage run hit a Windows coverage-file rename permission error. The same helper passed unsandboxed, which is recorded in the Clio evidence.
+Post-selection root validation passed with 52 tests and 95.57% total coverage. The root suite includes the selected generated package tests plus support-surface tests for the coverage helper and MCP server.
 
 ## Screenshots
 
-Embed or link these screenshots in the GitHub PR body:
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/pipeline-run.png" alt="Pipeline run showing eight transactions processed with expected settled, rejected, review-required, and error counts" width="300">
 
-![Pipeline run](screenshots/pipeline-run.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/test-coverage.png" alt="Coverage gate passing for the canonical Python package" width="300">
 
-![Test coverage](screenshots/test-coverage.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/skill-run-pipeline.png" alt="Run pipeline command evidence with safe transaction summary" width="300">
 
-![Run pipeline skill](screenshots/skill-run-pipeline.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/hook-trigger.png" alt="Coverage hook blocking path evidence" width="300">
 
-![Hook trigger](screenshots/hook-trigger.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/mcp-interaction.png" alt="Context7 and custom pipeline-status MCP evidence" width="300">
 
-![MCP interaction](screenshots/mcp-interaction.png)
+Additional assignment evidence:
 
-Original source screenshots remain preserved under `docs/screenshots/operator-sourced/`.
-
-The screenshot set also accounts for the required spec-produced and README-with-name evidence through the selected run records and reviewer docs: `specification.md` is the selected Athena output, and `README.md` includes `Igor Tanatarov` in the author line.
+- Spec produced: `docs/agent-runs/20260621-220037-write-spec-python-hera-python-full-set/agent-1-spec/outputs/specification.md`
+- README with student name: root `README.md`.
+- Context7 queries: selected Hephaestus `research-notes.md`.
+- Full operator-sourced screenshot evidence: `docs/screenshots/operator-sourced/`, including Java orchestration screenshots and the Python orchestration handoff.
 
 ## Reviewer Run Instructions
 
+Run from the homework root:
+
 ```powershell
-cd homework-6
 python integrator.py
 python -m pytest -p no:cacheprovider
-python scripts/check_coverage_gate.py --fail-under 80
+python scripts\check_coverage_gate.py --stack python --fail-under 80
 ```
 
-Optional blocking-path demonstration:
+Expected pipeline output:
 
-```powershell
-python scripts/check_coverage_gate.py --fail-under 99
+```text
+Pipeline complete: total=8 settled=2 rejected=2 review_required=4 error=0
 ```
-
-Optional MCP helper check by file path:
-
-```powershell
-python -c "import importlib.util; from pathlib import Path; p=Path('mcp/server.py').resolve(); spec=importlib.util.spec_from_file_location('pipeline_status_server', p); mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print(mod.build_summary_text())"
-```
-
-## Documentation
-
-- `README.md`
-- `HOWTORUN.md`
-- `ARCHITECTURE.md`
-- `TESTING_GUIDE.md`
-- `API_REFERENCE.md`
-- `docs/pr-description-draft.md`
 
 ## Known Limitations
 
-- The system is local and file-based by design.
-- The MCP server reads current result files and does not run or mutate the pipeline.
-- Stable screenshots use distinct evidence categories; the passing coverage screenshot is fresh 80% gate evidence, while the hook screenshot remains the deliberate blocking-path evidence.
-- In one-off Python imports, use a file-path import for `mcp/server.py` to avoid resolving the installed third-party `mcp` package.
+- Historical run folders may have different spec fingerprints because earlier packages are preserved as evidence.
+- The Java stack is preserved as alternate evidence, not selected as the root package.
+- Direct pre-push hook shell execution was blocked by the Windows sandbox; the delegated coverage helper passed at 80% and failed at 99% as expected.
+- `mcp.json` starts the status server against root result files. Clio validated helper compatibility against candidate results before selection; after selection, the same server reads root `shared/results/`.
+- Stable screenshots are generated terminal-style evidence PNGs from fresh checks, with the full manual screenshot set preserved separately.
+
+## Privacy
+
+Evidence uses counts, transaction IDs, statuses, and reason codes. It omits raw account IDs, raw descriptions, credentials, tokens, and full metadata.

@@ -143,6 +143,7 @@ Before selecting a run, confirm:
 
 - `specification.md` contains all five required Task 1 sections.
 - The selected stack is either `python` or `java`; omitted input was normalized to `python`.
+- Java specs name Maven, `pom.xml`, Java source/test paths, `BigDecimal`, Jackson or equivalent JSON handling, JUnit 5/JUnit Jupiter, JaCoCo `report` and `check` goals, and the stack-neutral result JSON shape required by the Python `pipeline-status` MCP reader.
 - The low-level task cards are implementation-ready transaction-system slices, not one entry per Homework Automation Layer agent.
 - The code-generation task requires at least four cooperating runtime transaction pipeline components, with Reporting Agent as the default fourth component unless explicitly replaced by another product component.
 - The generated transaction-system spec requires repeated pipeline runs to archive an existing `shared/` tree to zero-padded sibling archive folders before creating fresh protocol directories.

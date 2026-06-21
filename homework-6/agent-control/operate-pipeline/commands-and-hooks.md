@@ -4,11 +4,21 @@ This file defines the shared Operator Layer behavior for Homework 6 pipeline ope
 
 These surfaces are maintained once outside Themis (Test Generator). Future Themis runs validate them and report missing or stale behavior instead of regenerating them as ordinary test outputs.
 
+## Stack Resolution
+
+Resolve the package set before choosing a command:
+
+1. Use an explicit operator argument such as `stack=python`, `stack=java`, or a package-set ID when provided.
+2. Otherwise read `docs/agent-runs/selection-sets.json` and use its `canonical_set_id`.
+3. If that registry is unavailable, fall back to the current Python canonical package recorded in `docs/agent-runs/final-selection.md`.
+
+Do not infer the stack from raw transaction data or parse full result payloads. The registry contains command hints for pipeline execution, validation-only behavior, and coverage. Python remains canonical until a later explicit operator selection changes the canonical package set.
+
 ## `/run-pipeline`
 
 Purpose: run the multi-agent banking pipeline end to end.
 
-Fast path:
+Fast path for the canonical Python package:
 
 Use one bounded shell invocation for the happy path so the command does not spend time on broad context loading, repeated schema probes, `git status`, or separate summary passes:
 
@@ -43,11 +53,13 @@ Required behavior:
 
 1. Confirm `sample-transactions.json` exists.
 2. Archive or clear `shared/` according to the selected pipeline behavior. The current Python pipeline archives existing `shared/` output before creating a fresh run.
-3. Run the selected pipeline command, normally:
+3. Run the selected pipeline command. For `stack=python`, the normal command is:
 
    ```bash
    python integrator.py
    ```
+
+   For `stack=java`, use the package-set command hint or selected inventory, such as a generated `mvn exec:java` invocation or a packaged `java -jar target/...jar` command. Do not run Java generation as part of `/run-pipeline`.
 
 4. Confirm all transactions from `sample-transactions.json` appear in `shared/results/`.
 5. Summarize `shared/results/summary.json` when present.
@@ -61,7 +73,7 @@ Good summary fields include total count, settled count, rejected count, review-r
 
 Purpose: validate transactions without running the full pipeline.
 
-Fast path:
+Fast path for the canonical Python package:
 
 The current Python validator exposes dry-run behavior as an importable function rather than a file-path CLI. Use a single bounded invocation that emits only safe fields:
 
@@ -70,6 +82,8 @@ python -c "import json; from collections import Counter; from agents.transaction
 ```
 
 If the selected code later exposes a real dry-run CLI, prefer that interface and record the exact command. Do not run the full pipeline unless the operator explicitly asks to fall back.
+
+For `stack=java`, use the package-set command hint or selected Java inventory for the validation-only dry-run CLI. A valid Java alternate should report safe totals, valid/invalid counts, and reason-code groups without settlement, using Maven or packaged Java command syntax chosen by the generated spec.
 
 Report:
 
@@ -91,13 +105,36 @@ The default coverage threshold is 80 percent. The portable helper is:
 python scripts/check_coverage_gate.py --fail-under 80
 ```
 
-The helper runs coverage from the Homework 6 root using the selected stack's pytest coverage command:
+The helper defaults to `--stack auto` and remains backward-compatible with the selected Python root. Use explicit stack commands for package-set evidence:
+
+```bash
+python scripts/check_coverage_gate.py --stack python --fail-under 80
+python scripts/check_coverage_gate.py --stack java --project-dir path/to/java-package --fail-under 80
+```
+
+When a local Maven installation inherits an unavailable machine-level mirror or other external settings, Java validation may pass an explicit run-local settings override without changing the generated Java package:
+
+```bash
+python scripts/check_coverage_gate.py --stack java --project-dir path/to/java-package --maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml --fail-under 80
+```
+
+Relative Maven settings paths are resolved from the caller's current directory first, then from `--project-dir`. Omit these flags in normal environments; the default Java command remains unchanged.
+
+For Python, the helper runs coverage from the project root using pytest coverage:
 
 ```bash
 python -m pytest --cov=. --cov-fail-under=80
 ```
 
-The helper stores coverage data and pytest temporary files in a short-lived ignored `tmp/coverage-gate/` workspace folder so the hook does not mutate root `.coverage`, root `.pytest_cache/`, or `shared/` evidence while checking the gate.
+For Java, the helper requires a Maven project with `pom.xml` and JaCoCo `check` configuration, then runs:
+
+```bash
+mvn -Dcoverage.minimum=0.80 test jacoco:report jacoco:check
+```
+
+With Maven settings overrides, the helper adds `-s SETTINGS_PATH` and `-gs GLOBAL_SETTINGS_PATH` before the coverage threshold property. The Java check relies on the generated `pom.xml` to configure JaCoCo rules and halt the build below the covered-ratio threshold.
+
+For Python, the helper stores coverage data and pytest temporary files in a short-lived ignored `tmp/coverage-gate-<pid>/` workspace folder so the hook does not mutate root `.coverage`, root `.pytest_cache/`, or `shared/` evidence while checking the gate.
 
 Use an explicit override to demonstrate the blocking path without degrading the real suite:
 
@@ -105,7 +142,7 @@ Use an explicit override to demonstrate the blocking path without degrading the 
 python scripts/check_coverage_gate.py --fail-under 99
 ```
 
-The committed Git pre-push hook invokes the helper with the default 80 percent threshold. Claude hook settings should invoke the same helper for push-like actions when the local Claude Code hook schema is supported.
+The committed Git pre-push hook invokes the helper with `--stack auto` and the default 80 percent threshold. Claude hook settings should invoke the same helper for push-like actions when the local Claude Code hook schema is supported.
 
 The hook passes when coverage meets or exceeds the threshold and blocks or fails the action when coverage is below the threshold.
 

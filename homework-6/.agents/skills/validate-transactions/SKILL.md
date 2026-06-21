@@ -13,7 +13,7 @@ Before acting, read `../../../agent-control/operate-pipeline/commands-and-hooks.
 
 ## Execution
 
-Follow the `/validate-transactions` section exactly. Prefer its fast path: one bounded invocation of the validator dry-run function that emits total, valid, invalid, reason-code groups, and a safe transaction table.
+Follow the stack-resolution and `/validate-transactions` sections exactly. Prefer the documented fast path for the selected package set; for the current canonical Python set this is one bounded invocation of the validator dry-run function that emits total, valid, invalid, reason-code groups, and a safe transaction table.
 
 Do not run the stale file-path form `python agents/transaction_validator.py --dry-run sample-transactions.json`; the current validator uses package-relative imports and exposes dry-run behavior through `agents.transaction_validator.validate_transactions_file`.
 
@@ -21,7 +21,7 @@ Do not load broad project context, run `git status`, inspect raw sample transact
 
 Required behavior:
 
-1. Use validator dry-run behavior when available.
+1. Use the selected package set's validation-only dry-run behavior when available.
 2. Report total, valid, and invalid counts.
 3. Group invalid results by safe reason code.
 4. Show a redacted table with transaction ID, status, and safe reason code.

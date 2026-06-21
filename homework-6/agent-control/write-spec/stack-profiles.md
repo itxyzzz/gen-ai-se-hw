@@ -63,12 +63,14 @@ Use these concrete defaults for `stack=java`:
 | Agent classes | `TransactionValidator`, `FraudDetector`, and `SettlementProcessor` or `ReportingAgent`. |
 | Common agent method | `PipelineMessage processMessage(PipelineMessage message)`. |
 | Shared protocol | JSON files through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`. |
-| Tests | JUnit 5 with temporary directories. |
-| Coverage | JaCoCo; Athena (Spec Writer)'s temporary ending-context target is 75%. Themis (Test Generator) later owns raising coverage above 80% and adding the blocking coverage hook. |
-| Commands | `mvn test`, `mvn jacoco:report`, and a concrete pipeline run command such as `mvn exec:java` or a packaged `java -jar` command chosen in the generated spec. |
+| Tests | JUnit 5/JUnit Jupiter with Maven Surefire for unit tests and Failsafe when integration-test naming or phases are used. |
+| Coverage | JaCoCo Maven plugin with a `check` goal capable of failing below a covered-ratio threshold; Athena (Spec Writer)'s temporary ending-context target is 75%. Themis (Test Generator) later owns raising coverage above 80% and adding the blocking coverage hook. |
+| Commands | `mvn test`, `mvn test jacoco:report jacoco:check`, and a concrete pipeline run command such as `mvn exec:java` or a packaged `java -jar` command chosen in the generated spec. |
 | MCP | Python FastMCP server at `mcp/server.py` reading the Java pipeline's JSON result files. |
 
-Specification task cards should name Java packages, classes, methods, Maven commands, and test classes explicitly. Do not leave Java output as a language-neutral variant of the Python plan.
+Specification task cards should name Java packages, classes, methods, Maven commands, test classes, and `pom.xml` plugin expectations explicitly. Do not leave Java output as a language-neutral variant of the Python plan.
+
+Java specifications must require a stack-neutral result shape compatible with the existing `pipeline-status` reader: `shared/results/summary.json` for safe aggregate counts and `shared/results/TXN*.json` for safe transaction status, reason codes, amount string, currency, timestamps, component history count, and audit event count. Do not require a Java MCP server unless a later approved phase proves the Python FastMCP reader cannot consume the generated JSON.
 
 ## Shared Stack-Invariant Requirements
 

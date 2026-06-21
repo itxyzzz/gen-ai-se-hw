@@ -1,0 +1,26 @@
+Commands:
+python -m pytest -p no:cacheprovider
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+python scripts\check_coverage_gate.py --stack python --fail-under 99
+
+Workspace:
+C:\Users\TANATA~1\AppData\Local\Temp\clio-20260621-225923-generate-docs-python-hera-python-full-set
+
+Results:
+- Pytest passed with 36 tests.
+- Coverage gate at 80% passed.
+- Total coverage: 97.44%.
+- Demonstration gate at 99% failed as expected while tests still passed.
+
+Coverage profile:
+- `agents\__init__.py`: 100%
+- `agents\common.py`: 98%
+- `agents\fraud_detector.py`: 96%
+- `agents\reporting_agent.py`: 100%
+- `agents\settlement_processor.py`: 100%
+- `agents\transaction_validator.py`: 98%
+- `integrator.py`: 88%
+- Total: 97.44%
+
+Containment:
+Commands ran from a Clio temp workspace built from the named candidate packages. Root runtime code, root tests, root `.coverage`, and root screenshots were not used as execution targets.

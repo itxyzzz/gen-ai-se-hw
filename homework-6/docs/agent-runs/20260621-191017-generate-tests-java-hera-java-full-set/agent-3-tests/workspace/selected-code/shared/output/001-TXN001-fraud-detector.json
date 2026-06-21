@@ -1,0 +1,33 @@
+{
+  "message_id" : "0e559401-3ef9-3223-b31e-5711ac5bee99",
+  "timestamp" : "2026-06-21T17:00:08.689398600Z",
+  "source_agent" : "fraud_detector",
+  "target_agent" : "settlement_processor",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN001",
+    "timestamp" : "2026-03-16T09:00:00Z",
+    "amount" : "1500.00",
+    "currency" : "USD",
+    "transaction_type" : "transfer",
+    "channel" : "online",
+    "country" : "US"
+  },
+  "status" : "risk_scored",
+  "fraud_assessment" : {
+    "risk_score" : 0,
+    "risk_tier" : "low",
+    "reason_codes" : [ ]
+  },
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T17:00:08.681402600Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN001",
+    "outcome" : "validated"
+  }, {
+    "timestamp" : "2026-06-21T17:00:08.689398600Z",
+    "component" : "FraudDetector",
+    "transaction_id" : "TXN001",
+    "outcome" : "low"
+  } ]
+}

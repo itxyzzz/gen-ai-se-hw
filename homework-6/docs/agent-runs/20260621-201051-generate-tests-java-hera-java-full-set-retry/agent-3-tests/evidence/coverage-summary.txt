@@ -1,0 +1,6 @@
+Coverage summary
+Command: mvn -o -s ..\maven-empty-settings.xml -gs ..\maven-empty-settings.xml test jacoco:report jacoco:check
+Result: PASS, 13 tests, 0 failures, JaCoCo check met.
+Instruction coverage: 87.86% from target/site/jacoco/jacoco.csv.
+Portable helper 80%: PASS, see hook-pass.txt.
+Portable helper 99%: expected blocking failure, see hook-fail.txt.

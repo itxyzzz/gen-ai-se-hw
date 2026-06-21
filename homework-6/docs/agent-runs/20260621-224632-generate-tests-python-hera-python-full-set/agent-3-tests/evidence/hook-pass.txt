@@ -1,0 +1,12 @@
+Hook pass behavior:
+The committed pre-push hook delegates to `python scripts/check_coverage_gate.py --stack auto --fail-under 80`.
+
+Validation command used against the candidate package:
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+
+Result:
+Pass. The same coverage helper passed from the run-local project-under-test workspace with 36 passing tests and 97.44% total coverage.
+
+Shell invocation note:
+A run-local copy of `.githooks/pre-push` was placed under `workspace/project-under-test/.githooks/` for support validation. Direct hook-shell execution was blocked by the Windows sandbox: Bash reported `E_ACCESSDENIED`, and `sh` was not available. This is recorded as environment degradation, not a candidate package failure.
+

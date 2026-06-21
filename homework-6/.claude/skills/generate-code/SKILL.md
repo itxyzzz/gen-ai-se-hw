@@ -31,5 +31,6 @@ Repository `dev-doc-harness` and Superpowers requirements apply to Operator Laye
 /generate-code
 /generate-code generate
 /generate-code resume run=20260618-120000-generate-code-python-primary
+/generate-code resume run=20260621-140000-generate-code-java-alternate
 /generate-code compare
 ```

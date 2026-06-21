@@ -1,0 +1,13 @@
+{
+  "schema_version" : "1.0",
+  "transaction_id" : "TXN005",
+  "status" : "review_required",
+  "reason_codes" : [ "HIGH_VALUE", "VERY_HIGH_VALUE", "WIRE_TRANSFER_TYPE" ],
+  "amount" : "75000.00",
+  "currency" : "USD",
+  "processed_at" : "2026-06-21T18:28:05.072047700Z",
+  "risk_tier" : "very_high",
+  "component_history_count" : 4,
+  "audit_event_count" : 3,
+  "settlement_reference" : null
+}

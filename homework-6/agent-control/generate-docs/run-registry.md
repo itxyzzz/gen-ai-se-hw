@@ -7,7 +7,7 @@ This file defines preservation and selection rules for Clio (Documentation Gener
 Use:
 
 ```text
-YYYYMMDD-HHMMSS-generate-docs-python-short-label
+YYYYMMDD-HHMMSS-generate-docs-<stack>-short-label
 ```
 
 Examples:
@@ -15,7 +15,10 @@ Examples:
 ```text
 20260620-180000-generate-docs-python-primary
 20260620-193000-generate-docs-python-screenshot-repair
+20260621-170000-generate-docs-java-alternate
 ```
+
+Use `python` or `java` for `<stack>`, matching the package set being documented.
 
 ## Required Layout
 
@@ -59,6 +62,7 @@ The inventory must explicitly exclude runtime and tool outputs such as `evidence
 
 Each run must preserve:
 
+- Selected package-set ID and stack when `docs/agent-runs/selection-sets.json` exists.
 - Selected Athena run ID.
 - Selected Hephaestus run ID and output inventory path.
 - Selected Themis run ID and output inventory path.
@@ -124,6 +128,7 @@ The first successful Clio package may be selected by default only when no final 
 
 Selection records must name:
 
+- Selected package-set ID and stack.
 - Selected Clio run ID.
 - Selected Athena, Hephaestus, and Themis output run IDs and inventory versions.
 - Selected output inventory path.

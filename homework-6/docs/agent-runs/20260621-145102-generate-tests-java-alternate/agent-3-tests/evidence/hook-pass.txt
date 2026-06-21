@@ -1,0 +1,12 @@
+Coverage gate pass path:
+
+The direct Java coverage gate command passed:
+
+`mvn -s <validation-settings.xml> -gs <validation-settings.xml> test jacoco:report jacoco:check`
+
+Evidence:
+- 21 JUnit Jupiter tests passed.
+- JaCoCo reported: "All coverage checks have been met."
+
+Support-tool limitation:
+The repository helper command `python scripts/check_coverage_gate.py --stack java --project-dir ... --fail-under 80` failed before test execution because it invokes Maven without the run-local settings override and the machine-level Maven mirror points to an unavailable host.

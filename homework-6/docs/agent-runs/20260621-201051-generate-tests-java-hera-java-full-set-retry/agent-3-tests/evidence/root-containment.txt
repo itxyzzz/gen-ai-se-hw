@@ -1,0 +1,5 @@
+Root containment check
+Command: git status --short -- pom.xml src tests README.md HOWTORUN.md ARCHITECTURE.md TESTING_GUIDE.md API_REFERENCE.md docs\pr-description-draft.md docs\screenshots mcp mcp.json .codex\config.toml shared specification.md sample-transactions.json
+Result: no output; protected canonical root product/test/docs/MCP/shared paths were not modified.
+New preserved run folder: ?? docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/
+Existing unrelated untracked preserved Java/Hera run folders were present before this Themis retry.
