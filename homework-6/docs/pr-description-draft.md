@@ -48,15 +48,15 @@ Post-selection root validation passed with 52 tests and 95.57% total coverage. T
 
 ## Screenshots
 
-![Pipeline run](screenshots/pipeline-run.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/pipeline-run.png" alt="Pipeline run showing eight transactions processed with expected settled, rejected, review-required, and error counts" width="300">
 
-![Test coverage](screenshots/test-coverage.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/test-coverage.png" alt="Coverage gate passing for the canonical Python package" width="300">
 
-![Run pipeline skill](screenshots/skill-run-pipeline.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/skill-run-pipeline.png" alt="Run pipeline command evidence with safe transaction summary" width="300">
 
-![Hook trigger](screenshots/hook-trigger.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/hook-trigger.png" alt="Coverage hook blocking path evidence" width="300">
 
-![MCP interaction](screenshots/mcp-interaction.png)
+<img src="https://raw.githubusercontent.com/itxyzzz/gen-ai-se-hw/homework-6-extension/homework-6/docs/screenshots/mcp-interaction.png" alt="Context7 and custom pipeline-status MCP evidence" width="300">
 
 Additional assignment evidence:
 
