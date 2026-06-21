@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrate Runs"
+  short_description: "Coordinate Homework 6 package-set runs"
+  default_prompt: "Use $orchestrate-runs to plan, resume, compare, or select preserved Homework 6 package-set runs."

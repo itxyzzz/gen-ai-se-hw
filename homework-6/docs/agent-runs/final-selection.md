@@ -14,6 +14,8 @@ The registry records the current Python set with selected Athena (Spec Writer), 
 
 No Java package set is selected or canonical after Phase 01. Future Java alternates should be added as `alternate` or `candidate` sets until an explicit operator selection changes canonical status.
 
+After Phase 02, future cross-set orchestration, comparison, and explicit selection are owned by Hera (Orchestrator) through `agent-control/orchestrate-runs/`. The current Python canonical set remains unchanged. Hera selection proposals are recorded in preserved run-local `agent-5-orchestrator/selection-plan.md` files until the operator explicitly authorizes inventory-driven selection and the corresponding updates to this file and `selection-sets.json`.
+
 ## Selection Criteria
 
 | Criterion | Required evidence |

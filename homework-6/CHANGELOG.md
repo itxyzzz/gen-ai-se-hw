@@ -1,5 +1,31 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 46: Hera Orchestrator Phase 02 Implementation
+
+### Added
+
+- Added the Hera (Orchestrator) tool-neutral control package under `agent-control/orchestrate-runs/` with workflow, quality-bar, run-registry, and README files.
+- Added Codex and Claude `orchestrate-runs` entrypoints as thin wrappers around the shared Hera package.
+- Added Hera operator and architecture delta notes for future Clio documentation regeneration.
+
+### Changed
+
+- Updated `agents.md` to list Hera as a Homework Automation Layer orchestrator while excluding it from generated runtime transaction components.
+- Updated `docs/agent-runs/README.md` and `docs/agent-runs/final-selection.md` to point future cross-set comparison and selection to Hera while keeping the Python canonical set unchanged.
+
+### Fixed
+
+- Documented the nested-agent fallback path against the existing `agents.max_depth = 2` configuration without re-editing config or starting child generation.
+
+### Tests
+
+- Validated `selection-sets.json` and `mcp.json` with `python -m json.tool`.
+- Validated `.codex/config.toml` parsing and confirmed `agents.max_threads = 8` plus `agents.max_depth = 2`.
+- Ran the full selected Python test suite with `python -m pytest -p no:cacheprovider`: 54 passed.
+- Ran focused coverage-helper tests with `python -m pytest tests\test_coverage_gate.py -q -p no:cacheprovider`.
+- Confirmed Java coverage mode fails clearly without a root `pom.xml` instead of producing a traceback.
+- Ran protected-file diff checks, Hera reference scans, privacy scans, placeholder scans, and whitespace checks.
+
 ## Homework 6 - Step 45: Hera Orchestrator Phase 02 Plan
 
 ### Added

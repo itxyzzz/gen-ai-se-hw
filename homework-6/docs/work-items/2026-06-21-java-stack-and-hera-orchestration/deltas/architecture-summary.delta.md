@@ -1,7 +1,7 @@
 # Architecture Summary Delta
 
 Work ID: `2026-06-21-java-stack-and-hera-orchestration`
-Phase: Phase 01 Java stack readiness
+Phase: Phase 01 Java stack readiness and Phase 02 Hera orchestration
 
 ## Proposed Updates
 
@@ -15,7 +15,16 @@ Phase: Phase 01 Java stack readiness
   - `/validate-transactions` chooses Python import behavior or Java validation-only CLI behavior from the selected package set.
   - `scripts/check_coverage_gate.py` dispatches to pytest/pytest-cov or Maven/JUnit/JaCoCo.
 - Require Java generation guidance to preserve Maven, `pom.xml`, `src/main/java/...`, `src/test/java/...`, `BigDecimal`, JUnit 5/JUnit Jupiter, JaCoCo, and the existing safe `shared/results/` contract.
+- Add Hera (Orchestrator) as the fifth Homework Automation Layer control surface, separate from the four assignment deliverable generation agents.
+- Keep Hera outside the Generated Transaction System Layer. It is not a runtime pipeline component, Java class, Python product module, MCP tool, settlement component, or reporting component.
+- Add `agent-control/orchestrate-runs/` as the shared package for Hera workflow, quality-bar, and run-registry rules.
+- Add Codex and Claude entrypoints as thin wrappers around the shared Hera package:
+  - `.agents/skills/orchestrate-runs/SKILL.md`
+  - `.claude/skills/orchestrate-runs/SKILL.md`
+  - `.claude/commands/orchestrate-runs.md`
+- Preserve Hera run evidence under `docs/agent-runs/<hera-run-id>/agent-5-orchestrator/`, with `child-runs.md` as the ledger and `selection-plan.md` as non-authorizing proposal state.
+- Keep child agents responsible for their own quality bars while Hera owns sequence, preservation, comparison, and explicit selection workflow.
 
 ## Not Merged Into Canonical Architecture Yet
 
-The canonical `ARCHITECTURE.md` remains selected Clio output and was not edited in Phase 01. A future Clio regeneration should merge this delta into reviewer-facing documentation.
+The canonical `ARCHITECTURE.md` remains selected Clio output and was not edited in Phase 01 or Phase 02. A future Clio regeneration should merge this delta into reviewer-facing documentation.
