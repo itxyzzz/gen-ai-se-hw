@@ -4,6 +4,16 @@ Current status: selected Athena (Spec Writer) run `20260619-170102-write-spec-py
 
 Use the current canonical `specification.md` as downstream input for any future Hephaestus (Code Generator) regeneration or repair. The prior selected run `20260617-180458-write-spec-python-primary` remains preserved as failed/superseded evidence only.
 
+## Machine-Readable Selection Sets
+
+`docs/agent-runs/selection-sets.json` is the machine-readable package-set registry for Operator Layer helpers. This markdown file remains the human audit history and rationale record.
+
+Current canonical set ID: `python-canonical-20260621`.
+
+The registry records the current Python set with selected Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) run IDs, selected inventory paths, package root, and command hints for pipeline execution, validation-only behavior, tests, and coverage. It intentionally does not store raw transaction records, raw account IDs, descriptions, credentials, hidden prompts, or environment dumps.
+
+No Java package set is selected or canonical after Phase 01. Future Java alternates should be added as `alternate` or `candidate` sets until an explicit operator selection changes canonical status.
+
 ## Selection Criteria
 
 | Criterion | Required evidence |

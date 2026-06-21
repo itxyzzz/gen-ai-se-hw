@@ -8,7 +8,7 @@ Themis (Test Generator) must treat coverage as necessary but not sufficient. A c
 - Source spec mismatch is explicitly reported when the selected code source spec differs from current canonical `specification.md`.
 - Candidate tests and config are listed in `agent-3-tests/outputs/inventory.md` with canonical targets and SHA-256 fingerprints.
 - Runtime and tool outputs are excluded from selectable inventory: `workspace/`, `evidence/`, `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, `.test-tmp/`, and `__pycache__/`.
-- Coverage is at least 80 percent using the selected stack's coverage tool.
+- Coverage is at least 80 percent using the selected stack's coverage tool: pytest/pytest-cov for `stack=python`, or Maven/JUnit/JaCoCo for `stack=java`.
 - Tests include meaningful assertions over output fields, statuses, reason codes, summary counts, file movements, and redaction behavior, not only "does not crash" checks.
 - Unit tests cover each runtime component selected for the pipeline.
 - At least one integration test covers the full pipeline.
@@ -20,6 +20,7 @@ Themis (Test Generator) must treat coverage as necessary but not sufficient. A c
 - Repeated-run archival behavior is tested or validated.
 - Runtime provenance is tested when present in selected code.
 - Decimal money assertions check exact string or `Decimal` behavior and never rely on binary floating point.
+- Java alternate tests use `BigDecimal` assertions, JUnit 5/JUnit Jupiter test classes under `src/test/java/...`, Maven Surefire or Failsafe execution, and JaCoCo `check` evidence rather than Python pytest-only checks.
 - Strict JSON behavior covers invalid JSON, missing fields, unsupported currency such as `XYZ`, and malformed amounts where applicable.
 - Privacy scans prove raw account IDs, raw descriptions, credentials, tokens, and unfiltered metadata are not exposed in results, audit files, command output, screenshots, or evidence.
 - Workspace containment checks prove root `tests/`, root `shared/`, root `.coverage`, and canonical product files are unchanged during ordinary generation.

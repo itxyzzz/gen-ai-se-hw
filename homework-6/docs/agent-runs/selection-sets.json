@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "canonical_set_id": "python-canonical-20260621",
+  "updated_at": "2026-06-21",
+  "sets": {
+    "python-canonical-20260621": {
+      "stack": "python",
+      "status": "canonical",
+      "description": "Current selected Python Homework 6 package set. Java alternates are not selected in Phase 01.",
+      "package_root": ".",
+      "selection_record": "docs/agent-runs/final-selection.md",
+      "selected_runs": {
+        "athena_spec_writer": "20260619-170102-write-spec-python-fresh",
+        "hephaestus_code_generator": "20260619-175211-generate-code-python-fresh-spec",
+        "themis_test_generator": "20260620-144025-generate-tests-python-fresh-spec",
+        "clio_documentation_generator": "20260621-011348-generate-docs-python-review-repair"
+      },
+      "inventories": {
+        "code": "docs/agent-runs/20260619-175211-generate-code-python-fresh-spec/agent-2-code/outputs/inventory.md",
+        "tests": "docs/agent-runs/20260620-144025-generate-tests-python-fresh-spec/agent-3-tests/outputs/inventory.md",
+        "documentation": "docs/agent-runs/20260621-011348-generate-docs-python-review-repair/agent-4-docs/outputs/inventory.md"
+      },
+      "command_hints": {
+        "run_pipeline": "python integrator.py",
+        "validate_transactions": "python -c \"import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))\"",
+        "coverage_gate": "python scripts/check_coverage_gate.py --stack python --fail-under 80",
+        "tests": "python -m pytest -p no:cacheprovider"
+      },
+      "result_contract": {
+        "summary": "shared/results/summary.json",
+        "transactions": "shared/results/TXN*.json",
+        "mcp_reader": "mcp/server.py"
+      },
+      "privacy_notes": [
+        "Registry stores run IDs, paths, and command hints only.",
+        "Registry must not store raw transactions, account identifiers, descriptions, credentials, or hidden prompts."
+      ]
+    }
+  }
+}

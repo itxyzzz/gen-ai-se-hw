@@ -8,7 +8,7 @@ A successful normal Hephaestus run must create or update Task 2 Generated Transa
 
 Required Task 2 outcomes:
 
-- An integrator/orchestrator such as `integrator.py`.
+- An integrator/orchestrator such as `integrator.py` for `stack=python` or `src/main/java/.../Integrator.java` for `stack=java`.
 - At least three cooperating runtime transaction pipeline components, including Transaction Validator and Fraud Detector plus Settlement Processor, Compliance Checker, or Reporting Agent.
 - When the selected Athena (Spec Writer) spec follows the refreshed quality target, at least four cooperating runtime transaction pipeline components are required. The normal four-component target is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent. This is an intentional strengthened generation target above the assignment minimum, not a retroactive requirement for already selected three-component packages.
 - JSON file communication through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
@@ -100,6 +100,19 @@ For the current selected Python spec, generated code must satisfy these checks:
 - Account identifiers are redacted. Raw descriptions and raw account IDs do not appear in logs, result files, audit files, tests, or screenshots.
 - Risk scoring is deterministic educational logic, not real fraud, AML, sanctions, payment-network, banking, or legal compliance.
 
+## Java Stack Requirements
+
+For a Java alternate, generated code must satisfy these checks:
+
+- The candidate package contains `pom.xml`, Java sources under `src/main/java/...`, and any generated tests under `src/test/java/...`.
+- Monetary values use `BigDecimal`; `double` and `float` are not used for amounts, thresholds, summaries, or tests.
+- JSON handling uses Jackson or an equivalent configured library and preserves strict safe serialization.
+- Runtime components are Java classes with functional names such as `TransactionValidator`, `FraudDetector`, `SettlementProcessor`, `ReportingAgent`, and `Integrator`.
+- JUnit 5/JUnit Jupiter tests run through Maven Surefire or Failsafe rather than a custom test runner.
+- JaCoCo Maven plugin configuration includes a `check` goal that can fail the build below an 80 percent covered-ratio threshold during Themis validation.
+- Validation commands include `mvn test`, `mvn test jacoco:report jacoco:check`, and the generated Java pipeline command.
+- The Java package writes the same stack-neutral `shared/results/summary.json` and `shared/results/TXN*.json` safe fields expected by `mcp/server.py`.
+
 Expected sample outcomes from the selected spec:
 
 - `TXN006` rejects with `UNSUPPORTED_CURRENCY`.
@@ -140,7 +153,7 @@ Before reporting completion, Hephaestus must record validation evidence in `agen
 
 Minimum checks:
 
-- Pipeline command, normally `python integrator.py --input sample-transactions.json --shared-dir shared`, exits successfully from `agent-2-code/outputs/`.
+- Pipeline command exits successfully from `agent-2-code/outputs/`: normally `python integrator.py --input sample-transactions.json --shared-dir shared` for `stack=python`, or the generated Maven/Java command for `stack=java`.
 - Candidate validation does not mutate root shared output during ordinary generate mode; root shared smoke runs require explicit operator authorization or selection-stage validation.
 - All sample transactions are represented in local `shared/results/`.
 - Local `shared/results/summary.json` accounts for all sample records.
@@ -149,7 +162,7 @@ Minimum checks:
 - `agent-2-code/outputs/` contains the complete selectable package, a copied `sample-transactions.json`, local `shared/` current-run evidence when committed, and an inventory that excludes `shared/` from selectable code while excluding `archive/` and tool output entirely.
 - Source-spec provenance is recorded with the Athena run ID and SHA-256 fingerprint.
 - `mcp.json` and `.codex/config.toml` remain unchanged for Task 2.
-- Available tests pass, or blockers are recorded with exact command output and next action.
+- Available tests pass, using `python -m pytest` for `stack=python` or `mvn test` for `stack=java`, or blockers are recorded with exact command output and next action.
 - Privacy scans or focused review confirm no raw sensitive account identifiers or descriptions leak into generated outputs.
 
 If any required check cannot run, record the blocker, reason, and exact follow-up in the run handoff.

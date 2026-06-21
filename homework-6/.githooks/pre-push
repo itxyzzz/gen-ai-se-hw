@@ -8,4 +8,4 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 HW_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 
 cd "$HW_ROOT"
-python scripts/check_coverage_gate.py --fail-under 80
+python scripts/check_coverage_gate.py --stack auto --fail-under 80

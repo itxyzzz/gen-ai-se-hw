@@ -1,5 +1,28 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 44: Java Stack Readiness Phase 01 Implementation
+
+### Added
+
+- Added `docs/agent-runs/selection-sets.json` as the machine-readable package-set registry seeded with the current canonical Python set.
+- Added focused coverage-helper tests for stack parsing, registry-backed auto resolution, Python command construction, and Java missing-`pom.xml` failure.
+- Added Phase 01 testing, operator-manual, and architecture deltas for later Clio documentation regeneration.
+
+### Changed
+
+- Made `scripts/check_coverage_gate.py` a stack-aware helper with `--stack {auto,python,java}` and `--project-dir`.
+- Updated Athena, Hephaestus, Themis, Clio, and Operator Layer guidance to preserve Python as canonical while preparing Java-native Maven/JUnit/JaCoCo package generation and validation.
+- Updated `/run-pipeline`, `/validate-transactions`, Git hook, Claude hook, and skill/command wrappers to resolve stack behavior through selection metadata or explicit stack choice.
+- Included the previously prepared `.codex/config.toml` `agents.max_depth = 2` setting as authorized by the operator.
+
+### Fixed
+
+- Removed unqualified Python-only assumptions from Java-capable helper and generation-control paths where Phase 01 requires stack dispatch.
+
+### Tests
+
+- Ran focused coverage-helper tests with `python -m pytest tests\test_coverage_gate.py -q -p no:cacheprovider`.
+
 ## Homework 6 - Step 43: Java Stack Readiness Phase 01 Plan
 
 ### Added

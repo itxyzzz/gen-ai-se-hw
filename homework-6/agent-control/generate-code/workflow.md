@@ -38,8 +38,10 @@ Default to `generate` unless the operator asks for comparison or continuation.
 Use run IDs in this format:
 
 ```text
-YYYYMMDD-HHMMSS-generate-code-python-short-label
+YYYYMMDD-HHMMSS-generate-code-<stack>-short-label
 ```
+
+Examples include `YYYYMMDD-HHMMSS-generate-code-python-primary` for the canonical Python path and `YYYYMMDD-HHMMSS-generate-code-java-primary` for a preserved Java alternate. The `<stack>` value must match the selected Athena (Spec Writer) specification and must be recorded in `run-metadata.md`; do not infer it from file names alone.
 
 Create the run folder before drafting or editing product files:
 
@@ -101,6 +103,14 @@ Good Python Task 2 query topics include:
 - `argparse` CLI patterns for `python integrator.py`.
 - FastMCP only if the generated code reaches read-only result helper design; do not add MCP configuration during Task 2.
 
+Good Java Task 2 query topics include:
+
+- Java `BigDecimal` parsing, comparison, and JSON serialization for money.
+- Jackson or equivalent JSON binding for immutable message and result DTOs.
+- Maven project layout and `pom.xml` plugin configuration.
+- JUnit 5/JUnit Jupiter with Maven Surefire or Failsafe for generated tests.
+- JaCoCo Maven plugin `report` and `check` goals with covered-ratio enforcement.
+
 If Context7 is unavailable, stop and ask the operator whether to switch to a Context7-enabled project/thread or proceed with a documented limitation. Do not silently mark the assignment requirement satisfied without Context7-backed notes.
 
 ## Executor Sub-Agent Strategy
@@ -158,7 +168,7 @@ If the runtime cannot spawn sub-agents, record the limitation and proceed only w
 
 Hephaestus generates Task 2 Generated Transaction System Layer code only:
 
-- `integrator.py` or equivalent orchestrator.
+- `integrator.py` for `stack=python` or `src/main/java/.../Integrator.java` for `stack=java`.
 - At least three cooperating runtime transaction pipeline components to satisfy the assignment minimum.
 - At least four cooperating runtime transaction pipeline components when the selected spec follows the refreshed Athena (Spec Writer) quality target. The normal strengthened component set is Transaction Validator, Fraud Detector, Settlement Processor, and Reporting Agent.
 - JSON file protocol through `shared/input`, `shared/processing`, `shared/output`, and `shared/results`.
@@ -176,6 +186,8 @@ Hephaestus must not implement these later deliverables during a normal Task 2 ru
 - Task 3 slash commands, hooks, or enforced coverage gate.
 - Task 4 custom `mcp/server.py`, `pipeline-status` MCP config additions, or `.codex/config.toml` expansion.
 - Task 5 README, HOWTORUN, final docs, screenshots, or PR packaging.
+
+For `stack=java`, the generated candidate package must be Java-native: include `pom.xml`, source under `src/main/java/...`, tests under `src/test/java/...` when tests are included, `BigDecimal` money handling, JUnit Jupiter tests, and JaCoCo coverage configuration. Candidate validation should use Maven commands such as `mvn test`, `mvn test jacoco:report jacoco:check`, and the pipeline command declared by the generated specification. It must still emit the same `shared/input`, `shared/processing`, `shared/output`, and `shared/results` JSON protocol expected by the Operator Layer helpers.
 
 The selected `specification.md` may define result shapes that make later MCP tooling easy. That is allowed. Adding MCP server/config files is not allowed until the later MCP task or a separate explicit operator instruction.
 
@@ -209,12 +221,12 @@ Do not copy runtime evidence such as `shared/` or `archive/` during selection.
 
 Before reporting a Hephaestus run complete:
 
-1. From `agent-2-code/outputs/`, run the generated pipeline command against the local fixture, normally `python integrator.py --input sample-transactions.json --shared-dir shared`.
+1. From `agent-2-code/outputs/`, run the generated pipeline command against the local fixture. For `stack=python`, the normal command is `python integrator.py --input sample-transactions.json --shared-dir shared`. For `stack=java`, use the generated Maven or packaged Java pipeline command declared in the selected spec, such as `mvn exec:java` with the generated arguments or `java -jar target/...jar`.
 2. Verify all sample transactions appear under local `shared/results/`.
 3. Inspect local `shared/results/summary.json` for total, settled, rejected, review-required, and error counts.
 4. From `agent-2-code/outputs/`, run the pipeline a second time with the same local command and verify the prior local `shared/` output archives to `archive/shared-001` before fresh output is created.
 5. Verify the current local `shared/results/summary.json` is fresh after the second run and that local `shared/` is preserved as current last-run evidence when the run package is committed.
-6. Run available focused tests from `agent-2-code/outputs/`, normally `python -m pytest --basetemp .test-tmp` or a narrower equivalent if the generated code created tests.
+6. Run available focused tests from `agent-2-code/outputs/`: normally `python -m pytest --basetemp .test-tmp` for `stack=python` or `mvn test` for `stack=java`.
 7. Clean local tool artifacts after validation, including `.test-tmp/`, `.coverage*`, `.pytest_cache/`, and `__pycache__/`.
 8. Run privacy scans for raw account IDs, raw descriptions, credentials, tokens, secrets, and unfiltered metadata dumps.
 9. Verify `research-notes.md` has at least two Context7 entries.

@@ -7,7 +7,7 @@ This file defines preservation and selection rules for Themis (Test Generator) r
 Use:
 
 ```text
-YYYYMMDD-HHMMSS-generate-tests-python-short-label
+YYYYMMDD-HHMMSS-generate-tests-<stack>-short-label
 ```
 
 Examples:
@@ -15,7 +15,10 @@ Examples:
 ```text
 20260620-091500-generate-tests-python-primary
 20260620-103000-generate-tests-python-privacy-expansion
+20260621-151500-generate-tests-java-alternate
 ```
+
+Use `python` or `java` for `<stack>`, matching the selected Hephaestus package set being tested.
 
 ## Required Layout
 
@@ -50,6 +53,8 @@ Required files and folders:
 - Whether the file replaces, extends, or creates a canonical target.
 
 The inventory must explicitly exclude runtime and tool outputs such as `workspace/`, `evidence/`, `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, `.test-tmp/`, and `__pycache__/`.
+
+For `stack=java`, inventory kinds should name Java test classes, Maven test resources, or build-test configuration. Java test paths normally use `src/test/java/...` and validation evidence should cite Maven/JUnit and JaCoCo commands.
 
 ## Selected-Code Traceability
 

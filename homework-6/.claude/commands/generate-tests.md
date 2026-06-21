@@ -18,6 +18,7 @@ Argument examples:
 /generate-tests
 /generate-tests generate
 /generate-tests resume run=20260620-091500-generate-tests-python-primary
+/generate-tests resume run=20260621-151500-generate-tests-java-alternate
 /generate-tests compare
 /generate-tests select run=20260620-091500-generate-tests-python-primary
 ```

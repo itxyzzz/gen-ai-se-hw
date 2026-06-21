@@ -41,8 +41,10 @@ Default to `generate` unless the operator asks for comparison, continuation, or 
 Use run IDs in this format:
 
 ```text
-YYYYMMDD-HHMMSS-generate-tests-python-short-label
+YYYYMMDD-HHMMSS-generate-tests-<stack>-short-label
 ```
+
+Examples include `YYYYMMDD-HHMMSS-generate-tests-python-primary` and `YYYYMMDD-HHMMSS-generate-tests-java-alternate`. The `<stack>` value must match the selected Hephaestus (Code Generator) package set named by the selection record or invocation.
 
 ## Required Version Traceability
 
@@ -73,6 +75,7 @@ homework-6/docs/agent-runs/RUN_ID/
   agent-3-tests/
     outputs/
       tests/
+      src/test/java/
       pytest.ini
       inventory.md
     workspace/
@@ -108,6 +111,8 @@ Themis must keep root product files untouched during ordinary generation:
 6. Do not mutate root `tests/`, root `shared/`, root `.coverage`, root `.pytest_cache/`, or canonical generated product files during ordinary generation.
 
 `agent-3-tests/outputs/` is the selectable candidate package. Its `inventory.md` must list each candidate test/config file, intended canonical target, kind, SHA-256 fingerprint, and excluded runtime/tool-output paths. `workspace/` and `evidence/` are run evidence, not canonical copy targets.
+
+For `stack=java`, candidate tests normally live under `agent-3-tests/outputs/src/test/java/...`, Maven/JUnit validation runs from `workspace/project-under-test/`, and coverage evidence comes from the JaCoCo Maven plugin check goal. Do not create Python pytest-only wrappers for Java tests.
 
 During `select`, copy only inventory-declared files from `agent-3-tests/outputs/` to canonical targets. Never copy the workspace wholesale to the root.
 
@@ -155,8 +160,8 @@ Use no sub-agents when the work is tightly coupled, runtime support is unavailab
 Before reporting a Themis run complete:
 
 1. Confirm selected-code traceability and source spec mismatch reporting are present.
-2. Run the candidate suite from `workspace/project-under-test/`.
-3. Confirm coverage meets or exceeds the required 80 percent gate.
+2. Run the candidate suite from `workspace/project-under-test/`: `python -m pytest -p no:cacheprovider` for `stack=python`, or `mvn test` for `stack=java`.
+3. Confirm coverage meets or exceeds the required 80 percent gate: `python scripts/check_coverage_gate.py --stack python --fail-under 80` for Python packages, or `python scripts/check_coverage_gate.py --stack java --project-dir . --fail-under 80` from the Java project root when the helper has been copied into the validation workspace.
 4. Validate meaningful assertions, unit/integration balance, dry-run behavior, command behavior, hook behavior, privacy checks, fixture isolation, and repeated-run behavior.
 5. Write compact text evidence under `agent-3-tests/evidence/`.
 6. Confirm `outputs/inventory.md` lists only selectable test/config files and excludes runtime/tool outputs.

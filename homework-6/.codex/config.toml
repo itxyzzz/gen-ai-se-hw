@@ -2,6 +2,7 @@ sandbox_mode = "workspace-write"
 
 [agents]
 max_threads = 8
+max_depth = 2
 
 [mcp_servers.context7]
 command = "npx"

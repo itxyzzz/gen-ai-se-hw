@@ -4,10 +4,10 @@ This file defines preservation, comparison, and evidence rules for Homework 6 He
 
 ## Run IDs
 
-Use this format for normal Python code-generation runs:
+Use this format for normal stack-specific code-generation runs:
 
 ```text
-YYYYMMDD-HHMMSS-generate-code-python-short-label
+YYYYMMDD-HHMMSS-generate-code-<stack>-short-label
 ```
 
 Examples:
@@ -15,9 +15,10 @@ Examples:
 ```text
 20260618-140000-generate-code-python-primary
 20260618-153000-generate-code-python-repair
+20260621-140000-generate-code-java-alternate
 ```
 
-Use a short label that explains the purpose, such as `primary`, `repair`, `context7-retry`, or `privacy-fix`.
+Use `python` or `java` for `<stack>`, matching the selected Athena (Spec Writer) specification. Use a short label that explains the purpose, such as `primary`, `repair`, `context7-retry`, `privacy-fix`, or `alternate`.
 
 ## Required Layout
 
@@ -50,7 +51,7 @@ agent-2-code/review/final-integration-review.md
 
 ## Evidence Rules
 
-Run folders are evidence snapshots. Canonical generated product files live at the Homework 6 root, such as `integrator.py`, `agents/*.py`, `tests/*.py`, `research-notes.md`, and runtime `shared/` outputs.
+Run folders are evidence snapshots. Canonical generated product files live at the Homework 6 root for the selected Python package, such as `integrator.py`, `agents/*.py`, `tests/*.py`, `research-notes.md`, and runtime `shared/` outputs. A Java alternate remains under preserved run folders unless a later explicit operator selection replaces canonical targets through inventory-declared paths.
 
 A run folder must preserve:
 
@@ -114,6 +115,8 @@ The first successful code-generation run is auto-selected only when no selected 
 Later selections require explicit operator selection. Before copying a replacement package, remove the canonical targets declared by the prior selected inventory so stale selected files do not survive accidentally. Do not remove paths outside the inventory without explicit operator approval.
 
 Selection records must include the selected Hephaestus run ID, selected Athena source run ID, source spec SHA-256, inventory path, selected files, canonical targets, rationale, operator, and excluded runtime/tool paths.
+
+Selection-set metadata in `docs/agent-runs/selection-sets.json` should point to the selected Hephaestus inventory for each package set so helpers can resolve Python or Java command hints without parsing this markdown history.
 
 Canonical `research-notes.md` must include the Context7 entries required by Task 2. Run-local notes may mirror, expand, or link to that canonical file.
 
