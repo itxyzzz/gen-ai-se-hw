@@ -1,5 +1,23 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 49: Java Maven And Hera Repair Plans
+
+### Added
+
+- Added Plan Amendment 001 to insert Java Maven helper repair and Hera orchestration repair before cross-stack comparison.
+- Added the approved Phase 04 plan for repairing Java Maven coverage-helper settings override support.
+- Added the approved Phase 05 plan for repairing Hera child-agent orchestration control-surface guidance.
+
+### Changed
+
+- Moved cross-stack comparison behind the Maven helper and Hera orchestration repairs so comparison does not rely on suspect validation or orchestration evidence.
+- Recorded that official OpenAI/Codex documentation should be consulted if there is uncertainty about Codex thread or sub-agent behavior during Hera repair.
+
+### Tests
+
+- Validated the planning package for placeholder markers, whitespace issues, and staged scope.
+- Verified no committed or staged vendor-specific Maven mirror references remain in the planning package.
+
 ## Homework 6 - Step 48: Java Alternate Evidence Preservation
 
 ### Added
