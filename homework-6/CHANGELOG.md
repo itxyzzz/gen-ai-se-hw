@@ -1,5 +1,20 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 47: Java Alternate Generation Phase 03 Plan
+
+### Added
+
+- Added the approved minimal Phase 03 plan for invoking Hera (Orchestrator) in a clean thread to generate a preserved Java alternate package set.
+- Added minimal Phase 03 test-case and architecture snapshots that keep Hera's own skill and control package as the detailed orchestration source of truth.
+
+### Changed
+
+- Kept Phase 03 planning intentionally thin so Hera receives only a single clean execution instruction and does not inherit duplicated child-agent guidance.
+
+### Tests
+
+- Ran placeholder, sensitive-literal, and whitespace checks against the Phase 03 planning package.
+
 ## Homework 6 - Step 46: Hera Orchestrator Phase 02 Implementation
 
 ### Added
