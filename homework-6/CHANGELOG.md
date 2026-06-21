@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 43: Java Stack Readiness Phase 01 Plan
+
+### Added
+
+- Added the approved Phase 01 plan for Java stack readiness under `docs/work-items/2026-06-21-java-stack-and-hera-orchestration/`.
+- Added Phase 01 test-case and architecture snapshots covering stack-aware helper dispatch, Java control-surface readiness, selection-set metadata, MCP compatibility, and Python baseline protection.
+- Added a Phase 01 variance log placeholder for implementation-only deviations after the plan freeze.
+
+### Changed
+
+- Planned `docs/agent-runs/final-selection.md` as the human selection record with a future `docs/agent-runs/selection-sets.json` machine-readable stack registry for helper dispatch.
+- Planned the universal coverage helper shape so the existing Python gate remains compatible while Java mode can dispatch through Maven, JUnit 5, and JaCoCo.
+
+### Fixed
+
+- Not applicable; this is a plan-only checkpoint.
+
+### Tests
+
+- Validated the staged Phase 01 draft artifacts for placeholder markers and whitespace issues before approval.
+
 ## Homework 6 - Step 42: Java Stack And Hera Orchestration Spec
 
 ### Added
