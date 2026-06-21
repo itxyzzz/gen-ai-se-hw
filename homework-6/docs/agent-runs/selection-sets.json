@@ -1,12 +1,48 @@
 {
   "schema_version": 1,
-  "canonical_set_id": "python-canonical-20260621",
-  "updated_at": "2026-06-21",
+  "canonical_set_id": "python-canonical-20260622-hera-full-set",
+  "updated_at": "2026-06-22",
   "sets": {
-    "python-canonical-20260621": {
+    "python-canonical-20260622-hera-full-set": {
       "stack": "python",
       "status": "canonical",
-      "description": "Current selected Python Homework 6 package set. Java alternates are not selected in Phase 01.",
+      "description": "Selected latest Hera-generated Python Homework 6 package set. Includes selected spec, code, tests, docs, and stable screenshot evidence.",
+      "package_root": ".",
+      "selection_record": "docs/agent-runs/final-selection.md",
+      "selected_runs": {
+        "hera_orchestrator": "20260621-215717-orchestrate-runs-python-full-set",
+        "hera_select_set": "20260622-000718-orchestrate-runs-python-select-latest",
+        "athena_spec_writer": "20260621-220037-write-spec-python-hera-python-full-set",
+        "hephaestus_code_generator": "20260621-222543-generate-code-python-hera-python-full-set",
+        "themis_test_generator": "20260621-224632-generate-tests-python-hera-python-full-set",
+        "clio_documentation_generator": "20260621-225923-generate-docs-python-hera-python-full-set"
+      },
+      "inventories": {
+        "code": "docs/agent-runs/20260621-222543-generate-code-python-hera-python-full-set/agent-2-code/outputs/inventory.md",
+        "tests": "docs/agent-runs/20260621-224632-generate-tests-python-hera-python-full-set/agent-3-tests/outputs/inventory.md",
+        "documentation": "docs/agent-runs/20260621-225923-generate-docs-python-hera-python-full-set/agent-4-docs/outputs/inventory.md"
+      },
+      "command_hints": {
+        "run_pipeline": "python integrator.py",
+        "validate_transactions": "python -c \"import json; from collections import Counter; from agents.transaction_validator import validate_transactions_file; r=validate_transactions_file('sample-transactions.json'); safe={'total': r['total'], 'valid': r['valid'], 'invalid': r['rejected'], 'reason_code_groups': dict(Counter(code for item in r['results'] for code in item['reason_codes'])), 'results': [{'transaction_id': item['transaction_id'], 'status': item['status'], 'reason_codes': item['reason_codes']} for item in r['results']]}; print(json.dumps(safe, indent=2))\"",
+        "coverage_gate": "python scripts/check_coverage_gate.py --stack python --fail-under 80",
+        "tests": "python -m pytest -p no:cacheprovider"
+      },
+      "result_contract": {
+        "summary": "shared/results/summary.json",
+        "transactions": "shared/results/TXN*.json",
+        "pipeline_status": "shared/results/pipeline-status.json",
+        "mcp_reader": "mcp/server.py"
+      },
+      "privacy_notes": [
+        "Registry stores run IDs, paths, and command hints only.",
+        "Registry must not store raw transactions, account identifiers, descriptions, credentials, or hidden prompts."
+      ]
+    },
+    "python-canonical-20260621": {
+      "stack": "python",
+      "status": "superseded",
+      "description": "Previous selected Python Homework 6 package set, preserved as historical evidence after the 2026-06-22 Hera select-set.",
       "package_root": ".",
       "selection_record": "docs/agent-runs/final-selection.md",
       "selected_runs": {
@@ -32,8 +68,38 @@
         "mcp_reader": "mcp/server.py"
       },
       "privacy_notes": [
-        "Registry stores run IDs, paths, and command hints only.",
-        "Registry must not store raw transactions, account identifiers, descriptions, credentials, or hidden prompts."
+        "Historical registry entry stores run IDs, paths, and command hints only."
+      ]
+    },
+    "java-candidate-20260621-180512": {
+      "stack": "java",
+      "status": "candidate",
+      "description": "Preserved Java alternate package set generated through Hera. It is evidence for the Java stack and is not canonical.",
+      "package_root": "docs/agent-runs/20260621-183025-generate-code-java-hera-java-full-set/agent-2-code/outputs",
+      "selection_record": "docs/agent-runs/20260621-180512-orchestrate-runs-java-full-set/agent-5-orchestrator/selection-plan.md",
+      "selected_runs": {
+        "hera_orchestrator": "20260621-180512-orchestrate-runs-java-full-set",
+        "athena_spec_writer": "20260621-180826-write-spec-java-hera-java-full-set",
+        "hephaestus_code_generator": "20260621-183025-generate-code-java-hera-java-full-set",
+        "themis_test_generator": "20260621-201051-generate-tests-java-hera-java-full-set-retry",
+        "clio_documentation_generator": "20260621-203431-generate-docs-java-hera-java-full-set"
+      },
+      "inventories": {
+        "code": "docs/agent-runs/20260621-183025-generate-code-java-hera-java-full-set/agent-2-code/outputs/inventory.md",
+        "tests": "docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/outputs/inventory.md",
+        "documentation": "docs/agent-runs/20260621-203431-generate-docs-java-hera-java-full-set/agent-4-docs/outputs/inventory.md"
+      },
+      "command_hints": {
+        "coverage_gate": "python scripts/check_coverage_gate.py --stack java --project-dir docs/agent-runs/20260621-183025-generate-code-java-hera-java-full-set/agent-2-code/outputs --fail-under 80",
+        "tests": "mvn test"
+      },
+      "result_contract": {
+        "summary": "shared/results/summary.json",
+        "transactions": "shared/results/TXN*.json",
+        "mcp_reader": "mcp/server.py"
+      },
+      "privacy_notes": [
+        "Java is preserved evidence only until a future explicit select-set changes the canonical package."
       ]
     }
   }

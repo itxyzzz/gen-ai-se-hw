@@ -1,0 +1,23 @@
+{
+  "audit_events": [],
+  "component_history": [],
+  "data": {
+    "amount": "25000.00",
+    "currency": "USD",
+    "destination_account": "PRESENT",
+    "destination_pattern": "standard",
+    "metadata": {
+      "channel": "branch",
+      "country": "US"
+    },
+    "source_account": "PRESENT",
+    "timestamp": "2026-03-16T09:15:00Z",
+    "transaction_id": "TXN002",
+    "transaction_type": "wire_transfer"
+  },
+  "message_id": "94ca538f-6a8b-4a05-b963-18414c97e48e",
+  "message_type": "transaction",
+  "source_agent": "integrator",
+  "target_agent": "transaction_validator",
+  "timestamp": "2026-06-21T20:34:53Z"
+}

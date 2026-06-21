@@ -1,0 +1,18 @@
+Context7 evidence:
+- Hephaestus research notes record Context7 was reachable and used on 2026-06-21.
+- Query 1 returned `/python/cpython` for Python `Decimal`, strict JSON, and filesystem patterns.
+- Query 2 returned `/pytest-dev/pytest` for isolated filesystem testing with `tmp_path` and `monkeypatch`.
+
+Custom pipeline-status MCP evidence:
+The existing root `mcp/server.py` was imported by file path and pointed at the Clio candidate validation workspace results directory.
+
+Result:
+Pass.
+
+Safe custom MCP payload summary:
+- `list_pipeline_results`: total 8, settled 2, rejected 2, review_required 4, error 0.
+- `get_transaction_status("TXN006")`: found true, status `rejected`, reason code `UNSUPPORTED_CURRENCY`.
+- `pipeline://summary`: returned text lines for runtime run ID, generated timestamp, total, settled, rejected, review-required, and error counts.
+
+Compatibility note:
+The server implementation supports helper functions with an explicit result directory argument. Starting the MCP subprocess from `mcp.json` would read root `shared/results/`, so this Clio run used file-path import to validate compatibility with candidate result files without modifying root runtime output.

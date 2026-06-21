@@ -1,36 +1,40 @@
 # Architecture
 
-Homework 6 has three explicit layers. Keeping them separate prevents the generated transaction system from depending on hidden agent state or repository maintenance tools.
+This document describes the selected canonical Python package generated through Hera package-set review. The selected package is copied to the homework root, while the source runs and historical alternates remain preserved under `docs/agent-runs/`.
 
-## Layer Model
+## Layered View
 
 ```mermaid
 flowchart TB
-    Operator["Operator Layer\nrepo controls, skills, hooks, selection records"] --> Automation["Homework Automation Layer\nAthena, Hephaestus, Themis, Clio"]
-    Automation --> Generated["Generated Transaction System Layer\nPython runtime, tests, docs, MCP server"]
-    Generated --> Evidence["Run evidence\nshared/, archive/, docs/screenshots, docs/agent-runs"]
+    Operator["Operator Layer"] --> Automation["Homework Automation Layer"]
+    Automation --> Generated["Generated Transaction System Layer"]
+    Generated --> Evidence["Run evidence and reviewer docs"]
 ```
 
-| Layer | Responsibility |
+| Layer | Responsibility in this candidate |
 |---|---|
-| Operator Layer | Maintains control packages, command wrappers, MCP config, hooks, selection records, changelog, and final submission flow. |
-| Homework Automation Layer | Produces the selected specification, code, tests, and documentation packages. |
-| Generated Transaction System Layer | Runs the deterministic transaction-processing simulation and exposes safe status readers. |
+| Operator Layer | Maintains support surfaces such as `agent-control/`, `scripts/check_coverage_gate.py`, `.githooks/pre-push`, `mcp.json`, `.codex/config.toml`, and selection records. |
+| Homework Automation Layer | Hera coordinates Athena, Hephaestus, Themis, and Clio package-set runs and records explicit selections. |
+| Generated Transaction System Layer | Canonical Python runtime pipeline, tests, result files, and safe MCP-readable result shapes. |
 
-## Selected Source Versions
+## Selected Package Set
 
-| Source | Selected run |
-|---|---|
-| Athena (Spec Writer) | `20260619-170102-write-spec-python-fresh` |
-| Hephaestus (Code Generator) | `20260619-175211-generate-code-python-fresh-spec` |
-| Themis (Test Generator) | `20260620-144025-generate-tests-python-fresh-spec` |
-| Clio (Documentation Generator) | `20260621-011348-generate-docs-python-review-repair` |
-
-The current canonical specification fingerprint is:
-
-```text
-44FD7EF6AC4FEE8070A23820DD784AA6215795D58AE3D7EB8225EFEFB8AB9E3B
+```mermaid
+flowchart LR
+    Hera["Hera generate-set"] --> Athena["Athena candidate spec"]
+    Athena --> Hephaestus["Hephaestus candidate code"]
+    Hephaestus --> Themis["Themis candidate tests"]
+    Themis --> Clio["Clio candidate docs"]
 ```
+
+The selected source set is:
+
+- Athena (Spec Writer): `20260621-220037-write-spec-python-hera-python-full-set`
+- Hephaestus (Code Generator): `20260621-222543-generate-code-python-hera-python-full-set`
+- Themis (Test Generator): `20260621-224632-generate-tests-python-hera-python-full-set`
+- Clio (Documentation Generator): `20260621-225923-generate-docs-python-hera-python-full-set`
+
+`docs/agent-runs/selection-sets.json` names `python-canonical-20260622-hera-full-set` as the canonical package set. The earlier Python canonical set remains historical evidence, and Java package set `java-candidate-20260621-180512` remains an alternate stack candidate rather than a root replacement.
 
 ## Runtime Component Flow
 
@@ -40,83 +44,74 @@ sequenceDiagram
     participant V as Transaction Validator
     participant F as Fraud Detector
     participant S as Settlement Processor
-    participant R as shared/results
-    I->>I: archive old shared and write provenance
-    I->>V: safe message envelope
-    V-->>I: validation result
-    I->>F: validated message
-    F-->>I: risk result
-    I->>S: settlement input
-    S-->>I: final settlement result
-    I->>R: TXN*.json and summary.json
+    participant R as Reporting Agent
+    I->>V: message from shared/input
+    V->>F: validated or rejected message
+    F->>S: risk-scored message
+    S->>R: final simulated outcome
+    R-->>I: result file and summary data
 ```
 
-The integrator keeps processing even when one transaction fails. Controlled per-transaction failures become safe `error` results with reason codes and no stack traces.
+The runtime components are normal Python modules. They are not Codex skills, Claude commands, or Homework Automation Layer agents.
 
-## File Protocol
+## JSON File Protocol
+
+The generated product uses the required protocol:
 
 ```text
 shared/
   input/
-    001-TXN001.json
   processing/
-    001-TXN001-transaction-validator.json
   output/
-    001-TXN001-fraud-detector.json
-    001-TXN001-settlement-processor.json
   results/
-    TXN001.json
-    summary.json
-    pipeline-status.json
-  run-provenance.json
 ```
 
-Before each normal run, an existing `shared/` folder is copied to the next available archive folder such as `archive/shared-001`.
+The Integrator prepares these folders, archives prior output under `archive/shared-###`, seeds one message per transaction, and verifies that every input has a final result.
 
 ## Runtime Components
 
-| Component | File | Key behavior |
+| Component | File | Main behavior |
 |---|---|---|
-| Integrator | `integrator.py` | Creates protocol directories, archives prior runs, loads sample transactions, writes provenance, invokes runtime components, writes result and summary files. |
-| Common utilities | `agents/common.py` | Provides `Decimal` parsing, strict JSON writes, redaction, audit event creation, message envelopes, and sensitive-field assertions. |
-| Transaction Validator | `agents/transaction_validator.py` | Validates required fields, positive amount strings, supported currency codes, timestamp shape, and validation-only dry-run summaries. |
-| Fraud Detector | `agents/fraud_detector.py` | Applies deterministic educational risk scoring for high value, wire transfer, odd hour, remote channel, mobile channel, and cross-country review signals. |
-| Settlement Processor | `agents/settlement_processor.py` | Converts validation and risk outcomes into final statuses and safe final result payloads. |
-| Pipeline Status MCP | `mcp/server.py` | Reads current result files through safe tools/resources without rerunning or mutating the pipeline. |
+| Integrator | `integrator.py` | Prepares folders, loads sample records, runs each component, handles per-record errors, and writes provenance. |
+| Transaction Validator | `agents/transaction_validator.py` | Validates fields, timestamps, supported currency, and positive `Decimal` amount values. |
+| Fraud Detector | `agents/fraud_detector.py` | Applies deterministic educational review signals for high value, unusual time, channel/type, and destination patterns. |
+| Settlement Processor | `agents/settlement_processor.py` | Settles low-risk validated records and preserves rejected or review-required records. |
+| Reporting Agent | `agents/reporting_agent.py` | Writes safe per-transaction results, aggregate summary, status file, and privacy checks. |
 
 ## Privacy And Audit Design
 
-The runtime treats account identifiers, descriptions, metadata, and audit details as sensitive. Public outputs and documentation use only safe fields such as transaction ID, amount string, currency, status, reason codes, risk level, counts, and simulation notices.
+The candidate records safe evidence only:
 
-Audit events include timestamp, component name, transaction ID, outcome, and optional reason code or risk level. Final results and MCP responses do not expose raw account IDs or descriptions.
+- Transaction IDs are allowed for traceability.
+- Reason codes are used for explanations.
+- Amounts are string-serialized.
+- Counts and statuses are preferred for summaries.
+- Raw account IDs, descriptions, credentials, tokens, and full metadata are excluded from evidence and reviewer docs.
 
-## Money And Currency
+Audit events are runtime component records with timestamp, component name, transaction ID, safe outcome, and optional reason code.
 
-- Amounts are parsed from strings with `decimal.Decimal`.
-- Binary floating point is not used for money comparisons or serialization.
-- Valid currencies are `USD`, `EUR`, and `GBP`.
-- Unsupported or malformed currency values are rejected with stable reason codes.
+## MCP Design
 
-## MCP Architecture
+The root support server `mcp/server.py` exposes:
 
-```mermaid
-flowchart LR
-    Results["shared/results/*.json"] --> Server["mcp/server.py"]
-    Server --> ToolA["get_transaction_status"]
-    Server --> ToolB["list_pipeline_results"]
-    Server --> Resource["pipeline://summary"]
-    Config["mcp.json + .codex/config.toml"] --> Server
-```
+- Tool `get_transaction_status(transaction_id: str)`
+- Tool `list_pipeline_results()`
+- Resource `pipeline://summary`
 
-`pipeline-status` is read-only. It returns safe status views and does not run `integrator.py`.
+The server reads result files and does not run the pipeline. Before selection, Clio validated helper functions against candidate result files by passing an explicit result directory. After selection, the subprocess form in `mcp.json` reads root `shared/results/`, which matches the canonical root package.
 
-## Selection And Preservation
+## Stack-Aware Support
 
-Major automation outputs are preserved under `docs/agent-runs/` before any canonical copy. Selection records identify which run produced the canonical specification, code, tests, and documentation. Runtime folders such as `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, and `tmp/` are evidence or tool outputs, not selectable product packages.
+The root runtime is Python. The Operator Layer support surfaces also understand a preserved Java package set:
+
+- Python canonical commands use `python integrator.py`, `python -m pytest`, and `python scripts/check_coverage_gate.py --stack python --fail-under 80`.
+- Java alternate evidence uses Maven, JUnit, JaCoCo, Jackson, and `BigDecimal`, with stack-aware coverage support through `python scripts/check_coverage_gate.py --stack java --project-dir <java-package> --fail-under 80`.
+- Historical Python and Java package runs are evidence snapshots. They are not runtime dependencies of the selected Generated Transaction System Layer.
 
 ## Known Limitations
 
-- This is a local educational simulation, not a real payment or compliance system.
-- `mcp/server.py` imports can conflict with the installed third-party `mcp` package in one-off Python commands; tests use file-path loading where needed.
-- The stable screenshots now use distinct evidence categories: fresh terminal-style pipeline, coverage, and combined MCP images, plus preserved operator-sourced `/run-pipeline` skill and hook trigger images.
-- The file protocol is deterministic and simple by design; it is not a concurrent queue or distributed workflow engine.
+- Historical preserved runs may have different specification fingerprints; the selected root package uses Athena run `20260621-220037-write-spec-python-hera-python-full-set`.
+- The runtime is local and file-based, not a concurrent service or durable queue.
+- The archival implementation in the candidate was validated as preservation behavior in the sandbox, with Hephaestus noting copy-based archival constraints.
+- Hook helper pass/fail behavior is validated; direct hook-shell execution was blocked by the Windows sandbox.
+- Stable screenshots are generated terminal-style evidence PNGs, with the full operator-sourced screenshot set preserved under `docs/screenshots/operator-sourced/`.

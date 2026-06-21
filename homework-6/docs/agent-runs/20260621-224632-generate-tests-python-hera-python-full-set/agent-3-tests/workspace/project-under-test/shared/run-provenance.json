@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-06-21T20:50:11Z",
+  "generated_code_run_id": "20260621-222543-generate-code-python-hera-python-full-set",
+  "output_inventory_path": "docs/agent-runs/20260621-222543-generate-code-python-hera-python-full-set/agent-2-code/outputs/inventory.md",
+  "pipeline_version": "hephaestus-python-hera-full-set-v1",
+  "runtime_run_id": "12f1c0a6-1ec6-4008-a13c-dad934343e4f",
+  "schema_version": 1,
+  "source_spec_path": "docs/agent-runs/20260621-220037-write-spec-python-hera-python-full-set/agent-1-spec/outputs/specification.md",
+  "source_spec_run_id": "20260621-220037-write-spec-python-hera-python-full-set",
+  "source_spec_sha256": "6F2E8CD844884DF06172EEB1CF92A2956BC45425FE514B7A820ABAEA249D2222",
+  "stack": "python"
+}

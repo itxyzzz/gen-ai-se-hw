@@ -1,0 +1,15 @@
+Hook blocking behavior:
+The coverage helper was run with an intentionally impossible threshold to demonstrate the blocking path without weakening the real 80% gate.
+
+Command:
+python scripts\check_coverage_gate.py --stack python --fail-under 99
+
+Result:
+Expected failure. The test suite still passed, but coverage was below the demonstration threshold.
+
+Observed signal:
+- 36 tests passed.
+- Total coverage: 97.44%.
+- Failure message: `FAIL Required test coverage of 99% not reached. Total coverage: 97.44%`.
+- Exit code: 1.
+

@@ -1,5 +1,43 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 55: Hera Latest Python Selection
+
+### Added
+
+- Added Hera `select-set` run `20260622-000718-orchestrate-runs-python-select-latest` to preserve the canonical-selection audit trail.
+- Registered Java package set `java-candidate-20260621-180512` as preserved alternate evidence in the package-set registry.
+
+### Changed
+
+- Selected latest Hera-generated Python package set `python-canonical-20260622-hera-full-set` as canonical.
+- Copied the selected Python specification, runtime code, tests, research notes, reviewer docs, PR draft, and stable screenshots to canonical paths.
+- Updated documentation to use canonical root paths, describe stack-aware Python/Java support, preserve historical run context, and include the operator-provided Codex workflow and challenges narrative.
+
+### Tests
+
+- Validated the selection registry as JSON.
+- Verified `.codex/config.toml` still records `agents.max_threads = 8` and `agents.max_depth = 2`.
+- Ran `python -m pytest -p no:cacheprovider` with 52 passing tests.
+- Ran `python scripts\check_coverage_gate.py --stack python --fail-under 80` with 95.57% total coverage.
+- Ran `python integrator.py` with `total=8 settled=2 rejected=2 review_required=4 error=0`.
+- Ran stale-path and privacy scans for selected docs and Hera selection artifacts.
+
+## Homework 6 - Step 54: Hera Package Comparison
+
+### Added
+
+- Added a preserved Hera `compare-set` run comparing the selected canonical Python package, latest Python candidate, and latest Java candidate as full spec/code/tests/docs sets.
+- Recorded a Clio-evidence-based recommendation to keep the current Python canonical package for submission stability, prefer the latest Python candidate for any same-stack upgrade, and treat Java as an alternate unless explicitly selected.
+
+### Changed
+
+- Left canonical product files, selected docs, screenshots, MCP files, final-selection records, and selection registry unchanged.
+
+### Tests
+
+- Reviewed selection records, Clio inventories, validation checklists, handoffs, and Hera child ledgers for the compared packages.
+- Deferred fresh pipeline/test reruns because the operator authorized a documentation-based comparison.
+
 ## Homework 6 - Step 53: Themis Workflow Staging Repair Implementation
 
 ### Added

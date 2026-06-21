@@ -1,0 +1,62 @@
+{
+  "audit_events": [
+    {
+      "component": "transaction_validator",
+      "outcome": "rejected",
+      "reason_code": "UNSUPPORTED_CURRENCY",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN006"
+    },
+    {
+      "component": "fraud_detector",
+      "outcome": "rejected",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN006"
+    },
+    {
+      "component": "settlement_processor",
+      "outcome": "rejected",
+      "reason_code": "UNSUPPORTED_CURRENCY",
+      "timestamp": "2026-06-21T20:34:53Z",
+      "transaction_id": "TXN006"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-21T20:34:53Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-21T20:34:53Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-21T20:34:53Z"
+    }
+  ],
+  "data": {
+    "amount": "200.00",
+    "channel": "online",
+    "country": "US",
+    "currency": "XYZ",
+    "destination_account_redacted": "****SENT",
+    "destination_pattern": "standard",
+    "reason_codes": [
+      "UNSUPPORTED_CURRENCY"
+    ],
+    "risk_flags": [],
+    "risk_score": 0,
+    "source_account_redacted": "****SENT",
+    "status": "rejected",
+    "timestamp": "2026-03-16T10:05:00Z",
+    "transaction_id": "TXN006",
+    "transaction_type": "transfer",
+    "validation": "failed"
+  },
+  "message_id": "873dd015-c627-4924-9e5e-003e9693d7d2",
+  "message_type": "transaction",
+  "source_agent": "settlement_processor",
+  "target_agent": "reporting_agent",
+  "timestamp": "2026-06-21T20:34:53Z"
+}

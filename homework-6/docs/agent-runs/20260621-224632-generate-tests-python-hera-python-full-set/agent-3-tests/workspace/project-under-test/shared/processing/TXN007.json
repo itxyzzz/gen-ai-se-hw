@@ -1,0 +1,23 @@
+{
+  "audit_events": [],
+  "component_history": [],
+  "data": {
+    "amount": "-100.00",
+    "currency": "GBP",
+    "destination_account": "PRESENT",
+    "destination_pattern": "standard",
+    "metadata": {
+      "channel": "online",
+      "country": "GB"
+    },
+    "source_account": "PRESENT",
+    "timestamp": "2026-03-16T10:10:00Z",
+    "transaction_id": "TXN007",
+    "transaction_type": "refund"
+  },
+  "message_id": "76aa7601-8330-40c9-b125-bca062e16b6c",
+  "message_type": "transaction",
+  "source_agent": "integrator",
+  "target_agent": "transaction_validator",
+  "timestamp": "2026-06-21T20:50:11Z"
+}

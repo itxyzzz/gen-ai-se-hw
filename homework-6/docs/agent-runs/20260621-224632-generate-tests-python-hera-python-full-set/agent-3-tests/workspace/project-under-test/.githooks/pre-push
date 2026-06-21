@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+# Operator Layer coverage gate for Homework 6.
+# Shared behavior is documented in agent-control/operate-pipeline/commands-and-hooks.md.
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+HW_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+
+cd "$HW_ROOT"
+python scripts/check_coverage_gate.py --stack auto --fail-under 80

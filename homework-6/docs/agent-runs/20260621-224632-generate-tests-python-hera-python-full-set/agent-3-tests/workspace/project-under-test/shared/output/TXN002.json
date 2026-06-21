@@ -1,0 +1,64 @@
+{
+  "audit_events": [
+    {
+      "component": "transaction_validator",
+      "outcome": "validated",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "component": "fraud_detector",
+      "outcome": "review_required",
+      "reason_code": "REVIEW_HIGH_VALUE",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "component": "settlement_processor",
+      "outcome": "review_required",
+      "reason_code": "REVIEW_HIGH_VALUE",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN002"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-21T20:50:11Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-21T20:50:11Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-21T20:50:11Z"
+    }
+  ],
+  "data": {
+    "amount": "25000.00",
+    "channel": "branch",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_redacted": "****SENT",
+    "destination_pattern": "standard",
+    "reason_codes": [
+      "REVIEW_HIGH_VALUE"
+    ],
+    "risk_flags": [
+      "REVIEW_HIGH_VALUE"
+    ],
+    "risk_score": 80,
+    "source_account_redacted": "****SENT",
+    "status": "review_required",
+    "timestamp": "2026-03-16T09:15:00Z",
+    "transaction_id": "TXN002",
+    "transaction_type": "wire_transfer",
+    "validation": "passed"
+  },
+  "message_id": "8066284e-1c5a-441e-bec5-5e2795f320a9",
+  "message_type": "transaction",
+  "source_agent": "settlement_processor",
+  "target_agent": "reporting_agent",
+  "timestamp": "2026-06-21T20:50:11Z"
+}

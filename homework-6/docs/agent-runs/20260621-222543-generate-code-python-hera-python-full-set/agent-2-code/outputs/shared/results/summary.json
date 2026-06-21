@@ -1,0 +1,46 @@
+{
+  "completeness_check": "passed",
+  "error": 0,
+  "expected_transaction_ids": [
+    "TXN001",
+    "TXN002",
+    "TXN003",
+    "TXN004",
+    "TXN005",
+    "TXN006",
+    "TXN007",
+    "TXN008"
+  ],
+  "generated_at": "2026-06-21T20:34:54Z",
+  "privacy_check": "passed",
+  "reason_code_counts": {
+    "NON_POSITIVE_AMOUNT": 1,
+    "REVIEW_CHANNEL_PATTERN": 1,
+    "REVIEW_DESTINATION_PATTERN": 1,
+    "REVIEW_HIGH_VALUE": 2,
+    "REVIEW_UNUSUAL_TIME": 1,
+    "SETTLED": 2,
+    "UNSUPPORTED_CURRENCY": 1
+  },
+  "rejected": 2,
+  "result_files": [
+    "TXN001.json",
+    "TXN002.json",
+    "TXN003.json",
+    "TXN004.json",
+    "TXN005.json",
+    "TXN006.json",
+    "TXN007.json",
+    "TXN008.json"
+  ],
+  "review_required": 4,
+  "runtime_run_id": "05a50724-06c9-4efc-a0b7-ef0f7ff199ef",
+  "schema_version": 1,
+  "settled": 2,
+  "status_counts": {
+    "rejected": 2,
+    "review_required": 4,
+    "settled": 2
+  },
+  "total_records": 8
+}

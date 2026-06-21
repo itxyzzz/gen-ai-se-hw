@@ -1,0 +1,25 @@
+Command:
+python -m pytest -p no:cacheprovider
+
+Result:
+Pass. 36 tests passed in 5.56 seconds from the run-local project-under-test workspace.
+
+Coverage gate command:
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+
+Result:
+Pass. 36 tests passed and total coverage was 97.44%, above the required 80% threshold.
+
+Coverage profile:
+- agents\__init__.py: 100%
+- agents\common.py: 98%
+- agents\fraud_detector.py: 96%
+- agents\reporting_agent.py: 100%
+- agents\settlement_processor.py: 100%
+- agents\transaction_validator.py: 98%
+- integrator.py: 88%
+- Total: 97.44%
+
+Containment:
+The coverage helper ran from `agent-3-tests/workspace/project-under-test/` and used workspace-local `tmp/coverage-gate-*` paths. No root `.coverage` or root `.pytest_cache` output was created by this validation.
+
