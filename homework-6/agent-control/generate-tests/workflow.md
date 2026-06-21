@@ -161,7 +161,7 @@ Before reporting a Themis run complete:
 
 1. Confirm selected-code traceability and source spec mismatch reporting are present.
 2. Run the candidate suite from `workspace/project-under-test/`: `python -m pytest -p no:cacheprovider` for `stack=python`, or `mvn test` for `stack=java`.
-3. Confirm coverage meets or exceeds the required 80 percent gate: `python scripts/check_coverage_gate.py --stack python --fail-under 80` for Python packages, or `python scripts/check_coverage_gate.py --stack java --project-dir . --fail-under 80` from the Java project root when the helper has been copied into the validation workspace.
+3. Confirm coverage meets or exceeds the required 80 percent gate: `python scripts/check_coverage_gate.py --stack python --fail-under 80` for Python packages, or `python scripts/check_coverage_gate.py --stack java --project-dir . --fail-under 80` from the Java project root when the helper has been copied into the validation workspace. If the local Maven environment inherits an unavailable mirror or settings profile, use the Operator Layer override documented in `agent-control/operate-pipeline/commands-and-hooks.md`, for example `--maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml`, and record the exact paths in validation evidence.
 4. Validate meaningful assertions, unit/integration balance, dry-run behavior, command behavior, hook behavior, privacy checks, fixture isolation, and repeated-run behavior.
 5. Write compact text evidence under `agent-3-tests/evidence/`.
 6. Confirm `outputs/inventory.md` lists only selectable test/config files and excludes runtime/tool outputs.

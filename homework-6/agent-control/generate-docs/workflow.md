@@ -167,7 +167,7 @@ python scripts/check_coverage_gate.py --fail-under 80
 python scripts/check_coverage_gate.py --fail-under 99
 ```
 
-For `stack=java`, use the selected package-set command hints instead: `mvn test`, `python scripts/check_coverage_gate.py --stack java --project-dir <java-project> --fail-under 80`, and the generated Java pipeline or validation-only command declared by the selected inventory. Do not substitute Python evidence for Java evidence.
+For `stack=java`, use the selected package-set command hints instead: `mvn test`, `python scripts/check_coverage_gate.py --stack java --project-dir <java-project> --fail-under 80`, and the generated Java pipeline or validation-only command declared by the selected inventory. If local Maven settings would otherwise block test execution before JUnit or JaCoCo runs, use the optional coverage-helper flags documented in `agent-control/operate-pipeline/commands-and-hooks.md`: `--maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml`. Do not substitute Python evidence for Java evidence.
 
 Use `agent-control/operate-pipeline/commands-and-hooks.md` for the exact `/run-pipeline` and `/validate-transactions` behavior. Evidence must summarize safe counts, statuses, and reason codes only. Do not print raw account IDs, raw descriptions, names, or full audit payloads.
 

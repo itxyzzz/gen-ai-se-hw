@@ -1,5 +1,20 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 50: Java Maven Coverage Helper Repair
+
+### Added
+
+- Added optional Java coverage-helper flags for Maven user and global settings overrides.
+- Added focused tests for Java settings CLI parsing, unchanged default Java command behavior, and Maven override command construction.
+
+### Changed
+
+- Updated Operator Layer, Themis, and Clio guidance so Java validation can use Maven settings overrides when the local environment requires them.
+
+### Tests
+
+- Ran focused helper tests, the selected Python coverage gate, Java helper validation against a temporary project copy, whitespace checks, and privacy scans.
+
 ## Homework 6 - Step 49: Java Maven And Hera Repair Plans
 
 ### Added

@@ -37,6 +37,26 @@ def parse_args() -> argparse.Namespace:
         help="Minimum required coverage percentage. Defaults to 80.",
     )
     parser.add_argument(
+        "--maven-settings",
+        type=Path,
+        default=None,
+        help=(
+            "Optional Maven user settings.xml for Java coverage validation. "
+            "Relative paths are resolved from the caller directory first, then "
+            "from --project-dir."
+        ),
+    )
+    parser.add_argument(
+        "--maven-global-settings",
+        type=Path,
+        default=None,
+        help=(
+            "Optional Maven global settings.xml for Java coverage validation. "
+            "Relative paths are resolved from the caller directory first, then "
+            "from --project-dir."
+        ),
+    )
+    parser.add_argument(
         "pytest_args",
         nargs=argparse.REMAINDER,
         help="Optional extra arguments passed to pytest after '--'.",
@@ -57,6 +77,18 @@ def _normalized_extra_args(extra_args: list[str]) -> list[str]:
     if extra_args[:1] == ["--"]:
         return extra_args[1:]
     return extra_args
+
+
+def _resolve_optional_path(path: Path | None, project_dir: Path) -> Path | None:
+    if path is None:
+        return None
+    if path.is_absolute():
+        return path.resolve()
+
+    cwd_candidate = (Path.cwd() / path).resolve()
+    if cwd_candidate.exists():
+        return cwd_candidate
+    return (project_dir / path).resolve()
 
 
 def _resolve_stack(stack: str, project_dir: Path) -> str:
@@ -106,7 +138,12 @@ def run_python_gate(project_dir: Path, fail_under: int, extra_args: list[str] | 
     return completed.returncode
 
 
-def run_java_gate(project_dir: Path, fail_under: int) -> int:
+def run_java_gate(
+    project_dir: Path,
+    fail_under: int,
+    maven_settings: Path | None = None,
+    maven_global_settings: Path | None = None,
+) -> int:
     pom_path = project_dir / "pom.xml"
     if not pom_path.exists():
         print(
@@ -132,13 +169,31 @@ def run_java_gate(project_dir: Path, fail_under: int) -> int:
         )
         return 2
 
+    resolved_maven_settings = _resolve_optional_path(maven_settings, project_dir)
+    resolved_maven_global_settings = _resolve_optional_path(maven_global_settings, project_dir)
+    for label, settings_path in (
+        ("Maven user settings", resolved_maven_settings),
+        ("Maven global settings", resolved_maven_global_settings),
+    ):
+        if settings_path is not None and not settings_path.is_file():
+            print(f"{label} file not found: {settings_path}", file=sys.stderr)
+            return 2
+
     command = [
         mvn,
-        f"-Dcoverage.minimum={_coverage_ratio(fail_under)}",
-        "test",
-        "jacoco:report",
-        "jacoco:check",
     ]
+    if resolved_maven_settings is not None:
+        command.extend(["-s", str(resolved_maven_settings)])
+    if resolved_maven_global_settings is not None:
+        command.extend(["-gs", str(resolved_maven_global_settings)])
+    command.extend(
+        [
+            f"-Dcoverage.minimum={_coverage_ratio(fail_under)}",
+            "test",
+            "jacoco:report",
+            "jacoco:check",
+        ]
+    )
     print(
         f"Running Homework 6 Java coverage gate from {project_dir} "
         f"with fail-under={fail_under}"
@@ -152,7 +207,12 @@ def main() -> int:
     project_dir = args.project_dir.resolve()
     stack = _resolve_stack(args.stack, project_dir)
     if stack == "java":
-        return run_java_gate(project_dir, args.fail_under)
+        return run_java_gate(
+            project_dir,
+            args.fail_under,
+            maven_settings=args.maven_settings,
+            maven_global_settings=args.maven_global_settings,
+        )
     return run_python_gate(project_dir, args.fail_under, args.pytest_args)
 
 

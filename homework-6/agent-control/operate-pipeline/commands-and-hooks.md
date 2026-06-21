@@ -112,6 +112,14 @@ python scripts/check_coverage_gate.py --stack python --fail-under 80
 python scripts/check_coverage_gate.py --stack java --project-dir path/to/java-package --fail-under 80
 ```
 
+When a local Maven installation inherits an unavailable machine-level mirror or other external settings, Java validation may pass an explicit run-local settings override without changing the generated Java package:
+
+```bash
+python scripts/check_coverage_gate.py --stack java --project-dir path/to/java-package --maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml --fail-under 80
+```
+
+Relative Maven settings paths are resolved from the caller's current directory first, then from `--project-dir`. Omit these flags in normal environments; the default Java command remains unchanged.
+
 For Python, the helper runs coverage from the project root using pytest coverage:
 
 ```bash
@@ -124,7 +132,7 @@ For Java, the helper requires a Maven project with `pom.xml` and JaCoCo `check` 
 mvn -Dcoverage.minimum=0.80 test jacoco:report jacoco:check
 ```
 
-The Java check relies on the generated `pom.xml` to configure JaCoCo rules and halt the build below the covered-ratio threshold.
+With Maven settings overrides, the helper adds `-s SETTINGS_PATH` and `-gs GLOBAL_SETTINGS_PATH` before the coverage threshold property. The Java check relies on the generated `pom.xml` to configure JaCoCo rules and halt the build below the covered-ratio threshold.
 
 For Python, the helper stores coverage data and pytest temporary files in a short-lived ignored `tmp/coverage-gate-<pid>/` workspace folder so the hook does not mutate root `.coverage`, root `.pytest_cache/`, or `shared/` evidence while checking the gate.
 

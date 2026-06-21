@@ -9,6 +9,16 @@ Record nontrivial implementation variance after the Phase 01 plan is frozen. Bef
 
 ## Entries
 
+### 2026-06-21 - Phase 04 implementation
+
+Variance class: Local technical.
+
+Notes:
+
+- Added optional Java-only Maven settings flags directly to `scripts/check_coverage_gate.py` instead of adding a separate Java wrapper. This preserves the approved universal-helper approach and keeps the default Python and Java commands unchanged when the flags are omitted.
+- Settings paths resolve relative to the caller's current directory first, then `--project-dir`, so operator commands work both from the Homework 6 root and from a Java validation workspace.
+- The override is documented as an environment repair for inherited Maven settings, not as a generated Java product requirement.
+
 ### 2026-06-21 - Phase 01 implementation
 
 Variance class: None for scope, architecture, public API, data, security, privacy, compliance, acceptance criteria, or feasibility.
