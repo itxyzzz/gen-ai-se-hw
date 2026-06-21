@@ -8,6 +8,8 @@ Themis (Test Generator) must treat coverage as necessary but not sufficient. A c
 - Source spec mismatch is explicitly reported when the selected code source spec differs from current canonical `specification.md`.
 - Candidate tests and config are listed in `agent-3-tests/outputs/inventory.md` with canonical targets and SHA-256 fingerprints.
 - Runtime and tool outputs are excluded from selectable inventory: `workspace/`, `evidence/`, `shared/`, `archive/`, `.coverage*`, `.pytest_cache/`, `.test-tmp/`, and `__pycache__/`.
+- Java candidate output staging is clean before validation: Java tests live under `agent-3-tests/outputs/src/test/java/...`, and malformed roots such as `agent-3-tests/outputs/src/java/` are absent or the run is blocked as non-selectable.
+- Java coverage-helper evidence proves the requested threshold is wired to JaCoCo. When the selected Maven build needs a test/build configuration overlay such as `pom.xml` with `${coverage.minimum}`, that overlay is staged under `outputs/`, inventoried, and limited to build/test configuration.
 - Coverage is at least 80 percent using the selected stack's coverage tool: pytest/pytest-cov for `stack=python`, or Maven/JUnit/JaCoCo for `stack=java`.
 - Tests include meaningful assertions over output fields, statuses, reason codes, summary counts, file movements, and redaction behavior, not only "does not crash" checks.
 - Unit tests cover each runtime component selected for the pipeline.
@@ -34,6 +36,7 @@ Reject or pause a Themis run when it attempts to:
 - Implement Task 4 MCP server/config.
 - Produce final README, HOWTORUN, screenshot, or PR-description materials owned by Clio (Documentation Generator).
 - Regenerate `/run-pipeline`, `/validate-transactions`, the coverage helper, Git hook, or Claude hook settings as routine per-run outputs.
+- Continue validation from a malformed Java output tree or silently ignore duplicate Java test roots in a selectable inventory.
 - Copy `workspace/` or runtime evidence wholesale into canonical root targets.
 
 ## Review Questions

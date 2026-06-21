@@ -56,6 +56,8 @@ The inventory must explicitly exclude runtime and tool outputs such as `workspac
 
 For `stack=java`, inventory kinds should name Java test classes, Maven test resources, or build-test configuration. Java test paths normally use `src/test/java/...` and validation evidence should cite Maven/JUnit and JaCoCo commands.
 
+For `stack=java`, a selectable inventory must not include malformed duplicate trees such as `agent-3-tests/outputs/src/java/`. If such a path exists, the run inventory must mark the run blocked and explicitly exclude the path rather than presenting the package as selectable. A clean Java Themis inventory lists only Maven test/build configuration and files under `src/test/java/...` unless a stack-specific test resource path is intentionally required.
+
 ## Selected-Code Traceability
 
 Each run must preserve:
@@ -74,6 +76,8 @@ Do not compare against or select from "latest" files discovered in the root tree
 ## Workspace And Evidence
 
 `workspace/selected-code/` is a copy of the selected Hephaestus package. `workspace/project-under-test/` is rebuilt by overlaying `outputs/` onto `selected-code/`.
+
+Themis must rebuild `workspace/project-under-test/` only after candidate outputs pass the stack-specific staging check. Evidence for a blocked staging failure belongs in `validation-checklist.md` and `handoff.md`; do not create passing command, hook, or coverage evidence from a malformed output tree.
 
 Tests, coverage, command validation, hook validation, and pipeline validation run from `workspace/project-under-test/`. Runtime output must stay under the run folder.
 

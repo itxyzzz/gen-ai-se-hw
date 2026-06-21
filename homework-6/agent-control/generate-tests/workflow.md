@@ -114,6 +114,20 @@ Themis must keep root product files untouched during ordinary generation:
 
 For `stack=java`, candidate tests normally live under `agent-3-tests/outputs/src/test/java/...`, Maven/JUnit validation runs from `workspace/project-under-test/`, and coverage evidence comes from the JaCoCo Maven plugin check goal. Do not create Python pytest-only wrappers for Java tests.
 
+### Java Output Staging Guardrails
+
+For `stack=java`, Themis must stage reusable baseline tests and new candidate tests only under:
+
+```text
+agent-3-tests/outputs/src/test/java/
+```
+
+Do not stage Java tests under `agent-3-tests/outputs/src/java/`, `agent-3-tests/outputs/test/java/`, or any duplicate nested test tree. Before rebuilding `workspace/project-under-test/`, inspect `agent-3-tests/outputs/` and block or restart the run if malformed Java test roots exist.
+
+If malformed staging is detected before validation, Themis may correct it only when the correction is local, unambiguous, and does not require elevated cleanup. If cleanup becomes approval-dependent, destructive, or ambiguous, stop the run, write blocked metadata/checklist/handoff, and let Hera or the operator start a replacement run. Do not spend a child-agent run on cleanup loops.
+
+Rebuild `workspace/project-under-test/` only after `outputs/` passes this staging check.
+
 During `select`, copy only inventory-declared files from `agent-3-tests/outputs/` to canonical targets. Never copy the workspace wholesale to the root.
 
 ## Test Generation Scope
@@ -161,7 +175,7 @@ Before reporting a Themis run complete:
 
 1. Confirm selected-code traceability and source spec mismatch reporting are present.
 2. Run the candidate suite from `workspace/project-under-test/`: `python -m pytest -p no:cacheprovider` for `stack=python`, or `mvn test` for `stack=java`.
-3. Confirm coverage meets or exceeds the required 80 percent gate: `python scripts/check_coverage_gate.py --stack python --fail-under 80` for Python packages, or `python scripts/check_coverage_gate.py --stack java --project-dir . --fail-under 80` from the Java project root when the helper has been copied into the validation workspace. If the local Maven environment inherits an unavailable mirror or settings profile, use the Operator Layer override documented in `agent-control/operate-pipeline/commands-and-hooks.md`, for example `--maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml`, and record the exact paths in validation evidence.
+3. Confirm coverage meets or exceeds the required 80 percent gate: `python scripts/check_coverage_gate.py --stack python --fail-under 80` for Python packages, or `python scripts/check_coverage_gate.py --stack java --project-dir . --fail-under 80` from the Java project root when the helper has been copied into the validation workspace. If the local Maven environment inherits an unavailable mirror or settings profile, use the Operator Layer override documented in `agent-control/operate-pipeline/commands-and-hooks.md`, for example `--maven-settings path/to/settings.xml --maven-global-settings path/to/settings.xml`, and record the exact paths in validation evidence. For Java packages, the coverage helper's `--fail-under` value must affect the Maven JaCoCo check. If the selected `pom.xml` hardcodes the JaCoCo minimum and ignores `-Dcoverage.minimum`, Themis may add a candidate `pom.xml` test/build configuration overlay under `agent-3-tests/outputs/` that keeps the default at `0.80` and wires JaCoCo `<minimum>${coverage.minimum}</minimum>`. Inventory this overlay as Maven test/build configuration. Do not modify runtime product source under `src/main/java/...` without explicit operator repair authorization.
 4. Validate meaningful assertions, unit/integration balance, dry-run behavior, command behavior, hook behavior, privacy checks, fixture isolation, and repeated-run behavior.
 5. Write compact text evidence under `agent-3-tests/evidence/`.
 6. Confirm `outputs/inventory.md` lists only selectable test/config files and excludes runtime/tool outputs.

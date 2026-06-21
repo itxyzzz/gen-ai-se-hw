@@ -1,5 +1,24 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 53: Themis Workflow Staging Repair Implementation
+
+### Added
+
+- Added Themis Java output-staging guardrails so candidate tests must live under `agent-3-tests/outputs/src/test/java/` and malformed duplicate roots block selection.
+- Added Java Maven coverage-helper guidance for candidate `pom.xml` test/build overlays that wire `coverage.minimum` into JaCoCo checks.
+
+### Changed
+
+- Updated Themis run-registry and validation guidance so `workspace/project-under-test/` is rebuilt only after candidate outputs pass staging checks.
+
+### Fixed
+
+- Prevented future Themis child agents from spending approval-dependent cleanup loops on malformed run-local output paths such as `agent-3-tests/outputs/src/java/`.
+
+### Tests
+
+- Ran focused static scans for Themis staging, malformed-output, coverage-threshold, inventory, and unresolved draft markers.
+
 ## Homework 6 - Step 52: Themis Workflow Staging Repair Plan
 
 ### Added
