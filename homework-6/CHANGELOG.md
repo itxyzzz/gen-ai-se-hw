@@ -1,5 +1,26 @@
 # Homework 6 Changelog
 
+## Homework 6 - Step 48: Java Alternate Evidence Preservation
+
+### Added
+
+- Preserved Hera (Orchestrator), Athena (Spec Writer), Hephaestus (Code Generator), Themis (Test Generator), and Clio (Documentation Generator) Java alternate run folders under `docs/agent-runs/`.
+- Added an operator review note for Hera run `20260621-145059-orchestrate-runs-java-alternate` identifying the degraded orchestration behavior.
+
+### Changed
+
+- Clarified the preserved Hera handoff and validation checklist so the Java alternate is treated as functional evidence, not as a clean Hera child-agent orchestration success.
+
+### Fixed
+
+- Removed generated Maven `target/`, run-local `shared/`, and run-local `archive/` trees from the Java Themis workspace before preserving evidence.
+
+### Tests
+
+- Reproduced the Java coverage helper failure against the unavailable machine Maven mirror.
+- Re-ran direct Maven/JUnit/JaCoCo validation with the run-local Maven settings override: 21 tests passed and all JaCoCo checks were met.
+- Ran a post-cleanup privacy scan confirming no raw sample account IDs or raw sample descriptions outside files named `sample-transactions.json`.
+
 ## Homework 6 - Step 47: Java Alternate Generation Phase 03 Plan
 
 ### Added
