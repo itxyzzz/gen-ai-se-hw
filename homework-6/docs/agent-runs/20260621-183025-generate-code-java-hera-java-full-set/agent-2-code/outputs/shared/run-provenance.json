@@ -1,0 +1,11 @@
+{
+  "schema_version" : "1.0",
+  "runtime_run_id" : "run-2026-06-21T170008-391356700Z",
+  "generated_at" : "2026-06-21T17:00:08.393010500Z",
+  "source_spec_run_id" : "20260621-180826-write-spec-java-hera-java-full-set",
+  "source_spec_path" : "docs/agent-runs/20260621-180826-write-spec-java-hera-java-full-set/agent-1-spec/outputs/specification.md",
+  "source_spec_fingerprint" : "2FC5B597915CFD59D5786271DB0CDE96B06417DEEC1433D056B76D7023234CFC",
+  "pipeline_version_id" : "20260621-183025-generate-code-java-hera-java-full-set",
+  "pipeline_inventory_path" : "docs/agent-runs/20260621-183025-generate-code-java-hera-java-full-set/agent-2-code/outputs/inventory.md",
+  "pipeline_package_fingerprint" : "pending-inventory-fingerprint"
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version" : "1.0",
+  "transaction_id" : "TXN007",
+  "status" : "rejected",
+  "reason_codes" : [ "NON_POSITIVE_AMOUNT" ],
+  "amount" : "-100.00",
+  "currency" : "GBP",
+  "processed_at" : "2026-06-21T17:00:08.896637100Z",
+  "risk_tier" : "low",
+  "component_history_count" : 2,
+  "audit_event_count" : 1,
+  "settlement_reference" : null
+}

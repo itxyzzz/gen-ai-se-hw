@@ -1,0 +1,25 @@
+{
+  "message_id" : "36386415-4110-3584-8175-c8eeff80817a",
+  "timestamp" : "2026-06-21T18:28:05.047303300Z",
+  "source_agent" : "transaction_validator",
+  "target_agent" : "reporting_agent",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN006",
+    "timestamp" : "2026-03-16T10:05:00Z",
+    "amount" : "200.00",
+    "currency" : "XYZ",
+    "transaction_type" : "transfer",
+    "channel" : "online",
+    "country" : "US"
+  },
+  "status" : "rejected",
+  "reason_codes" : [ "UNSUPPORTED_CURRENCY" ],
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T18:28:05.047303300Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN006",
+    "outcome" : "rejected",
+    "reason_code" : "UNSUPPORTED_CURRENCY"
+  } ]
+}

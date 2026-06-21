@@ -1,0 +1,23 @@
+{
+  "message_id" : "53c1fa82-6b69-38aa-85ac-183ad427e2d3",
+  "timestamp" : "2026-06-21T17:00:08.711038400Z",
+  "source_agent" : "transaction_validator",
+  "target_agent" : "fraud_detector",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN002",
+    "timestamp" : "2026-03-16T09:15:00Z",
+    "amount" : "25000.00",
+    "currency" : "USD",
+    "transaction_type" : "wire_transfer",
+    "channel" : "branch",
+    "country" : "US"
+  },
+  "status" : "validated",
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T17:00:08.711038400Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN002",
+    "outcome" : "validated"
+  } ]
+}

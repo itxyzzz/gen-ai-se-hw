@@ -1,0 +1,13 @@
+{
+  "schema_version" : "1.0",
+  "transaction_id" : "TXN003",
+  "status" : "settled",
+  "reason_codes" : [ ],
+  "amount" : "9999.99",
+  "currency" : "USD",
+  "processed_at" : "2026-06-21T18:28:05.071051100Z",
+  "risk_tier" : "low",
+  "component_history_count" : 4,
+  "audit_event_count" : 3,
+  "settlement_reference" : "SIM-TXN003"
+}

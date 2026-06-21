@@ -1,0 +1,13 @@
+{
+  "schema_version" : "1.0",
+  "transaction_id" : "TXN002",
+  "status" : "review_required",
+  "reason_codes" : [ "HIGH_VALUE", "WIRE_TRANSFER_TYPE" ],
+  "amount" : "25000.00",
+  "currency" : "USD",
+  "processed_at" : "2026-06-21T18:28:05.071051100Z",
+  "risk_tier" : "high",
+  "component_history_count" : 4,
+  "audit_event_count" : 3,
+  "settlement_reference" : null
+}

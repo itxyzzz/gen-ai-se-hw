@@ -1,0 +1,19 @@
+Java candidate MCP evidence.
+
+Context7 evidence from Hephaestus:
+
+- `/fasterxml/jackson-databind`: ObjectMapper setup for strict JSON, Java time, and BigDecimal-preserving file IO.
+- `/websites/junit_current`: JUnit Jupiter with Maven Surefire and `@TempDir` filesystem isolation.
+- `/websites/jacoco_jacoco_trunk_doc`: JaCoCo Maven `report` and `check` goals with a `0.80` covered-ratio rule.
+
+Access date for all Context7 queries: 2026-06-21.
+
+Custom `pipeline-status` MCP reader status:
+
+- Root `mcp/server.py` remains the current Python FastMCP reader.
+- In normal MCP use it reads `shared/results` under the homework root.
+- When a Java candidate is selected or staged so its result files are under that location, the reader can return safe status fields from Java `TXN*.json` result files.
+- For run-local candidate inspection, its helper functions accept an explicit `results_dir` argument when loaded by file path, so candidate evidence can be checked without copying canonical root output.
+- Java result shapes expose `transaction_id`, `status`, `reason_codes`, `amount`, `currency`, `processed_at`, `risk_tier`, `component_history_count`, and `audit_event_count`; fields not present in the Python-specific view safely default in the current reader.
+
+No root MCP files were modified by this Clio run.
