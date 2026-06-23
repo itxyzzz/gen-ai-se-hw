@@ -1,0 +1,113 @@
+[
+  {
+    "transaction_id": "TXN001",
+    "timestamp": "2026-03-16T09:00:00Z",
+    "source_account": "ACC-1604",
+    "destination_account": "ACC-6032",
+    "amount": "362.44",
+    "currency": "EUR",
+    "transaction_type": "transfer",
+    "description": "Payroll transfer",
+    "metadata": {
+      "channel": "online",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN002",
+    "timestamp": "2026-03-16T16:15:00Z",
+    "source_account": "ACC-1733",
+    "destination_account": "ACC-6225",
+    "amount": "166805.86",
+    "currency": "USD",
+    "transaction_type": "wire_transfer",
+    "description": "Monthly subscription",
+    "metadata": {
+      "channel": "online",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN003",
+    "timestamp": "2026-03-16T13:30:00Z",
+    "destination_account": "ACC-3980",
+    "amount": "8055.81",
+    "currency": "GBP",
+    "transaction_type": "transfer",
+    "description": "Invoice settlement",
+    "metadata": {
+      "channel": "branch",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN004",
+    "timestamp": "2026-03-16T13:30:00Z",
+    "source_account": "ACC-1618",
+    "destination_account": "ACC-5826",
+    "amount": "not-a-number",
+    "currency": "USD",
+    "transaction_type": "payment",
+    "description": "Invoice settlement",
+    "metadata": {
+      "channel": "branch",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN005",
+    "timestamp": "2026-03-16T16:30:00Z",
+    "source_account": "ACC-1849",
+    "destination_account": "ACC-5591",
+    "amount": "2066.29",
+    "currency": "USD",
+    "transaction_type": "transfer",
+    "description": "Monthly subscription",
+    "metadata": {
+      "channel": "online",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN006",
+    "timestamp": "2026-03-16T01:30:00Z",
+    "source_account": "ACC-1875",
+    "destination_account": "ACC-3887",
+    "amount": "1109.07",
+    "currency": "GBP",
+    "transaction_type": "payment",
+    "description": "Reimbursement",
+    "metadata": {
+      "channel": "branch",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN007",
+    "timestamp": "2026-03-16T13:15:00Z",
+    "source_account": "ACC-1686",
+    "destination_account": "ACC-5718",
+    "amount": "9871.53",
+    "currency": "USD",
+    "transaction_type": "deposit",
+    "description": "Invoice settlement",
+    "metadata": {
+      "channel": "online",
+      "country": "US"
+    }
+  },
+  {
+    "transaction_id": "TXN008",
+    "timestamp": "2026-03-16T16:15:00Z",
+    "source_account": "ACC-1167",
+    "destination_account": "ACC-6388",
+    "amount": "2880.60",
+    "currency": "USD",
+    "transaction_type": "deposit",
+    "description": "Payroll transfer",
+    "metadata": {
+      "channel": "branch",
+      "country": "US"
+    }
+  }
+]
