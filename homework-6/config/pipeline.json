@@ -1,0 +1,7 @@
+{
+  "stages": [
+    "transaction_validator",
+    "fraud_detector",
+    "settlement_processor"
+  ]
+}

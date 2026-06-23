@@ -23,7 +23,14 @@ from agents.common import (
     safe_json_load,
     utc_now,
 )
-from agents import fraud_detector, reporting_agent, settlement_processor, transaction_validator
+from agents import reporting_agent, transaction_validator
+from agents.pipeline import (
+    DEFAULT_STAGES,
+    available_stages,
+    resolve_stages,
+    run_stages,
+    validate_stages,
+)
 from pipeline_api import PipelineRuntimeApi
 
 
@@ -125,23 +132,30 @@ def _transaction_id_from_message(message: dict[str, Any], fallback: str) -> str:
     return str(data.get("transaction_id") or fallback)
 
 
-def process_transaction(message_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+def process_transaction(
+    message_path: Path,
+    paths: dict[str, Path],
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
+    active_stages = list(DEFAULT_STAGES) if stages is None else stages
     processing_path = paths["processing"] / Path(message_path).name
     message = safe_json_load(message_path)
     safe_json_dump(message, processing_path)
-    message = transaction_validator.process_message(message)
-    message = fraud_detector.process_message(message)
-    message = settlement_processor.process_message(message)
+    message = run_stages(message, active_stages)
     output_path = paths["output"] / processing_path.name
     safe_json_dump(message, output_path)
     reporting_agent.process_message(message, paths["results"])
     return message
 
 
-def safe_process_transaction(message_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+def safe_process_transaction(
+    message_path: Path,
+    paths: dict[str, Path],
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
     fallback_id = Path(message_path).stem
     try:
-        return process_transaction(message_path, paths)
+        return process_transaction(message_path, paths, stages)
     except Exception:
         transaction_id = fallback_id
         try:
@@ -153,22 +167,29 @@ def safe_process_transaction(message_path: Path, paths: dict[str, Path]) -> dict
         return {"data": {"transaction_id": transaction_id, "status": "error", "reason_codes": [REASON_PROCESSING_ERROR]}}
 
 
-def process_transaction_via_api(api: PipelineRuntimeApi, run_id: str, transaction_id: str) -> dict[str, Any]:
+def process_transaction_via_api(
+    api: PipelineRuntimeApi,
+    run_id: str,
+    transaction_id: str,
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
+    active_stages = list(DEFAULT_STAGES) if stages is None else stages
     message = api.get_message(run_id, transaction_id)["message"]
     api.record_stage(run_id, transaction_id, "processing", message)
-    message = transaction_validator.process_message(message)
-    api.record_stage(run_id, transaction_id, "validated", message)
-    message = fraud_detector.process_message(message)
-    api.record_stage(run_id, transaction_id, "scored", message)
-    message = settlement_processor.process_message(message)
+    message = run_stages(message, active_stages)
     api.record_stage(run_id, transaction_id, "output", message)
     api.record_stage(run_id, transaction_id, "result", message)
     return message
 
 
-def safe_process_transaction_via_api(api: PipelineRuntimeApi, run_id: str, transaction_id: str) -> dict[str, Any]:
+def safe_process_transaction_via_api(
+    api: PipelineRuntimeApi,
+    run_id: str,
+    transaction_id: str,
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
     try:
-        return process_transaction_via_api(api, run_id, transaction_id)
+        return process_transaction_via_api(api, run_id, transaction_id, stages)
     except Exception:
         api.record_error(run_id, transaction_id, REASON_PROCESSING_ERROR)
         return {"data": {"transaction_id": transaction_id, "status": "error", "reason_codes": [REASON_PROCESSING_ERROR]}}
@@ -178,8 +199,10 @@ def run_pipeline(
     base_dir: Path = Path("."),
     input_path: Path = Path("sample-transactions.json"),
     shared_dir_name: str = "shared",
+    stages: list[str] | None = None,
 ) -> dict[str, Any]:
     runtime_run_id = str(uuid4())
+    active_stages = resolve_stages(stages, base_dir)
     transactions = load_transactions(input_path)
     api = PipelineRuntimeApi()
     run = api.create_run(
@@ -190,7 +213,7 @@ def run_pipeline(
         generated_at=utc_now(),
     )
     for transaction_id in run["expected_transaction_ids"]:
-        safe_process_transaction_via_api(api, runtime_run_id, transaction_id)
+        safe_process_transaction_via_api(api, runtime_run_id, transaction_id, active_stages)
     return api.finalize_run(runtime_run_id)
 
 
@@ -211,10 +234,38 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run the educational transaction-processing pipeline.")
     parser.add_argument("--input", default="sample-transactions.json", help="Input JSON transaction file.")
     parser.add_argument("--shared-dir", default="shared", help="Shared protocol directory.")
+    parser.add_argument(
+        "--stages",
+        default=None,
+        help="Comma-separated stage names overriding config/pipeline.json "
+        "(e.g. transaction_validator,settlement_processor).",
+    )
+    parser.add_argument(
+        "--list-stages",
+        action="store_true",
+        help="Print available and configured stages, then exit.",
+    )
     args = parser.parse_args()
     shared_dir = Path(args.shared_dir)
     base_dir, shared_name = _base_and_shared_name(shared_dir)
-    summary = run_pipeline(base_dir=base_dir, input_path=Path(args.input), shared_dir_name=shared_name)
+
+    if args.list_stages:
+        print("Available stages:", ", ".join(available_stages()))
+        print("Configured stages:", ", ".join(resolve_stages(None, base_dir)))
+        return 0
+
+    override = [name.strip() for name in args.stages.split(",")] if args.stages else None
+    if override is not None:
+        try:
+            validate_stages(override)
+        except ValueError as exc:
+            parser.error(str(exc))
+    summary = run_pipeline(
+        base_dir=base_dir,
+        input_path=Path(args.input),
+        shared_dir_name=shared_name,
+        stages=override,
+    )
     print(
         "Pipeline complete: "
         f"total={summary['total_records']} settled={summary['settled']} "
