@@ -97,6 +97,49 @@ Avoid reading raw input records or result payloads in the final answer. The vali
 
 Do not print raw account IDs, raw descriptions, names, or full audit payloads.
 
+## `/generate-transactions`
+
+Purpose: generate a fresh list of synthetic transactions in the canonical input format, including both valid and invalid records, for use with `/validate-transactions` and `/run-pipeline`.
+
+The generator is written against the current rules in `agents.transaction_validator`, `agents.fraud_detector`, and `integrator`, so it can deliberately emit records in every outcome class. It is the recommended way to exercise the pipeline beyond the committed `sample-transactions.json`.
+
+Fast path for the canonical Python package:
+
+Use one bounded shell invocation. Prefer `--balanced` to cover every branch, and always pass a `--seed` so evidence is reproducible:
+
+```bash
+python scripts/generate_transactions.py --balanced --seed 42 --output sample-transactions.generated.json --manifest sample-transactions.manifest.json
+```
+
+Required behavior:
+
+1. Resolve the package set first using the Stack Resolution rules above. For `stack=python`, use `scripts/generate_transactions.py`. For `stack=java`, use the package-set command hint or selected Java inventory for an equivalent generator; if none exists, report the gap instead of inventing one.
+2. Choose the mix:
+   - `--balanced` emits at least one record of every category (best for branch coverage).
+   - Otherwise tune `--count`, `--invalid-ratio`, and `--review-ratio`.
+   - Always pass `--seed` for reproducibility, and `--start-index` to avoid `transaction_id` collisions when appending to an existing set.
+3. Write transactions to an explicit `--output` path. Do not overwrite the committed `sample-transactions.json` unless the operator explicitly asks; prefer a clearly named file such as `sample-transactions.generated.json`.
+4. Optionally write `--manifest` to record the redacted expected outcome (validator status and reason codes, plus pipeline status and reason codes) per transaction.
+5. Report only safe summary fields: total, valid, invalid, category counts, and expected pipeline counts. Do not print raw account IDs, raw descriptions, names, or full transaction payloads.
+6. To confirm the generated set behaves as predicted, hand the output file to `/validate-transactions` (validator layer) or `/run-pipeline` (full pipeline). Remember the validator-vs-pipeline divergence below.
+
+Generator outcome contract:
+
+| Category | Validator | Full pipeline | Reason code |
+|---|---|---|---|
+| `valid_settled` | validated | settled | `SETTLED` |
+| `review_high_value` | validated | review_required | `REVIEW_HIGH_VALUE` |
+| `review_unusual_time` | validated | review_required | `REVIEW_UNUSUAL_TIME` |
+| `review_channel_pattern` | validated | review_required | `REVIEW_CHANNEL_PATTERN` |
+| `review_destination_pattern` | validated | review_required | `REVIEW_DESTINATION_PATTERN` |
+| `invalid_missing_field` | rejected | settled | `MISSING_FIELD` (validator) / `SETTLED` (pipeline) |
+| `invalid_amount` | rejected | rejected | `INVALID_AMOUNT` |
+| `invalid_non_positive_amount` | rejected | rejected | `NON_POSITIVE_AMOUNT` |
+| `invalid_unsupported_currency` | rejected | rejected | `UNSUPPORTED_CURRENCY` |
+| `invalid_timestamp` | rejected | rejected | `INVALID_TIMESTAMP` |
+
+`invalid_missing_field` is the deliberate divergence: the validator rejects it with `MISSING_FIELD`, but `integrator.seed_input_messages` backfills every required field, so the full pipeline settles it. `MISSING_FIELD` is observable only through `/validate-transactions`.
+
 ## Coverage Gate
 
 The default coverage threshold is 80 percent. The portable helper is:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Transactions"
+  short_description: "Generate random Homework 6 transactions (valid and invalid)"
+  default_prompt: "Use $generate-transactions to generate a random Homework 6 transaction list with both valid and invalid records."
