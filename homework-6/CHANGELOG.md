@@ -1,5 +1,20 @@
 # Homework 6 Changelog
 
+## 2026-06-23-rest-agent-communication: plan REST-owned pipeline communication
+
+### Added
+
+- Added the approved planning package for refactoring canonical Python runtime communication through a local REST API.
+- Added API-contract and test-case snapshots that define API-owned file persistence, deterministic component boundaries, privacy expectations, and validation commands.
+
+### Changed
+
+- Planned the canonical Python application refactor so `python integrator.py` remains the user-facing entry point while the REST API owns `shared/` and `archive/` runtime file writes.
+
+### Tests
+
+- Validated the planning package for unresolved placeholder markers and staged scope before the freeze commit.
+
 ## Homework 6 - Step 55: Hera Latest Python Selection
 
 ### Added
