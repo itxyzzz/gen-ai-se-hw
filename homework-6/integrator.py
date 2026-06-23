@@ -31,6 +31,7 @@ from agents.pipeline import (
     run_stages,
     validate_stages,
 )
+from pipeline_api import PipelineRuntimeApi
 
 
 def _base_and_shared_name(shared_dir: Path) -> tuple[Path, str]:
@@ -166,6 +167,34 @@ def safe_process_transaction(
         return {"data": {"transaction_id": transaction_id, "status": "error", "reason_codes": [REASON_PROCESSING_ERROR]}}
 
 
+def process_transaction_via_api(
+    api: PipelineRuntimeApi,
+    run_id: str,
+    transaction_id: str,
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
+    active_stages = list(DEFAULT_STAGES) if stages is None else stages
+    message = api.get_message(run_id, transaction_id)["message"]
+    api.record_stage(run_id, transaction_id, "processing", message)
+    message = run_stages(message, active_stages)
+    api.record_stage(run_id, transaction_id, "output", message)
+    api.record_stage(run_id, transaction_id, "result", message)
+    return message
+
+
+def safe_process_transaction_via_api(
+    api: PipelineRuntimeApi,
+    run_id: str,
+    transaction_id: str,
+    stages: list[str] | None = None,
+) -> dict[str, Any]:
+    try:
+        return process_transaction_via_api(api, run_id, transaction_id, stages)
+    except Exception:
+        api.record_error(run_id, transaction_id, REASON_PROCESSING_ERROR)
+        return {"data": {"transaction_id": transaction_id, "status": "error", "reason_codes": [REASON_PROCESSING_ERROR]}}
+
+
 def run_pipeline(
     base_dir: Path = Path("."),
     input_path: Path = Path("sample-transactions.json"),
@@ -173,18 +202,19 @@ def run_pipeline(
     stages: list[str] | None = None,
 ) -> dict[str, Any]:
     runtime_run_id = str(uuid4())
-    paths = prepare_shared_directories(base_dir, shared_dir_name)
-    write_run_provenance(paths, {"runtime_run_id": runtime_run_id, "generated_at": utc_now()})
     active_stages = resolve_stages(stages, base_dir)
     transactions = load_transactions(input_path)
-    expected_ids = [str(item.get("transaction_id") or f"UNKNOWN-{index:03d}") for index, item in enumerate(transactions, start=1)]
-    message_paths = seed_input_messages(transactions, paths)
-    for path in message_paths:
-        safe_process_transaction(path, paths, active_stages)
-    summary = reporting_agent.summarize_results(paths["results"], expected_ids, runtime_run_id)
-    pipeline_status = reporting_agent.build_pipeline_status(summary)
-    safe_json_dump(pipeline_status, paths["results"] / "pipeline-status.json")
-    return summary
+    api = PipelineRuntimeApi()
+    run = api.create_run(
+        base_dir=base_dir,
+        shared_dir_name=shared_dir_name,
+        input_records=transactions,
+        runtime_run_id=runtime_run_id,
+        generated_at=utc_now(),
+    )
+    for transaction_id in run["expected_transaction_ids"]:
+        safe_process_transaction_via_api(api, runtime_run_id, transaction_id, active_stages)
+    return api.finalize_run(runtime_run_id)
 
 
 def validate_transactions_only(input_path: Path, base_dir: Path | None = None) -> list[dict[str, Any]]:

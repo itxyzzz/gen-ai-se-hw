@@ -67,6 +67,11 @@ def write_transaction_result(message: dict[str, Any], results_dir: Path) -> Path
 
 
 def write_error_result(transaction_id: str, reason_code: str, results_dir: Path) -> Path:
+    payload = build_error_result_payload(transaction_id, reason_code)
+    return safe_json_dump(payload, Path(results_dir) / f"{payload['transaction_id']}.json")
+
+
+def build_error_result_payload(transaction_id: str, reason_code: str) -> dict[str, Any]:
     safe_id = transaction_id or "UNKNOWN"
     payload = {
         "schema_version": 1,
@@ -82,14 +87,14 @@ def write_error_result(transaction_id: str, reason_code: str, results_dir: Path)
         "privacy_check": "passed",
     }
     assert_privacy_safe(payload)
-    return safe_json_dump(payload, Path(results_dir) / f"{safe_id}.json")
+    return payload
 
 
 def list_result_files(results_dir: Path) -> list[str]:
     return sorted(path.name for path in Path(results_dir).glob("TXN*.json"))
 
 
-def summarize_results(
+def build_results_summary(
     results_dir: Path,
     expected_transaction_ids: list[str],
     runtime_run_id: str,
@@ -117,6 +122,15 @@ def summarize_results(
         "completeness_check": "passed" if observed_ids == expected_ids else "failed",
     }
     assert_privacy_safe(summary)
+    return summary
+
+
+def summarize_results(
+    results_dir: Path,
+    expected_transaction_ids: list[str],
+    runtime_run_id: str,
+) -> dict[str, Any]:
+    summary = build_results_summary(results_dir, expected_transaction_ids, runtime_run_id)
     safe_json_dump(summary, Path(results_dir) / "summary.json")
     return summary
 

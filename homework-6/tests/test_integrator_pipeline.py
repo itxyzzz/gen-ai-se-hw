@@ -3,6 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
+import integrator
+from pipeline_api import PipelineRuntimeApi
 from integrator import run_pipeline, validate_transactions_only
 
 
@@ -43,3 +47,26 @@ def test_runtime_results_do_not_expose_raw_sensitive_fields(sample_input: Path, 
         output_text += path.read_text(encoding="utf-8")
     assert "ACC-" + "1001" not in output_text
     assert "Monthly " + "rent payment" not in output_text
+
+
+def test_run_pipeline_uses_api_stage_boundary(sample_input: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    class TrackingApi(PipelineRuntimeApi):
+        def record_stage(self, run_id: str, transaction_id: str, stage: str, message: dict) -> dict:
+            calls.append(stage)
+            return super().record_stage(run_id, transaction_id, stage, message)
+
+    monkeypatch.setattr(integrator, "PipelineRuntimeApi", TrackingApi)
+    monkeypatch.setattr(
+        integrator,
+        "process_transaction",
+        lambda *_args, **_kwargs: pytest.fail("run_pipeline must not use file-path transaction handoff"),
+    )
+
+    summary = run_pipeline(base_dir=tmp_path, input_path=sample_input)
+
+    assert summary["total_records"] == 8
+    assert calls.count("processing") == 8
+    assert calls.count("output") == 8
+    assert calls.count("result") == 8
