@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-24-root-readme-portfolio-router: plan portfolio router README rewrite
+
+### Added
+
+- Added the approved harness planning package for rewriting the root `README.md` as a portfolio and evidence router while preserving the original assignment README formulation.
+
 ## 2026-06-19
 
 ### Changed
