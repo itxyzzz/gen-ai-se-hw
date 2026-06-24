@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-24-root-readme-portfolio-router: tune README reviewer framing
+
+### Changed
+
+- Adjusted the root `README.md` portfolio entry to lead with concrete reviewer evidence, rename sections for a technical hiring-review audience, and move claim-boundary language below the work summary.
+
 ## 2026-06-24-root-readme-portfolio-router: rewrite root README as portfolio router
 
 ### Changed
