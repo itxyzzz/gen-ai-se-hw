@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-24-root-readme-portfolio-router: rewrite root README as portfolio router
+
+### Changed
+
+- Rewrote the root `README.md` as a concise course-portfolio and evidence router covering all six homeworks, actual PR descriptions, AI-assistance notes, and claim boundaries while preserving the original assignment README formulation at the end.
+
 ## 2026-06-24-root-readme-portfolio-router: plan portfolio router README rewrite
 
 ### Added
