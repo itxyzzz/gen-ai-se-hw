@@ -1,6 +1,6 @@
 # AI-Assisted Software Engineering Portfolio
 
-This repository contains six completed coursework projects from the **GenAI and Agentic AI for Software Engineering** course. The work focuses on AI-assisted backend prototyping, requirements analysis, agentic workflow design, MCP tooling, testing, documentation, and reviewer-facing evidence preservation.
+This repository contains six completed projects from the **GenAI and Agentic AI for Software Engineering** course. The work focuses on AI-assisted backend prototyping, requirements analysis, agentic workflow design, MCP tooling, testing, documentation, and reviewer-facing evidence preservation.
 
 The repository is organized so reviewers can inspect both the final artifacts and the process evidence behind them: source code, tests, coverage results, PR descriptions, screenshots, run logs, specifications, MCP configuration, planning artifacts, and documented limitations.
 
@@ -8,20 +8,11 @@ The repository is organized so reviewers can inspect both the final artifacts an
 
 For a fast external review, start here:
 
-1. [Homework 6](homework-6/README.md): capstone Python transaction-processing simulation generated and selected through a named multi-agent workflow, with tests, coverage, sanitized outputs, and a read-only MCP status server.
+1. [Homework 6](homework-6/README.md): capstone Python transaction-processing simulation generated and selected through a role-based multi-agent workflow, with tests, coverage, sanitized outputs, and a read-only MCP status server.
 2. [Homework 4](homework-4/README.md): portable text-first agentic bug-fixing pipeline with agents, skills, tool adapters, preserved runs, benchmark artifacts, and a fixed sample app.
 3. [Homework 3](homework-3/README.md): finance-oriented EU/EEA dispute-intake specification package showing requirements analysis, scope control, state/workflow modeling, audit/privacy thinking, and agent guidance.
 4. [Homework 5](homework-5/README.md): MCP server configuration and custom FastMCP reader service, including project-scoped Codex MCP discovery lessons and focused tests.
 5. [Homework 1](homework-1/README.md) and [Homework 2](homework-2/README.md): Java/Spring Boot API foundations, validation, imports, deterministic classification, OpenAPI/Swagger, tests, coverage, lifecycle scripts, and manual verification.
-
-## Repository Review Map
-
-| Area | What was done | Reviewer evidence | Relevant keywords |
-|---|---|---|---|
-| Backend APIs | Built Java/Spring Boot REST APIs for transaction handling and support-ticket workflows, including validation, filtering, imports, Swagger docs, lifecycle scripts, and automated tests. | HW1 and HW2 source code, README files, HOWTORUN guides, MockMvc/JUnit tests, JaCoCo reports, Postman/manual verification notes, and PR descriptions. | Java, Spring Boot, REST API, validation, OpenAPI, Swagger, JUnit, MockMvc, JaCoCo |
-| Requirements and analysis | Produced a finance-oriented dispute-intake specification with stakeholder flows, state modeling, acceptance criteria, audit/privacy considerations, scoped domain assumptions, and low-level task traceability. | HW3 README, specification package, domain rules, technical conventions, operator manual, agent instructions, and PR description. | requirements analysis, systems analysis, acceptance criteria, state modeling, regulated-domain documentation |
-| Agentic workflows | Designed agent-based workflows for bug fixing and capstone transaction-processing generation, including planning, implementation, review, testing, documentation, package selection, and evidence preservation. | HW4 and HW6 workflow docs, agent specs, adapters, run artifacts, benchmark outputs, tests, coverage reports, sanitized result files, and PR descriptions. | agentic workflow, multi-agent orchestration, AI-assisted software engineering, test automation, evidence preservation |
-| MCP tooling | Configured GitHub, Filesystem, Notion, and custom FastMCP services with validation tests, credential hygiene, project-scoped Codex setup notes, screenshots, and reviewer runbooks. | HW5 README, `mcp.json`, `.codex/config.toml`, custom FastMCP server, tests, screenshots, HOWTORUN guide, and PR description. | MCP, FastMCP, tool/resource design, credential hygiene, integration testing |
 
 ## Portfolio Work Summary
 
@@ -32,26 +23,19 @@ For a fast external review, start here:
 | [HW3: Dispute Intake Specification](homework-3/README.md) | Documentation-only EU/EEA payment-account dispute-intake package with stakeholder flows, state model, scoped domain rationale, low-level task traceability, operator guidance, and AI-agent instructions. | Specification, domain rules, technical conventions, operator manual, process artifacts, screenshots, and [PR #6](https://github.com/itxyzzz/gen-ai-se-hw/pull/6). | requirements analysis, systems analysis, state modeling, acceptance criteria, audit/privacy documentation |
 | [HW4: Agentic Bug-Fixing Pipeline](homework-4/README.md) | Text-first multi-agent workflow launched by `Run HW4 pipeline`, with research, planning, fixing, security review, unit-test generation, tool adapters, preserved run evidence, and benchmark comparison. | Agent specs, skills, adapters, baseline/fixed app, tests, immutable run evidence, benchmark artifacts, screenshots, and [PR #8](https://github.com/itxyzzz/gen-ai-se-hw/pull/8). | agentic workflow, tool adapters, bug fixing, security review, regression testing |
 | [HW5: MCP Servers](homework-5/README.md) | GitHub, Filesystem, Notion, and custom FastMCP server configuration. Custom `custom-lorem-reader` exposes a resource and `read` tool with validation tests and screenshot evidence. | MCP configs, custom server, focused tests, screenshots, reviewer setup notes, HOWTORUN guide, and [PR #9](https://github.com/itxyzzz/gen-ai-se-hw/pull/9). | MCP, FastMCP, tool/resource design, credential hygiene, validation testing |
-| [HW6: Canonical Python Transaction Pipeline](homework-6/README.md) | Capstone Python transaction-processing simulation selected from a Hera-orchestrated package set. Athena wrote the spec, Hephaestus generated runtime code, Themis expanded tests, Clio produced docs, and the root package preserves evidence, coverage, sanitized result files, and a read-only MCP status server. | Runtime pipeline, tests, coverage gate, selected agent-run evidence, research notes, screenshots, MCP status server, and [PR #10](https://github.com/itxyzzz/gen-ai-se-hw/pull/10). | Python, pytest, coverage gates, multi-agent orchestration, JSON protocol, privacy-aware reporting |
+| [HW6: Capstone Python Transaction Pipeline](homework-6/README.md) | Capstone Python transaction-processing simulation selected from multiple AI-generated candidate packages. The workflow separated specification, implementation, test expansion, documentation, package selection, and evidence preservation across role-specific agents. | Runtime pipeline, tests, coverage gate, selected agent-run evidence, research notes, screenshots, sanitized result files, MCP status server, and [PR #10](https://github.com/itxyzzz/gen-ai-se-hw/pull/10). | Python, pytest, coverage gates, multi-agent orchestration, JSON protocol, privacy-aware reporting |
 
-## Skills Evidenced By The Repository
+## Skills and Evidence Summary
 
 This portfolio most strongly supports roles around AI-assisted systems/product analysis, workflow automation, AI product engineering, technical business analysis, and prototype-oriented backend/automation work.
 
-Supported skills and keywords include: requirements analysis, systems analysis, acceptance criteria, workflow modeling, state modeling, technical documentation, API documentation, Java, Spring Boot, Python, pytest, JUnit, MockMvc, JaCoCo, REST APIs, JSON, OpenAPI/Swagger, MCP, FastMCP, Context7-backed documentation research, AI-assisted software engineering, agentic workflow design, multi-agent workflow orchestration, test automation, coverage gates, privacy-aware design, audit-safe reporting, deterministic rules, and transaction-processing simulation.
-
-The repository preserves PR narratives, screenshots, changelogs, planning artifacts, run evidence, limitations, and reviewer runbooks so the process can be inspected alongside the final artifacts.
-
-## Evidence Map
-
-| Homework | README | Actual PR description |
-|---|---|---|
-| Homework 1 | [homework-1/README.md](homework-1/README.md) | [PR #1: Homework 1 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/1) |
-| Homework 2 | [homework-2/README.md](homework-2/README.md) | [PR #5: Homework 2 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/5) |
-| Homework 3 | [homework-3/README.md](homework-3/README.md) | [PR #6: Homework 3 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/6) |
-| Homework 4 | [homework-4/README.md](homework-4/README.md) | [PR #8: Homework 4 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/8) |
-| Homework 5 | [homework-5/README.md](homework-5/README.md) | [PR #9: Homework 5 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/9) |
-| Homework 6 | [homework-6/README.md](homework-6/README.md) | [PR #10: Homework 6 submission](https://github.com/itxyzzz/gen-ai-se-hw/pull/10) |
+| Skill area | Evidence in this repository |
+|---|---|
+| Requirements and systems analysis | HW3 dispute-intake specification, stakeholder flows, state model, acceptance criteria, scoped domain assumptions, audit/privacy considerations, and task traceability. |
+| Backend/API implementation | HW1 and HW2 Spring Boot APIs, REST endpoints, validation, imports, OpenAPI/Swagger docs, JUnit/MockMvc tests, JaCoCo coverage, and manual verification notes. |
+| Agentic workflow design | HW4 bug-fixing pipeline and HW6 capstone workflow with planning, implementation, review, testing, documentation, package selection, and preserved run evidence. |
+| MCP/tool integration | HW5 GitHub, Filesystem, Notion, and custom FastMCP configuration, custom reader service, validation tests, screenshots, and reviewer runbooks. |
+| Verification and evidence discipline | Tests, coverage reports, PR descriptions, screenshots, changelogs, sanitized outputs, run artifacts, planning records, and documented limitations. |
 
 ## AI Assistance And Operator Role
 
@@ -63,7 +47,7 @@ The most important authorship signal is not that every artifact was hand-written
 
 This is a coursework portfolio, not a production banking, compliance, fraud, AML/KYC, PCI, or cloud/SRE system. The strongest evidence is AI-assisted engineering judgment: scoping work, directing AI tools, validating outputs, correcting errors, preserving evidence, writing specifications, and packaging work for review.
 
-Safe claims from this repository:
+Claims supported by this repository:
 
 - Completed a six-stage AI-assisted software engineering course portfolio.
 - Built local Java/Spring Boot APIs and a Python transaction-processing simulation with tests and documentation.
@@ -71,7 +55,7 @@ Safe claims from this repository:
 - Designed agentic and MCP-based workflows with preserved run evidence and reviewer instructions.
 - Demonstrated documentation, testing, handoff, evidence, and AI-workflow governance discipline.
 
-Claims that should be avoided or heavily qualified:
+Claims not supported without additional evidence:
 
 - Production banking, payments, settlement, fraud, AML/KYC, sanctions, PCI, PSD2/GDPR/DORA implementation, or compliance automation.
 - ML model development, model training, fine-tuning, RAG, formal AI evaluations, cloud deployment, SRE, observability, or high-availability operations.

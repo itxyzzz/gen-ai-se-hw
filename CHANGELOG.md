@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-24-root-readme-portfolio-router: simplify README evidence sections
+
+### Changed
+
+- Simplified the root `README.md` portfolio entry by removing duplicated evidence sections, replacing unexplained Homework 6 agent names with role-based wording, and changing claim-boundary headings to more evidence-centered language.
+
 ## 2026-06-24-root-readme-portfolio-router: tune README reviewer framing
 
 ### Changed
