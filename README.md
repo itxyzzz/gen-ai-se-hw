@@ -1,6 +1,6 @@
 # AI-Assisted Software Engineering Portfolio
 
-This repository contains six completed projects from the **GenAI and Agentic AI for Software Engineering** course. The work focuses on AI-assisted backend prototyping, requirements analysis, agentic workflow design, MCP tooling, testing, documentation, and reviewer-facing evidence preservation.
+This repository contains six completed projects from the **GenAI and Agentic AI for Software Engineering** course, organized as a reviewer-facing software engineering portfolio. The work focuses on AI-assisted backend prototyping, requirements analysis, agentic workflow design, MCP tooling, testing, documentation, and reviewer-facing evidence preservation.
 
 The repository is organized so reviewers can inspect both the final artifacts and the process evidence behind them: source code, tests, coverage results, PR descriptions, screenshots, run logs, specifications, MCP configuration, planning artifacts, and documented limitations.
 
@@ -27,7 +27,7 @@ For a fast external review, start here:
 
 ## Skills and Evidence Summary
 
-This portfolio most strongly supports roles around AI-assisted systems/product analysis, workflow automation, AI product engineering, technical business analysis, and prototype-oriented backend/automation work.
+This portfolio most strongly supports roles around AI-assisted systems/product analysis, workflow automation, technical business analysis, AI-assisted engineering operations, and prototype-oriented backend/API work.
 
 | Skill area | Evidence in this repository |
 |---|---|
@@ -37,13 +37,13 @@ This portfolio most strongly supports roles around AI-assisted systems/product a
 | MCP/tool integration | HW5 GitHub, Filesystem, Notion, and custom FastMCP configuration, custom reader service, validation tests, screenshots, and reviewer runbooks. |
 | Verification and evidence discipline | Tests, coverage reports, PR descriptions, screenshots, changelogs, sanitized outputs, run artifacts, planning records, and documented limitations. |
 
-## AI Assistance And Operator Role
+## AI Assistance and Operator Role
 
-The repository was built as an AI-assisted course portfolio by Igor Tanatarov. Codex was the primary environment across the work, with Google Antigravity, Open Code, ChatGPT Deep Research, Context7, MCP tooling, and named homework automation agents used in specific stages. The PR descriptions and homework README files document where AI generated drafts, where the operator redirected scope, where manual checks found issues, and where validation evidence was preserved.
+The repository was built as an AI-assisted course portfolio by Igor Tanatarov. Codex was the primary environment across the work, with Google Antigravity, Open Code, ChatGPT Deep Research, Context7, MCP tooling, and role-specific homework automation agents used in specific stages. The PR descriptions and homework README files document where AI generated drafts, where the operator redirected scope, where manual checks found issues, and where validation evidence was preserved.
 
 The most important authorship signal is not that every artifact was hand-written. It is that the work repeatedly records how AI output was planned, constrained, corrected, verified, documented, and safely framed.
 
-## Scope And Claim Boundaries
+## Scope and Claim Boundaries
 
 This is a coursework portfolio, not a production banking, compliance, fraud, AML/KYC, PCI, or cloud/SRE system. The strongest evidence is AI-assisted engineering judgment: scoping work, directing AI tools, validating outputs, correcting errors, preserving evidence, writing specifications, and packaging work for review.
 

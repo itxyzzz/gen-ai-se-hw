@@ -2,6 +2,12 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-24-root-readme-portfolio-router: polish README wording
+
+### Changed
+
+- Polished the root `README.md` portfolio wording with reviewer-facing opening language, lowercase conjunctions in headings, role-specific automation-agent phrasing, and narrower role positioning.
+
 ## 2026-06-24-root-readme-portfolio-router: simplify README evidence sections
 
 ### Changed
