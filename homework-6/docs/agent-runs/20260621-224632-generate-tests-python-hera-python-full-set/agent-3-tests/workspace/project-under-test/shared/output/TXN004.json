@@ -1,0 +1,66 @@
+{
+  "audit_events": [
+    {
+      "component": "transaction_validator",
+      "outcome": "validated",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "component": "fraud_detector",
+      "outcome": "review_required",
+      "reason_code": "REVIEW_UNUSUAL_TIME",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "component": "settlement_processor",
+      "outcome": "review_required",
+      "reason_code": "REVIEW_UNUSUAL_TIME",
+      "timestamp": "2026-06-21T20:50:11Z",
+      "transaction_id": "TXN004"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-21T20:50:11Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-21T20:50:11Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-21T20:50:11Z"
+    }
+  ],
+  "data": {
+    "amount": "500.00",
+    "channel": "api",
+    "country": "DE",
+    "currency": "EUR",
+    "destination_account_redacted": "****SENT",
+    "destination_pattern": "standard",
+    "reason_codes": [
+      "REVIEW_UNUSUAL_TIME",
+      "REVIEW_CHANNEL_PATTERN"
+    ],
+    "risk_flags": [
+      "REVIEW_UNUSUAL_TIME",
+      "REVIEW_CHANNEL_PATTERN"
+    ],
+    "risk_score": 60,
+    "source_account_redacted": "****SENT",
+    "status": "review_required",
+    "timestamp": "2026-03-16T02:47:00Z",
+    "transaction_id": "TXN004",
+    "transaction_type": "transfer",
+    "validation": "passed"
+  },
+  "message_id": "107bd88e-86aa-41b4-9b83-0e5f9c38433a",
+  "message_type": "transaction",
+  "source_agent": "settlement_processor",
+  "target_agent": "reporting_agent",
+  "timestamp": "2026-06-21T20:50:11Z"
+}

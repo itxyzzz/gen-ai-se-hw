@@ -1,0 +1,85 @@
+{
+  "error": 0,
+  "generated_at": "2026-06-19T18:46:22Z",
+  "rejected": 2,
+  "results": [
+    {
+      "reason_codes": [],
+      "result_file": "TXN001.json",
+      "risk_level": "low",
+      "status": "settled",
+      "transaction_id": "TXN001"
+    },
+    {
+      "reason_codes": [
+        "HIGH_VALUE",
+        "WIRE_TRANSFER"
+      ],
+      "result_file": "TXN002.json",
+      "risk_level": "high",
+      "status": "review_required",
+      "transaction_id": "TXN002"
+    },
+    {
+      "reason_codes": [],
+      "result_file": "TXN003.json",
+      "risk_level": "low",
+      "status": "settled",
+      "transaction_id": "TXN003"
+    },
+    {
+      "reason_codes": [
+        "ODD_HOUR_ACTIVITY",
+        "REMOTE_CHANNEL",
+        "CROSS_COUNTRY_REVIEW_SIGNAL"
+      ],
+      "result_file": "TXN004.json",
+      "risk_level": "high",
+      "status": "review_required",
+      "transaction_id": "TXN004"
+    },
+    {
+      "reason_codes": [
+        "VERY_HIGH_VALUE",
+        "HIGH_VALUE",
+        "WIRE_TRANSFER"
+      ],
+      "result_file": "TXN005.json",
+      "risk_level": "very_high",
+      "status": "review_required",
+      "transaction_id": "TXN005"
+    },
+    {
+      "reason_codes": [
+        "UNSUPPORTED_CURRENCY"
+      ],
+      "result_file": "TXN006.json",
+      "risk_level": "not_scored",
+      "status": "rejected",
+      "transaction_id": "TXN006"
+    },
+    {
+      "reason_codes": [
+        "NON_POSITIVE_AMOUNT"
+      ],
+      "result_file": "TXN007.json",
+      "risk_level": "not_scored",
+      "status": "rejected",
+      "transaction_id": "TXN007"
+    },
+    {
+      "reason_codes": [
+        "REMOTE_CHANNEL"
+      ],
+      "result_file": "TXN008.json",
+      "risk_level": "medium",
+      "status": "settled",
+      "transaction_id": "TXN008"
+    }
+  ],
+  "review_required": 3,
+  "schema_version": "1.0",
+  "settled": 3,
+  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed.",
+  "total_transactions": 8
+}

@@ -1,0 +1,34 @@
+{
+  "message_id" : "1237e755-169f-34b9-85bd-67325bcf3293",
+  "timestamp" : "2026-06-21T17:00:08.865971100Z",
+  "source_agent" : "fraud_detector",
+  "target_agent" : "settlement_processor",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN005",
+    "timestamp" : "2026-03-16T10:00:00Z",
+    "amount" : "75000.00",
+    "currency" : "USD",
+    "transaction_type" : "wire_transfer",
+    "channel" : "branch",
+    "country" : "US"
+  },
+  "status" : "risk_scored",
+  "reason_codes" : [ "HIGH_VALUE", "VERY_HIGH_VALUE", "WIRE_TRANSFER_TYPE" ],
+  "fraud_assessment" : {
+    "risk_score" : 100,
+    "risk_tier" : "very_high",
+    "reason_codes" : [ "HIGH_VALUE", "VERY_HIGH_VALUE", "WIRE_TRANSFER_TYPE" ]
+  },
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T17:00:08.845448Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN005",
+    "outcome" : "validated"
+  }, {
+    "timestamp" : "2026-06-21T17:00:08.865971100Z",
+    "component" : "FraudDetector",
+    "transaction_id" : "TXN005",
+    "outcome" : "very_high"
+  } ]
+}

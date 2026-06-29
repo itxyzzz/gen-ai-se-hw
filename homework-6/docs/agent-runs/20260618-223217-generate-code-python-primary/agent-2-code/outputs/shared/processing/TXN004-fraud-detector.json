@@ -1,0 +1,76 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "7d87f6f1-7a2b-4b81-a6de-37f1aa5a70e7",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "c352f652-e716-4a50-a6a9-3b3842d5c16a",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "d215d875-3ed4-46ce-946d-3a17ca372d43",
+      "outcome": "review_required",
+      "reason_code": "ODD_HOUR_ACTIVITY",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "500.00",
+    "channel": "api",
+    "country": "DE",
+    "currency": "EUR",
+    "destination_account_redacted": "ACC-****5500",
+    "source_account_redacted": "ACC-****1004",
+    "status": "review_required",
+    "timestamp": "2026-03-16T02:47:00Z",
+    "transaction_id": "TXN004",
+    "transaction_type": "transfer"
+  },
+  "message_id": "51dae936-99d3-4e09-abc1-9d5df2656796",
+  "message_type": "risk_result",
+  "risk": {
+    "decision": "review_required",
+    "risk_level": "high",
+    "risk_reasons": [
+      "ODD_HOUR_ACTIVITY",
+      "REMOTE_CHANNEL",
+      "CROSS_COUNTRY_REVIEW_SIGNAL"
+    ],
+    "risk_score": 55
+  },
+  "schema_version": "1.0",
+  "source_agent": "fraud_detector",
+  "target_agent": "settlement_processor",
+  "transaction_id": "TXN004",
+  "validation": {
+    "amount": "500.00",
+    "currency": "EUR",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}

@@ -1,0 +1,11 @@
+Validation-only behavior:
+The Java `Integrator` exposes `--dry-run`, and the Themis suite calls `validateOnly(Path.of("sample-transactions.json"))`.
+
+Observed safe counts:
+- total=8
+- valid=6
+- invalid=2
+- invalid reason codes: `UNSUPPORTED_CURRENCY`, `NON_POSITIVE_AMOUNT`
+
+Privacy note:
+The validation-only response intentionally includes only transaction IDs, valid/invalid status, and reason codes.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Pipeline"
+  short_description: "Run the Homework 6 transaction pipeline"
+  default_prompt: "Use $run-pipeline to run the Homework 6 transaction-processing pipeline end to end."

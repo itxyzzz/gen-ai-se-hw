@@ -1,0 +1,35 @@
+# MCP Interaction Evidence
+
+Stable screenshot target: `docs/screenshots/mcp-interaction.png`
+
+This run generated a fresh combined MCP evidence image so the stable target covers both required MCP categories.
+
+## Context7 Evidence
+
+From `research-notes.md`:
+
+- Search: `Python standard library decimal Decimal monetary arithmetic json allow_nan pathlib safe file writing for transaction processing`
+- Returned library ID: `/python/cpython`
+- Applied insight: construct money values from strings with `Decimal`, serialize `Decimal` values as strings, and use strict JSON writes with `allow_nan=False`.
+
+From `research-notes.md`:
+
+- Search: `pytest tmp_path fixture temporary directory filesystem isolation tests pathlib`
+- Returned library ID: `/pytest-dev/pytest`
+- Applied insight: use `tmp_path` for isolated filesystem tests.
+
+## Custom Pipeline Status Evidence
+
+`mcp/server.py` exposes:
+
+- `get_transaction_status(transaction_id: str)`
+- `list_pipeline_results()`
+- `pipeline://summary`
+
+Fresh safe status evidence:
+
+- Summary: total 8, settled 2, rejected 2, review required 4, error 0.
+- `TXN001` status: `settled`.
+- `TXN006` status: `rejected` with `UNSUPPORTED_CURRENCY`.
+
+The custom server reads current `shared/results` files and does not run or mutate the pipeline.

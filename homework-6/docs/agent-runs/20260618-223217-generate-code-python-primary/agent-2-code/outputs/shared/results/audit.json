@@ -1,0 +1,221 @@
+{
+  "events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "0881813a-8b70-4de9-98a5-2a947b998686",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "55ada995-deb9-4312-bced-6eb6000400ff",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "42496e38-aa34-4c00-9530-65c92d80a654",
+      "outcome": "approved_for_settlement",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "4661b9d9-2452-4bca-be50-22f7f79a9466",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "a03a6847-4597-49c8-8e77-ccd99454e90a",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "dc29b052-1cce-4a3e-9322-01992ca8da29",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "8da7c18b-832b-4813-b8e8-373cac8c984d",
+      "outcome": "review_required",
+      "reason_code": "HIGH_VALUE",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "d5477888-5ee0-4854-9403-cdc0b2c31ea9",
+      "outcome": "review_required",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "5e1c39a8-dac1-49dd-89d1-bb8c4c310ceb",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "ce613cca-3694-4ca1-9197-59d0684f06f3",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "2c87d58e-f5bb-48f2-8a09-5399f1f47534",
+      "outcome": "approved_for_settlement",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "73747db7-7d60-4e80-bef1-e741d00596fd",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN003"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "7d87f6f1-7a2b-4b81-a6de-37f1aa5a70e7",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "c352f652-e716-4a50-a6a9-3b3842d5c16a",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "d215d875-3ed4-46ce-946d-3a17ca372d43",
+      "outcome": "review_required",
+      "reason_code": "ODD_HOUR_ACTIVITY",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "acd82597-cc47-4ce3-a3f6-1abe0245c34a",
+      "outcome": "review_required",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "735e5d0f-fc4a-4b59-a28d-d4054849b27c",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "f5cdb2e3-6c6d-48da-bf05-4412842f386c",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "a015ed64-9751-47fc-9b26-32ba220e6bc3",
+      "outcome": "review_required",
+      "reason_code": "VERY_HIGH_VALUE",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "781b8399-bde1-4beb-bacc-ab76ad1681e7",
+      "outcome": "review_required",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN005"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "4e0eee9f-6f5a-4eb2-ab48-04e80b04765c",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN006"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "9cbf0744-c047-4589-8b53-15634a4170f1",
+      "outcome": "rejected",
+      "reason_code": "UNSUPPORTED_CURRENCY",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN006"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "3ab02ff5-55af-4b7d-b4b3-2d94feb4b0e9",
+      "outcome": "rejected",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN006"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "d6af2105-8063-4ee9-bd80-0e3745f29093",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "e569ce6b-dba5-4157-b7fd-95c76a28d8cd",
+      "outcome": "rejected",
+      "reason_code": "NON_POSITIVE_AMOUNT",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "fb97f005-b3c5-4605-96e5-1ee64e8d90f9",
+      "outcome": "rejected",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    },
+    {
+      "agent_name": "integrator",
+      "event_id": "36ce9911-26f6-434d-b2aa-7b1ebe037dd8",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "259500a8-6aa5-423c-964e-0d76bb43ec04",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "da92f148-7496-47c7-8f97-2999303392e7",
+      "outcome": "approved_for_settlement",
+      "reason_code": "REMOTE_CHANNEL",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "662527fa-7885-4e4c-8e13-616180d62862",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    }
+  ],
+  "schema_version": "1.0"
+}

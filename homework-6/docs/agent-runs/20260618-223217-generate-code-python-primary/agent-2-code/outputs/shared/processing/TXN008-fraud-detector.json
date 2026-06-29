@@ -1,0 +1,74 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "36ce9911-26f6-434d-b2aa-7b1ebe037dd8",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "259500a8-6aa5-423c-964e-0d76bb43ec04",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "da92f148-7496-47c7-8f97-2999303392e7",
+      "outcome": "approved_for_settlement",
+      "reason_code": "REMOTE_CHANNEL",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "3200.00",
+    "channel": "mobile",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_redacted": "ACC-****9900",
+    "source_account_redacted": "ACC-****1008",
+    "status": "approved_for_settlement",
+    "timestamp": "2026-03-16T10:15:00Z",
+    "transaction_id": "TXN008",
+    "transaction_type": "transfer"
+  },
+  "message_id": "0bf4719d-8e69-48eb-8114-f9d33ef3fbb7",
+  "message_type": "risk_result",
+  "risk": {
+    "decision": "approved_for_settlement",
+    "risk_level": "medium",
+    "risk_reasons": [
+      "REMOTE_CHANNEL"
+    ],
+    "risk_score": 10
+  },
+  "schema_version": "1.0",
+  "source_agent": "fraud_detector",
+  "target_agent": "settlement_processor",
+  "transaction_id": "TXN008",
+  "validation": {
+    "amount": "3200.00",
+    "currency": "USD",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}

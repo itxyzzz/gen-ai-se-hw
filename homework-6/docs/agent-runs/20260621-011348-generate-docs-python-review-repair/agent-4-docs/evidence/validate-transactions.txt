@@ -1,0 +1,12 @@
+# Validation-Only Evidence
+
+Command behavior follows `agent-control/operate-pipeline/commands-and-hooks.md`.
+
+Observed safe result:
+
+- Total: 8.
+- Valid: 6.
+- Invalid: 2.
+- Invalid reason codes: `UNSUPPORTED_CURRENCY`, `NON_POSITIVE_AMOUNT`.
+
+The stable screenshot set does not require a separate validation-only image, so `docs/screenshots/operator-sourced/090-validate-transactions.png` remains preserved as support evidence only.

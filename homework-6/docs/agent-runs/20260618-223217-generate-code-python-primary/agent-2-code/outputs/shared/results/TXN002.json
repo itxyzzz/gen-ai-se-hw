@@ -1,0 +1,72 @@
+{
+  "amount": "25000.00",
+  "audit": [
+    {
+      "agent_name": "integrator",
+      "event_id": "a03a6847-4597-49c8-8e77-ccd99454e90a",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "dc29b052-1cce-4a3e-9322-01992ca8da29",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "8da7c18b-832b-4813-b8e8-373cac8c984d",
+      "outcome": "review_required",
+      "reason_code": "HIGH_VALUE",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "d5477888-5ee0-4854-9403-cdc0b2c31ea9",
+      "outcome": "review_required",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN002"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "currency": "USD",
+  "generated_at": "2026-06-19T18:46:22Z",
+  "reason_code": "HIGH_VALUE",
+  "reason_codes": [
+    "HIGH_VALUE",
+    "WIRE_TRANSFER"
+  ],
+  "risk_level": "high",
+  "risk_reasons": [
+    "HIGH_VALUE",
+    "WIRE_TRANSFER"
+  ],
+  "risk_score": 55,
+  "schema_version": "1.0",
+  "settlement_note": "manual_review_required",
+  "settlement_reference": null,
+  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed.",
+  "status": "review_required",
+  "transaction_id": "TXN002",
+  "transaction_type": "wire_transfer"
+}

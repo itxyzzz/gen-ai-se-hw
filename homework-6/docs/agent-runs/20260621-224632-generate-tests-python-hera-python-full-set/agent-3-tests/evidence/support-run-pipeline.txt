@@ -1,0 +1,30 @@
+Command:
+Documented `/run-pipeline` fast path adapted to the run-local project-under-test workspace.
+
+Result:
+Pass.
+
+Safe summary:
+{
+  "total": 8,
+  "settled": 2,
+  "review_required": 4,
+  "rejected": 2,
+  "error": 0,
+  "result_count": 8,
+  "all_present": true,
+  "rejected_safe": [
+    {
+      "transaction_id": "TXN006",
+      "reason_codes": "UNSUPPORTED_CURRENCY"
+    },
+    {
+      "transaction_id": "TXN007",
+      "reason_codes": "NON_POSITIVE_AMOUNT"
+    }
+  ]
+}
+
+Privacy:
+Evidence includes transaction IDs, statuses, counts, and reason codes only. No raw account IDs, raw descriptions, or metadata are included.
+

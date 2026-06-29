@@ -1,0 +1,15 @@
+# Skill Run Pipeline Evidence
+
+Stable screenshot target: `docs/screenshots/skill-run-pipeline.png`
+
+Source screenshot: `docs/screenshots/operator-sourced/080-run-pipeline.png`
+
+Observed safe evidence:
+
+- `/run-pipeline` skill completed successfully.
+- Total transactions: 8.
+- Settled: 2.
+- Review required: 4.
+- Rejected: 2.
+- Error: 0.
+- Rejected transactions are summarized by transaction ID and reason code only.

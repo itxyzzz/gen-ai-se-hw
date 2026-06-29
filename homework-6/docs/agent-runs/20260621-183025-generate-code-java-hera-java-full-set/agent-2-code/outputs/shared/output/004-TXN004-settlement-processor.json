@@ -1,0 +1,39 @@
+{
+  "message_id" : "0bb4770d-05bc-3d30-857b-d0794860146e",
+  "timestamp" : "2026-06-21T17:00:08.822759800Z",
+  "source_agent" : "settlement_processor",
+  "target_agent" : "reporting_agent",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN004",
+    "timestamp" : "2026-03-16T02:47:00Z",
+    "amount" : "500.00",
+    "currency" : "EUR",
+    "transaction_type" : "transfer",
+    "channel" : "api",
+    "country" : "DE"
+  },
+  "status" : "review_required",
+  "reason_codes" : [ "ODD_HOUR", "CHANNEL_RISK", "COUNTRY_RISK" ],
+  "fraud_assessment" : {
+    "risk_score" : 80,
+    "risk_tier" : "very_high",
+    "reason_codes" : [ "ODD_HOUR", "CHANNEL_RISK", "COUNTRY_RISK" ]
+  },
+  "audit_events" : [ {
+    "timestamp" : "2026-06-21T17:00:08.816761100Z",
+    "component" : "TransactionValidator",
+    "transaction_id" : "TXN004",
+    "outcome" : "validated"
+  }, {
+    "timestamp" : "2026-06-21T17:00:08.819760100Z",
+    "component" : "FraudDetector",
+    "transaction_id" : "TXN004",
+    "outcome" : "very_high"
+  }, {
+    "timestamp" : "2026-06-21T17:00:08.822759800Z",
+    "component" : "SettlementProcessor",
+    "transaction_id" : "TXN004",
+    "outcome" : "review_required"
+  } ]
+}

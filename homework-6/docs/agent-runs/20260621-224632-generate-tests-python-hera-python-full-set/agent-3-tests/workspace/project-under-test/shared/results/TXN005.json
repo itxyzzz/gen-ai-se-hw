@@ -1,0 +1,15 @@
+{
+  "amount": "75000.00",
+  "audit_event_count": 4,
+  "component_history_count": 4,
+  "currency": "USD",
+  "privacy_check": "passed",
+  "processed_at": "2026-06-21T20:50:11Z",
+  "reason_codes": [
+    "REVIEW_HIGH_VALUE"
+  ],
+  "safe_summary": "Simulated review outcome recorded.",
+  "schema_version": 1,
+  "status": "review_required",
+  "transaction_id": "TXN005"
+}

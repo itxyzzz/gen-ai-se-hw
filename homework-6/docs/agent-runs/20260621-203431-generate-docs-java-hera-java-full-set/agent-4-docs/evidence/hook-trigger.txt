@@ -1,0 +1,20 @@
+Java candidate hook and coverage-gate blocking evidence.
+
+Passing command:
+python scripts\check_coverage_gate.py --stack java --project-dir . --maven-settings ..\maven-empty-settings.xml --maven-global-settings ..\maven-empty-settings.xml --fail-under 80
+
+Passing result:
+PASS
+
+Blocking command:
+python scripts\check_coverage_gate.py --stack java --project-dir . --maven-settings ..\maven-empty-settings.xml --maven-global-settings ..\maven-empty-settings.xml --fail-under 99
+
+Blocking result:
+FAIL as expected
+
+Blocking signal:
+JaCoCo reported instruction covered ratio 0.87 against required minimum 0.99, and Maven ended with BUILD FAILURE.
+
+Source evidence:
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/evidence/hook-pass.txt
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/evidence/hook-fail.txt

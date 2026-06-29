@@ -1,0 +1,70 @@
+{
+  "amount": "3200.00",
+  "audit": [
+    {
+      "agent_name": "integrator",
+      "event_id": "36ce9911-26f6-434d-b2aa-7b1ebe037dd8",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "259500a8-6aa5-423c-964e-0d76bb43ec04",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "da92f148-7496-47c7-8f97-2999303392e7",
+      "outcome": "approved_for_settlement",
+      "reason_code": "REMOTE_CHANNEL",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "662527fa-7885-4e4c-8e13-616180d62862",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN008"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "currency": "USD",
+  "generated_at": "2026-06-19T18:46:22Z",
+  "reason_code": "REMOTE_CHANNEL",
+  "reason_codes": [
+    "REMOTE_CHANNEL"
+  ],
+  "risk_level": "medium",
+  "risk_reasons": [
+    "REMOTE_CHANNEL"
+  ],
+  "risk_score": 10,
+  "schema_version": "1.0",
+  "settlement_note": "simulated_settlement_ready",
+  "settlement_reference": "SIM-TXN008",
+  "simulation_notice": "Educational simulation only; no real payment, banking, legal, AML, sanctions, KYC, PCI, or payment-network compliance determination is performed.",
+  "status": "settled",
+  "transaction_id": "TXN008",
+  "transaction_type": "transfer"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Tests"
+  short_description: "Generate Homework 6 test packages"
+  default_prompt: "Use $generate-tests to create, compare, or select a preserved Homework 6 test-generation run."

@@ -1,0 +1,28 @@
+Java candidate test and coverage evidence from selected Themis retry.
+
+Command context:
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/workspace/project-under-test
+
+Command:
+mvn -o -s ..\maven-empty-settings.xml -gs ..\maven-empty-settings.xml test jacoco:report jacoco:check
+
+Result:
+PASS
+
+Safe evidence:
+13 tests
+0 failures
+JaCoCo check met
+Instruction coverage 87.86%
+
+Portable coverage helper:
+python scripts\check_coverage_gate.py --stack java --project-dir . --maven-settings ..\maven-empty-settings.xml --maven-global-settings ..\maven-empty-settings.xml --fail-under 80
+
+Result:
+PASS
+
+Deliberate blocker:
+same helper with --fail-under 99 failed as expected because actual instruction coverage was below 99%.
+
+Source evidence:
+docs/agent-runs/20260621-201051-generate-tests-java-hera-java-full-set-retry/agent-3-tests/evidence/coverage-summary.txt

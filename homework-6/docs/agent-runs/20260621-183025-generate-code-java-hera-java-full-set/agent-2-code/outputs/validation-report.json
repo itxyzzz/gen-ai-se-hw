@@ -1,0 +1,12 @@
+{
+  "schema_version" : "1.0",
+  "generated_at" : "2026-06-21T17:00:22.268813900Z",
+  "total" : 8,
+  "valid" : 6,
+  "invalid" : 2,
+  "invalid_transaction_ids" : [ "TXN006", "TXN007" ],
+  "reason_code_counts" : {
+    "UNSUPPORTED_CURRENCY" : 1,
+    "NON_POSITIVE_AMOUNT" : 1
+  }
+}

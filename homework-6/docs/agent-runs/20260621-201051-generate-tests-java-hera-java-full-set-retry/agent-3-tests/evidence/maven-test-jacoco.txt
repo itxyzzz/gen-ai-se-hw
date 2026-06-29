@@ -1,0 +1,73 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< edu.setu:transaction-pipeline-java >-----------------
+[INFO] Building Homework 6 Java Transaction Pipeline Candidate 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ transaction-pipeline-java ---
+[INFO] argLine set to -javaagent:C:\\Users\\tanatarov\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Work\\Codex\\SETU-HW\\gen-ai-se-hw\\homework-6\\docs\\agent-runs\\20260621-201051-generate-tests-java-hera-java-full-set-retry\\agent-3-tests\\workspace\\project-under-test\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ transaction-pipeline-java ---
+[INFO] skip non existing resourceDirectory C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260621-201051-generate-tests-java-hera-java-full-set-retry\agent-3-tests\workspace\project-under-test\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ transaction-pipeline-java ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ transaction-pipeline-java ---
+[INFO] skip non existing resourceDirectory C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260621-201051-generate-tests-java-hera-java-full-set-retry\agent-3-tests\workspace\project-under-test\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ transaction-pipeline-java ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 11 source files with javac [debug release 17] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ transaction-pipeline-java ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running edu.setu.transactionpipeline.agent.FraudDetectorTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.264 s -- in edu.setu.transactionpipeline.agent.FraudDetectorTest
+[INFO] Running edu.setu.transactionpipeline.agent.SettlementProcessorTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in edu.setu.transactionpipeline.agent.SettlementProcessorTest
+[INFO] Running edu.setu.transactionpipeline.agent.TransactionValidatorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in edu.setu.transactionpipeline.agent.TransactionValidatorTest
+[INFO] Running edu.setu.transactionpipeline.BuildContractTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in edu.setu.transactionpipeline.BuildContractTest
+[INFO] Running edu.setu.transactionpipeline.cli.ValidateTransactionsCommandTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.593 s -- in edu.setu.transactionpipeline.cli.ValidateTransactionsCommandTest
+[INFO] Running edu.setu.transactionpipeline.IntegrationPipelineTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.193 s -- in edu.setu.transactionpipeline.IntegrationPipelineTest
+[INFO] Running edu.setu.transactionpipeline.io.JsonAndResultSchemaTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in edu.setu.transactionpipeline.io.JsonAndResultSchemaTest
+[INFO] Running edu.setu.transactionpipeline.io.SharedDirectoryManagerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s -- in edu.setu.transactionpipeline.io.SharedDirectoryManagerTest
+[INFO] Running edu.setu.transactionpipeline.privacy.PrivacyGuardTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in edu.setu.transactionpipeline.privacy.PrivacyGuardTest
+[INFO] Running edu.setu.transactionpipeline.ThemisQualityTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.583 s -- in edu.setu.transactionpipeline.ThemisQualityTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ transaction-pipeline-java ---
+[INFO] Loading execution data file C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260621-201051-generate-tests-java-hera-java-full-set-retry\agent-3-tests\workspace\project-under-test\target\jacoco.exec
+[INFO] Analyzed bundle 'Homework 6 Java Transaction Pipeline Candidate' with 28 classes
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (default-cli) @ transaction-pipeline-java ---
+[INFO] Loading execution data file C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260621-201051-generate-tests-java-hera-java-full-set-retry\agent-3-tests\workspace\project-under-test\target\jacoco.exec
+[INFO] Analyzed bundle 'Homework 6 Java Transaction Pipeline Candidate' with 28 classes
+[INFO] 
+[INFO] --- jacoco:0.8.12:check (default-cli) @ transaction-pipeline-java ---
+[INFO] Loading execution data file C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260621-201051-generate-tests-java-hera-java-full-set-retry\agent-3-tests\workspace\project-under-test\target\jacoco.exec
+[INFO] Analyzed bundle 'transaction-pipeline-java' with 28 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.387 s
+[INFO] Finished at: 2026-06-21T20:26:49+02:00
+[INFO] ------------------------------------------------------------------------

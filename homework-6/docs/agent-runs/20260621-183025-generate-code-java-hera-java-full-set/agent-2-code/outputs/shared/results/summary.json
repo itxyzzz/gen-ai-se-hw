@@ -1,0 +1,20 @@
+{
+  "schema_version" : "1.0",
+  "generated_at" : "2026-06-21T17:00:08.900635900Z",
+  "total" : 8,
+  "settled" : 2,
+  "rejected" : 2,
+  "review_required" : 4,
+  "error" : 0,
+  "complete" : true,
+  "reason_code_counts" : {
+    "HIGH_VALUE" : 2,
+    "WIRE_TRANSFER_TYPE" : 2,
+    "ODD_HOUR" : 1,
+    "CHANNEL_RISK" : 2,
+    "COUNTRY_RISK" : 1,
+    "VERY_HIGH_VALUE" : 1,
+    "UNSUPPORTED_CURRENCY" : 1,
+    "NON_POSITIVE_AMOUNT" : 1
+  }
+}

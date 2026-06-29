@@ -1,0 +1,87 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "0881813a-8b70-4de9-98a5-2a947b998686",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "55ada995-deb9-4312-bced-6eb6000400ff",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "fraud_detector",
+      "event_id": "42496e38-aa34-4c00-9530-65c92d80a654",
+      "outcome": "approved_for_settlement",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    },
+    {
+      "agent_name": "settlement_processor",
+      "event_id": "4661b9d9-2452-4bca-be50-22f7f79a9466",
+      "outcome": "settled",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN001"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "fraud_detector",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "settlement_processor",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "1500.00",
+    "channel": "online",
+    "country": "US",
+    "currency": "USD",
+    "destination_account_redacted": "ACC-****2001",
+    "source_account_redacted": "ACC-****1001",
+    "status": "settled",
+    "timestamp": "2026-03-16T09:00:00Z",
+    "transaction_id": "TXN001",
+    "transaction_type": "transfer"
+  },
+  "message_id": "a04f4e73-f613-406c-9b75-e67d6fecfadf",
+  "message_type": "settlement_result",
+  "risk": {
+    "decision": "approved_for_settlement",
+    "risk_level": "low",
+    "risk_reasons": [],
+    "risk_score": 0
+  },
+  "schema_version": "1.0",
+  "settlement": {
+    "settlement_note": "simulated_settlement_ready",
+    "settlement_reference": "SIM-TXN001",
+    "status": "settled"
+  },
+  "source_agent": "settlement_processor",
+  "target_agent": "integrator",
+  "transaction_id": "TXN001",
+  "validation": {
+    "amount": "1500.00",
+    "currency": "USD",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}

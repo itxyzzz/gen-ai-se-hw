@@ -1,0 +1,11 @@
+Coverage gate blocking path:
+
+Before Themis added `ThemisQualityTest.java`, the Hephaestus baseline package produced this coverage failure:
+
+- Tests run: 9
+- Failures: 0
+- JaCoCo covered-ratio: 0.76
+- Required minimum: 0.80
+- Result: BUILD FAILURE
+
+This demonstrates that the Java JaCoCo gate can block below-threshold coverage.

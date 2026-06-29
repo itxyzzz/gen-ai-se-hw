@@ -1,0 +1,16 @@
+Command:
+mvn -s ..\..\..\..\20260621-145101-generate-code-java-alternate\agent-2-code\validation-settings.xml -gs ..\..\..\..\20260621-145101-generate-code-java-alternate\agent-2-code\validation-settings.xml test jacoco:report jacoco:check
+
+Working directory:
+docs\agent-runs\20260621-145102-generate-tests-java-alternate\agent-3-tests\workspace\project-under-test
+
+Result:
+- BUILD SUCCESS
+- Tests run: 21
+- Failures: 0
+- Errors: 0
+- Skipped: 0
+- JaCoCo: All coverage checks have been met.
+
+Privacy note:
+The visible dry-run output contains transaction IDs, statuses, and reason codes only. It does not include raw account IDs or raw descriptions.

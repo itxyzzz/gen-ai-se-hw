@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate Transactions"
+  short_description: "Validate Homework 6 sample transactions"
+  default_prompt: "Use $validate-transactions to validate the Homework 6 sample transactions without running the full pipeline."

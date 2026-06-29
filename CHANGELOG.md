@@ -2,6 +2,11 @@
 
 All notable repository-level policy and standards changes are tracked here.
 
+## 2026-06-19
+
+### Changed
+- Ignored Homework 6 runtime transaction pipeline output folders `homework-6/shared/` and `homework-6/archive/` so generated run output does not appear as untracked source changes.
+
 ## 2026-06-06
 
 ### Changed

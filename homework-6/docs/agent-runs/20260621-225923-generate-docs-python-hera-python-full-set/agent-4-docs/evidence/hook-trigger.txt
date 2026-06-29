@@ -1,0 +1,24 @@
+Hook pass behavior:
+The committed pre-push hook delegates to `python scripts/check_coverage_gate.py --stack auto --fail-under 80`.
+
+Candidate validation command:
+python scripts\check_coverage_gate.py --stack python --fail-under 80
+
+Pass result:
+- 36 tests passed.
+- Total coverage: 97.44%.
+- The 80% gate passed.
+
+Hook blocking behavior:
+The same coverage helper was run with an intentionally impossible threshold:
+
+python scripts\check_coverage_gate.py --stack python --fail-under 99
+
+Expected failure result:
+- 36 tests passed before the threshold check.
+- Total coverage: 97.44%.
+- Failure signal: `FAIL Required test coverage of 99% not reached. Total coverage: 97.44%`.
+- Exit code: 1.
+
+Environment limitation:
+Direct shell execution of a run-local `.githooks/pre-push` remained blocked by this Windows sandbox because Bash returned `E_ACCESSDENIED` and `sh` was unavailable. The delegated helper behavior was validated with both pass and expected-fail paths.

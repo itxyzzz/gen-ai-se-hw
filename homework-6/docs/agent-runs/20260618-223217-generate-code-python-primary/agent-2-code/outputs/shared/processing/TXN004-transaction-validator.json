@@ -1,0 +1,54 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "7d87f6f1-7a2b-4b81-a6de-37f1aa5a70e7",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    },
+    {
+      "agent_name": "transaction_validator",
+      "event_id": "c352f652-e716-4a50-a6a9-3b3842d5c16a",
+      "outcome": "validated",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN004"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    },
+    {
+      "component": "transaction_validator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "500.00",
+    "channel": "api",
+    "country": "DE",
+    "currency": "EUR",
+    "destination_account_redacted": "ACC-****5500",
+    "source_account_redacted": "ACC-****1004",
+    "status": "validated",
+    "timestamp": "2026-03-16T02:47:00Z",
+    "transaction_id": "TXN004",
+    "transaction_type": "transfer"
+  },
+  "message_id": "51dae936-99d3-4e09-abc1-9d5df2656796",
+  "message_type": "validation_result",
+  "schema_version": "1.0",
+  "source_agent": "transaction_validator",
+  "target_agent": "fraud_detector",
+  "transaction_id": "TXN004",
+  "validation": {
+    "amount": "500.00",
+    "currency": "EUR",
+    "is_valid": true,
+    "reason_code": null,
+    "status": "validated"
+  }
+}

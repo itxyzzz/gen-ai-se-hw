@@ -1,0 +1,36 @@
+{
+  "audit_events": [
+    {
+      "agent_name": "integrator",
+      "event_id": "d6af2105-8063-4ee9-bd80-0e3745f29093",
+      "outcome": "received",
+      "timestamp": "2026-06-19T18:46:22Z",
+      "transaction_id": "TXN007"
+    }
+  ],
+  "component_history": [
+    {
+      "component": "integrator",
+      "timestamp": "2026-06-19T18:46:22Z"
+    }
+  ],
+  "created_at": "2026-06-19T18:46:22Z",
+  "data": {
+    "amount": "-100.00",
+    "channel": "online",
+    "country": "GB",
+    "currency": "GBP",
+    "destination_account_redacted": "ACC-****8800",
+    "source_account_redacted": "ACC-****1007",
+    "status": "received",
+    "timestamp": "2026-03-16T10:10:00Z",
+    "transaction_id": "TXN007",
+    "transaction_type": "refund"
+  },
+  "message_id": "1fe3b328-f245-41ba-939c-14fe9a285860",
+  "message_type": "transaction",
+  "schema_version": "1.0",
+  "source_agent": "integrator",
+  "target_agent": "transaction_validator",
+  "transaction_id": "TXN007"
+}

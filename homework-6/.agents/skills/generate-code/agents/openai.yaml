@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Code"
+  short_description: "Generate Homework 6 pipeline code runs"
+  default_prompt: "Use $generate-code to create or review a preserved Homework 6 code-generation run."

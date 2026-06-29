@@ -1,0 +1,41 @@
+# Test And Coverage Evidence
+
+Pytest command:
+
+```powershell
+python -m pytest -p no:cacheprovider
+```
+
+Result:
+
+```text
+50 passed in 5.89s
+```
+
+Coverage command:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 80
+```
+
+Result:
+
+```text
+Required test coverage of 80% reached. Total coverage: 94.79%
+50 passed in 14.85s
+```
+
+The first sandboxed coverage command failed with a Windows coverage-file rename permission error in `tmp/coverage-gate-*`. The same command passed when rerun outside the sandbox.
+
+Blocking demonstration:
+
+```powershell
+python scripts/check_coverage_gate.py --fail-under 99
+```
+
+Result:
+
+```text
+50 passed in 13.65s
+FAIL Required test coverage of 99% not reached. Total coverage: 94.79%
+```

@@ -1,0 +1,37 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-8.4.2, pluggy-1.6.0
+rootdir: C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260620-144025-generate-tests-python-fresh-spec\agent-3-tests\workspace\project-under-test
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.13.0, cov-7.1.0
+collected 40 items
+
+tests\test_common.py .......                                             [ 17%]
+tests\test_fraud_detector.py ......                                      [ 32%]
+tests\test_integrator_pipeline.py ...........                            [ 60%]
+tests\test_settlement_processor.py ....                                  [ 70%]
+tests\test_themis_quality.py ......                                      [ 85%]
+tests\test_transaction_validator.py ......                               [100%]
+
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.12.6-final-0 _______________
+
+Name                                  Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------
+agents\__init__.py                        0      0   100%
+agents\common.py                        136     13    90%   64-65, 67, 87, 113, 167, 170, 172, 213, 226-229
+agents\fraud_detector.py                 73      7    90%   31, 34-35, 67-68, 100-101
+agents\settlement_processor.py           38      1    97%   42
+agents\transaction_validator.py          86      7    92%   43, 49, 52, 60, 63-64, 160
+integrator.py                           197     13    93%   72, 135, 139, 144, 147, 199, 340-345, 358
+tests\test_common.py                     34      0   100%
+tests\test_fraud_detector.py             33      0   100%
+tests\test_integrator_pipeline.py        91      0   100%
+tests\test_settlement_processor.py       19      0   100%
+tests\test_themis_quality.py             91      0   100%
+tests\test_transaction_validator.py      38      0   100%
+-------------------------------------------------------------------
+TOTAL                                   836     41    95%
+Required test coverage of 80% reached. Total coverage: 95.10%
+============================= 40 passed in 2.97s ==============================
+Running Homework 6 coverage gate from C:\Work\Codex\SETU-HW\gen-ai-se-hw\homework-6\docs\agent-runs\20260620-144025-generate-tests-python-fresh-spec\agent-3-tests\workspace\project-under-test with fail-under=80

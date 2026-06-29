@@ -1,0 +1,44 @@
+# Hephaestus Run Metadata
+
+- Run ID: `20260619-175211-generate-code-python-fresh-spec`
+- Mode: `generate`
+- Selected stack: `python`
+- Start time: 2026-06-19 17:52:11 Europe/Budapest
+- Orchestration tool: Codex Desktop, repo-local `generate-code` skill
+- Context7 reachable: yes
+- Source Athena (Spec Writer) run ID: `20260619-170102-write-spec-python-fresh`
+- Canonical source spec path: `homework-6/specification.md`
+- Source spec SHA-256: `44FD7EF6AC4FEE8070A23820DD784AA6215795D58AE3D7EB8225EFEFB8AB9E3B`
+- Planned sub-agent strategy: no executor sub-agents; the implementation is tightly coupled across message envelope shape, stage files, result shape, and tests, so final integration quality is better preserved by one orchestration thread.
+- Observed runtime limits: model/reasoning controls and sub-agent spawning were not exposed as direct knobs in this Codex Desktop turn; Context7 MCP was available through the configured project server.
+- Canonical files this run intends to create or modify if selected:
+  - `integrator.py`
+  - `pytest.ini`
+  - `agents/__init__.py`
+  - `agents/common.py`
+  - `agents/transaction_validator.py`
+  - `agents/fraud_detector.py`
+  - `agents/settlement_processor.py`
+  - `tests/test_common.py`
+  - `tests/test_transaction_validator.py`
+  - `tests/test_fraud_detector.py`
+  - `tests/test_settlement_processor.py`
+  - `tests/test_integrator_pipeline.py`
+  - `research-notes.md`
+- Task 2 scope exclusions:
+  - No `.claude/commands/` or Codex command wrappers.
+  - No coverage gate hooks.
+  - No `mcp/server.py` or `pipeline-status` MCP configuration changes.
+  - No Task 5 README, HOWTORUN, screenshots, or PR packaging files.
+- Pre-existing product files:
+  - A prior selected Hephaestus package exists at `20260618-223217-generate-code-python-primary`, generated from the older Athena source run `20260618-003908-write-spec-python-replacement`.
+  - Canonical `integrator.py`, `agents/`, `tests/`, `pytest.ini`, and `research-notes.md` existed before this run.
+- Pre-existing dirty git state:
+  - `CHANGELOG.md`
+  - `docs/agent-runs/20260617-180458-write-spec-python-primary/comparison.md`
+  - `docs/agent-runs/20260618-003908-write-spec-python-replacement/comparison.md`
+  - `docs/agent-runs/final-selection.md`
+  - `specification.md`
+  - `docs/agent-runs/20260619-170102-write-spec-python-fresh/`
+- Selection note: this is a later Hephaestus run, so canonical copy requires explicit operator selection under the run-registry rule.
+

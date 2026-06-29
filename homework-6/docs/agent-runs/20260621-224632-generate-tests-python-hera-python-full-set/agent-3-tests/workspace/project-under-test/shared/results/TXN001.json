@@ -1,0 +1,16 @@
+{
+  "amount": "1500.00",
+  "audit_event_count": 4,
+  "component_history_count": 4,
+  "currency": "USD",
+  "privacy_check": "passed",
+  "processed_at": "2026-06-21T20:50:11Z",
+  "reason_codes": [
+    "SETTLED"
+  ],
+  "safe_summary": "Simulated transaction outcome recorded.",
+  "schema_version": 1,
+  "settlement_reference": "SIM-TXN001",
+  "status": "settled",
+  "transaction_id": "TXN001"
+}

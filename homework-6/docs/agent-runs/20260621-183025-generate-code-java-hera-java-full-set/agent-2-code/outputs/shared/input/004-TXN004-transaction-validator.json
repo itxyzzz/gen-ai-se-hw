@@ -1,0 +1,16 @@
+{
+  "message_id" : "0bb4770d-05bc-3d30-857b-d0794860146e",
+  "timestamp" : "2026-06-21T17:00:08.812775100Z",
+  "source_agent" : "integrator",
+  "target_agent" : "transaction_validator",
+  "message_type" : "transaction",
+  "data" : {
+    "transaction_id" : "TXN004",
+    "timestamp" : "2026-03-16T02:47:00Z",
+    "amount" : "500.00",
+    "currency" : "EUR",
+    "transaction_type" : "transfer",
+    "channel" : "api",
+    "country" : "DE"
+  }
+}
